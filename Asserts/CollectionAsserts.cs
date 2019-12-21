@@ -20,8 +20,8 @@ namespace SoftCube.Asserts
         /// <typeparam name="TItem">項目の型。</typeparam>
         /// <param name="collection">項目コレクション。</param>
         /// <param name="inspector">検査。</param>
-        /// <exception cref="ArgumentNullException"><paramref name="collection"/>が null である場合、投げられます。</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="inspector"/>が null である場合、投げられます。</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="collection"/>が <c>null</c> である場合、投げられます。</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="inspector"/>が <c>null</c> である場合、投げられます。</exception>
         /// <exception cref="AllException">検査に合格しない項目がある場合、投げられます。</exception>
         public static void All<TItem>(IEnumerable<TItem> collection, Action<TItem> inspector)
         {
@@ -58,7 +58,7 @@ namespace SoftCube.Asserts
         /// </summary>
         /// <typeparam name="TItem">項目の型。</typeparam>
         /// <param name="collection">項目コレクション。</param>
-        /// <param name="inspectors">検査コレクション (項目数と検査数は正確に一致しなくてはならない)。</param>
+        /// <param name="inspectors">検査コレクション (項目数と検査数は正確に一致しなくてはなりません)。</param>
         /// <exception cref="CollectionException">検査に合格しない項目がある場合、投げられます。</exception>
         public static void Collection<TItem>(IEnumerable<TItem> collection, params Action<TItem>[] inspectors)
         {
@@ -94,7 +94,7 @@ namespace SoftCube.Asserts
         /// <typeparam name="TItem">項目の型。</typeparam>
         /// <param name="expected">期待値。</param>
         /// <param name="collection">コレクション。</param>
-        /// <exception cref="ArgumentNullException"><paramref name="collection"/>がnullである場合、投げられます。</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="collection"/> が <c>null</c> である場合、投げられます。</exception>
         /// <exception cref="ContainsException">指定項目 (期待値) を含まない場合、投げられます。</exception>
         public static void Contains<TItem>(TItem expected, IEnumerable<TItem> collection)
         {
@@ -114,8 +114,8 @@ namespace SoftCube.Asserts
         /// <param name="expected">期待値。</param>
         /// <param name="collection">コレクション。</param>
         /// <param name="comparer">等値比較子</param>
-        /// <exception cref="ArgumentNullException"><paramref name="collection"/>がnullである場合、投げられます。</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="comparer"/>がnullである場合、投げられます。</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="collection"/>が <c>null</c> である場合、投げられます。</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="comparer"/>が <c>null</c> である場合、投げられます。</exception>
         /// <exception cref="ContainsException">指定項目(期待値)が含まれない場合、投げられます。</exception>
         public static void Contains<TItem>(TItem expected, IEnumerable<TItem> collection, IEqualityComparer<TItem> comparer)
         {
@@ -301,7 +301,7 @@ namespace SoftCube.Asserts
         /// コレクションが空であることを検証します。
         /// </summary>
         /// <param name="collection">コレクション。</param>
-        /// <exception cref="ArgumentNullException">コレクションが null の場合、投げられます。</exception>
+        /// <exception cref="ArgumentNullException">コレクションが <c>null</c> の場合、投げられます。</exception>
         /// <exception cref="EmptyException">コレクションが空の場合、投げられます。</exception>
         public static void Empty(IEnumerable collection)
         {
@@ -358,7 +358,7 @@ namespace SoftCube.Asserts
         /// コレクションが空ではないことを検証します。
         /// </summary>
         /// <param name="collection">コレクション。</param>
-        /// <exception cref="ArgumentNullException">コレクションが null の場合、投げられます。</exception>
+        /// <exception cref="ArgumentNullException">コレクションが <c>null</c> の場合、投げられます。</exception>
         /// <exception cref="NotEmptyException">コレクションが空である場合、投げられます。</exception>
         public static void NotEmpty(IEnumerable collection)
         {

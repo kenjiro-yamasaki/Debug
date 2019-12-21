@@ -10,11 +10,11 @@
         #region False
 
         /// <summary>
-        /// 条件が false であることを検証します。
+        /// 条件が <c>false</c> であることを検証します。
         /// </summary>
         /// <param name="condition">条件。</param>
         /// <param name="message">検証失敗時の例外メッセージ。</param>
-        /// <exception cref="FalseException">条件が false でない場合、投げられます。</exception>
+        /// <exception cref="FalseException">条件が <c>false</c> ではない場合、投げられます。</exception>
         public static void False(bool? condition, string message)
         {
             if (!condition.HasValue || condition.GetValueOrDefault())
@@ -24,31 +24,31 @@
         }
 
         /// <summary>
-        /// 条件が false であることを検証します。
+        /// 条件が <c>false</c> であることを検証します。
         /// </summary>
         /// <param name="condition">条件。</param>
-        /// <exception cref="FalseException">条件が false でない場合、投げられます。</exception>
+        /// <exception cref="FalseException">条件が <c>false</c> ではない場合、投げられます。</exception>
         public static void False(bool condition)
         {
             False((bool?)condition, null);
         }
 
         /// <summary>
-        /// 条件が false であることを検証します。
+        /// 条件が <c>false</c> であることを検証します。
         /// </summary>
         /// <param name="condition">条件。</param>
-        /// <exception cref="FalseException">条件が false でない場合、投げられます。</exception>
+        /// <exception cref="FalseException">条件が <c>false</c> ではない場合、投げられます。</exception>
         public static void False(bool? condition)
         {
             False(condition, null);
         }
 
         /// <summary>
-        /// 条件が false であることを検証します。
+        /// 条件が <c>false</c> であることを検証します。
         /// </summary>
         /// <param name="condition">条件。</param>
         /// <param name="message">検証失敗時の例外メッセージ。</param>
-        /// <exception cref="FalseException">条件が false でない場合、投げられます。</exception>
+        /// <exception cref="FalseException">条件が <c>false</c> ではない場合、投げられます。</exception>
         public static void False(bool condition, string message)
         {
             False((bool?)condition, message);
@@ -59,11 +59,11 @@
         #region True
 
         /// <summary>
-        /// 条件が true であることを検証します。
+        /// 条件が <c>true</c> であることを検証します。
         /// </summary>
         /// <param name="condition">条件。</param>
         /// <param name="message">検証失敗時の例外メッセージ。</param>
-        /// <exception cref="TrueException">条件が true でない場合、投げられます。</exception>
+        /// <exception cref="TrueException">条件が <c>true</c> ではない場合、投げられます。</exception>
         public static void True(bool? condition, string message)
         {
             if (!condition.HasValue || !condition.GetValueOrDefault())
@@ -73,31 +73,31 @@
         }
 
         /// <summary>
-        /// 条件が true であることを検証します。
+        /// 条件が <c>true</c> であることを検証します。
         /// </summary>
         /// <param name="condition">条件。</param>
-        /// <exception cref="TrueException">条件が true でない場合、投げられます。</exception>
+        /// <exception cref="TrueException">条件が <c>true</c> ではない場合、投げられます。</exception>
         public static void True(bool condition)
         {
             True((bool?)condition, null);
         }
 
         /// <summary>
-        /// 条件が true であることを検証します。
+        /// 条件が <c>true</c> であることを検証します。
         /// </summary>
         /// <param name="condition">条件。</param>
-        /// <exception cref="TrueException">条件が true でない場合、投げられます。</exception>
+        /// <exception cref="TrueException">条件が <c>true</c> ではない場合、投げられます。</exception>
         public static void True(bool? condition)
         {
             True(condition, null);
         }
 
         /// <summary>
-        /// 条件が true であることを検証します。
+        /// 条件が <c>true</c> であることを検証します。
         /// </summary>
         /// <param name="condition">条件。</param>
         /// <param name="message">検証失敗時の例外メッセージ。</param>
-        /// <exception cref="TrueException">条件が true でない場合、投げられます。</exception>
+        /// <exception cref="TrueException">条件が <c>true</c> ではない場合、投げられます。</exception>
         public static void True(bool condition, string message)
         {
             True((bool?)condition, message);

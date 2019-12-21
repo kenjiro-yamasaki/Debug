@@ -59,8 +59,7 @@ namespace SoftCube.Asserts
             {
                 throw new EqualException(
                     string.Format(CultureInfo.CurrentCulture, "{0} (rounded from {1})", expectedRounded, expected),
-                    string.Format(CultureInfo.CurrentCulture, "{0} (rounded from {1})", actualRounded, actual)
-                );
+                    string.Format(CultureInfo.CurrentCulture, "{0} (rounded from {1})", actualRounded, actual));
             }
         }
 
@@ -80,8 +79,7 @@ namespace SoftCube.Asserts
             {
                 throw new EqualException(
                     string.Format(CultureInfo.CurrentCulture, "{0} (rounded from {1})", expectedRounded, expected),
-                    string.Format(CultureInfo.CurrentCulture, "{0} (rounded from {1})", actualRounded, actual)
-                );
+                    string.Format(CultureInfo.CurrentCulture, "{0} (rounded from {1})", actualRounded, actual));
             }
         }
 
@@ -102,8 +100,7 @@ namespace SoftCube.Asserts
                     string.Format(CultureInfo.CurrentCulture, "{0} difference {1} is larger than {2}",
                         actual,
                         difference.ToString(),
-                        precision.ToString()
-                    ));
+                        precision.ToString()));
             }
         }
 
@@ -169,8 +166,7 @@ namespace SoftCube.Asserts
             {
                 throw new NotEqualException(
                     string.Format(CultureInfo.CurrentCulture, "{0} (rounded from {1})", expectedRounded, expected),
-                    string.Format(CultureInfo.CurrentCulture, "{0} (rounded from {1})", actualRounded, actual)
-                );
+                    string.Format(CultureInfo.CurrentCulture, "{0} (rounded from {1})", actualRounded, actual));
             }
         }
 
@@ -190,8 +186,7 @@ namespace SoftCube.Asserts
             {
                 throw new NotEqualException(
                     string.Format(CultureInfo.CurrentCulture, "{0} (rounded from {1})", expectedRounded, expected),
-                    string.Format(CultureInfo.CurrentCulture, "{0} (rounded from {1})", actualRounded, actual)
-                );
+                    string.Format(CultureInfo.CurrentCulture, "{0} (rounded from {1})", actualRounded, actual));
             }
         }
 
@@ -212,8 +207,7 @@ namespace SoftCube.Asserts
                     string.Format(CultureInfo.CurrentCulture, "{0} difference {1} is not larger than {2}",
                         actual,
                         difference.ToString(),
-                        precision.ToString()
-                    ));
+                        precision.ToString()));
             }
         }
 

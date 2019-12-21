@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace SoftCube.Asserts
+﻿namespace SoftCube.Asserts
 {
     /// <summary>
     /// アサート。
@@ -10,10 +8,10 @@ namespace SoftCube.Asserts
         #region 静的メソッド
 
         /// <summary>
-        /// オブジェクト参照が null ではないことを検証します。
+        /// オブジェクト参照が <c>null</c> ではないことを検証します。
         /// </summary>
-        /// <param name="object">オブジェクト。</param>
-        /// <exception cref="NotNullException">オブジェクト参照が null である場合、投げられます。</exception>
+        /// <param name="object">オブジェクト参照。</param>
+        /// <exception cref="NotNullException">オブジェクト参照が <c>null</c> である場合、投げられます。</exception>
         public static void NotNull(object @object)
         {
             if (@object == null)
@@ -23,10 +21,10 @@ namespace SoftCube.Asserts
         }
 
         /// <summary>
-        /// オブジェクト参照が null であることを検証します。
+        /// オブジェクト参照が <c>null</c> であることを検証します。
         /// </summary>
-        /// <param name="object">オブジェクト。</param>
-        /// <exception cref="NullException">オブジェクト参照が null ではない場合、投げられます。</exception>
+        /// <param name="object">オブジェクト参照。</param>
+        /// <exception cref="NullException">オブジェクト参照が <c>null</c> ではない場合、投げられます。</exception>
         public static void Null(object @object)
         {
             if (@object != null)
