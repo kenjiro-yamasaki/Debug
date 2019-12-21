@@ -276,11 +276,11 @@ namespace SoftCube.Asserts
         }
 
         /// <summary>
-        /// 反復型の値 (コレクション) をフォーマットします。
+        /// 反復子の値 (コレクション) をフォーマットします。
         /// </summary>
-        /// <param name="values">反復型の値 (コレクション)。</param>
+        /// <param name="values">反復子の値 (コレクション)。</param>
         /// <param name="depth">ネストの深さ。</param>
-        /// <returns>フォーマットされた反復型の値 (コレクション)。</returns>
+        /// <returns>フォーマットされた反復子の値 (コレクション)。</returns>
         private static string FormatEnumerable(IEnumerable<object> values, int depth)
         {
             if (depth == MaxDepth)
