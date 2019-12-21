@@ -1,4 +1,4 @@
-﻿using SoftCube.System;
+﻿using SoftCube.Runtime;
 using System.IO;
 using System.Text;
 
@@ -77,7 +77,7 @@ namespace SoftCube.Logger
         /// コンストラクター。
         /// </summary>
         /// <param name="filePath">ファイルパス。</param>
-        /// <param name="append">ファイルにログを追加するかを示す値。</param>
+        /// <param name="append">ファイルにログを追加するか。</param>
         /// <param name="encoding">エンコーディング。</param>
         /// <seealso cref="Open(string, bool, Encoding)"/>
         public RollingFileAppender(string filePath, bool append, Encoding encoding)
@@ -90,7 +90,7 @@ namespace SoftCube.Logger
         /// </summary>
         /// <param name="systemClock">システムクロック。</param>
         /// <param name="filePath">ファイルパス。</param>
-        /// <param name="append">ファイルにログを追加するかを示す値。</param>
+        /// <param name="append">ファイルにログを追加するか。</param>
         /// <param name="encoding">エンコーディング。</param>
         /// <seealso cref="Open(string, bool, Encoding)"/>
         public RollingFileAppender(ISystemClock systemClock, string filePath, bool append, Encoding encoding)

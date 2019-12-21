@@ -1,4 +1,4 @@
-﻿using SoftCube.System;
+﻿using SoftCube.Runtime;
 using System;
 using System.Diagnostics;
 using System.Threading;
@@ -130,7 +130,7 @@ namespace SoftCube.Logger
         /// <summary>
         /// 破棄します。
         /// </summary>
-        /// <param name="disposing"><see cref="IDisposable.Dispose"/> から呼び出されたかを示す値。</param>
+        /// <param name="disposing"><see cref="IDisposable.Dispose"/> から呼び出されたか。</param>
         protected virtual void Dispose(bool disposing)
         {
         }

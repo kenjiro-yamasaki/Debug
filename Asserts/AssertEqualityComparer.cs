@@ -76,7 +76,7 @@ namespace SoftCube.Asserts
         /// </summary>
         /// <param name="x">比較対象のオブジェクト。</param>
         /// <param name="y">比較対象のオブジェクト。</param>
-        /// <returns>指定したオブジェクトが等しいかを示す値。</returns>
+        /// <returns>指定したオブジェクトが等しいか。</returns>
         public bool Equals(T x, T y)
         {
             var typeInfo = typeof(T).GetTypeInfo();
@@ -356,7 +356,7 @@ namespace SoftCube.Asserts
         /// 指定した型情報が <see cref="ISet<T>"/> かを判断します。
         /// </summary>
         /// <param name="typeInfo">型情報。</param>
-        /// <returns>指定した型情報が <see cref="ISet<T>"/> かを示す値。</returns>
+        /// <returns>指定した型情報が <see cref="ISet<T>"/> か。</returns>
         private bool IsSet(TypeInfo typeInfo)
         {
             return typeInfo.ImplementedInterfaces
@@ -372,7 +372,7 @@ namespace SoftCube.Asserts
         /// <typeparam name="TItem"><see cref="IEnumerable"/> の項目の型。</typeparam>
         /// <param name="enumerableX">比較対象のオブジェクト。</param>
         /// <param name="enumerableY">比較対象のオブジェクト。</param>
-        /// <returns>指定したオブジェクトが等しいかを示す値。</returns>
+        /// <returns>指定したオブジェクトが等しいか。</returns>
         private bool CompareTypedSets<TItem>(IEnumerable enumerableX, IEnumerable enumerableY)
         {
             var setX = new HashSet<TItem>(enumerableX.Cast<TItem>());
@@ -463,7 +463,7 @@ namespace SoftCube.Asserts
             /// </summary>
             /// <param name="x">比較対象のオブジェクト。</param>
             /// <param name="y">比較対象のオブジェクト。</param>
-            /// <returns>指定したオブジェクトが等しいかを示す値。</returns>
+            /// <returns>指定したオブジェクトが等しいか。</returns>
             public new bool Equals(object x, object y)
             {
                 if (x == null)
@@ -489,7 +489,7 @@ namespace SoftCube.Asserts
             /// <typeparam name="U">比較対象のオブジェクトの型。</typeparam>
             /// <param name="x">比較対象のオブジェクト。</param>
             /// <param name="y">比較対象のオブジェクト。</param>
-            /// <returns>指定したオブジェクトが等しいかを示す値。</returns>
+            /// <returns>指定したオブジェクトが等しいか。</returns>
             private bool EqualsGeneric<U>(U x, U y)
             {
                 return new AssertEqualityComparer<U>(ItemEqualityComparer).Equals(x, y);

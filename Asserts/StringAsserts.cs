@@ -289,7 +289,7 @@ namespace SoftCube.Asserts
         /// 指定文字が改行文字かを判断します。
         /// </summary>
         /// <param name="char">文字。</param>
-        /// <returns>指定文字が改行文字かを示す値。</returns>
+        /// <returns>指定文字が改行文字か。</returns>
         private static bool IsLineEnding(char @char)
         {
             return @char == '\r' || @char == '\n';
@@ -299,7 +299,7 @@ namespace SoftCube.Asserts
         /// 指定文字が空白文字かを判断します。
         /// </summary>
         /// <param name="char">文字。</param>
-        /// <returns>指定文字が空白文字かを示す値。</returns>
+        /// <returns>指定文字が空白文字か。</returns>
         private static bool IsWhiteSpace(char @char)
         {
             return @char == ' ' || @char == '\t';

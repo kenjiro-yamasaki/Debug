@@ -28,7 +28,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Logger\Logger.csproj" />
-    <ProjectReference Include="..\System\System.csproj" />
     <ProjectReference Include="..\Test\Test.csproj" />
   </ItemGroup>
 

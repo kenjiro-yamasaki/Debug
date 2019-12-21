@@ -1,4 +1,4 @@
-﻿using SoftCube.System;
+﻿using SoftCube.Runtime;
 using System.Text;
 
 namespace SoftCube.Logger

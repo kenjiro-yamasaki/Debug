@@ -1,6 +1,7 @@
-﻿using SoftCube.System;
+﻿using SoftCube.Runtime;
 using System.IO;
 using System.Text;
+using System;
 
 namespace SoftCube.Logger
 {
@@ -19,14 +20,46 @@ namespace SoftCube.Logger
         /// 日付パターン。
         /// </summary>
         /// <remarks>
-        /// 
-        /// 
-        /// 
-        /// 
-        /// 
-        /// 
+        /// ここで指定した日付パターンがログファイルの後ろに添えられることになるのですが、
+        /// 日付パターンで使用する文字列は、<see cref="DateTime.ToString(string)"/> で決められたものを使用します。
+        /// 使用できる文字列のうち、主なものを紹介します。
+        /// ・yyyyy : 年の下 5 桁。
+        /// ・M     : 月 (1～12)。
+        /// ・MM    : 月 (01～12)。
+        /// ・d     : 日にち (1～31)。
+        /// ・dd    : 日にち (01～31)。
+        /// ・H     : 時間 (0～23)。
+        /// ・HH    : 時間 (00～23)。
+        /// ・h     : 時間 (1～12)。
+        /// ・hh    : 時間 (01～12)。
+        /// ・m     : 分 (0～59)。
+        /// ・mm    : 分 (00～59)。
+        /// ・s     : 秒 (0～59)。
+        /// ・ss    : 秒 (00～59)。
+        /// ・fff   : 1/1000秒。
         /// </remarks>
-        public string DatePattern { get; set; } = "yyyyMMdd";
+        /// <example>
+        /// 変換パターンは、以下の例のように指定します。
+        /// ・"yyyy-MM-dd" → "2019-12-17"
+        /// </example>
+        public string DatePattern
+        {
+            get => datePattern;
+            set
+            {
+                if (datePattern != value)
+                {
+                    int index = value.IndexOfAny(Path.GetInvalidFileNameChars());
+                    if (0 <= index)
+                    {
+                        throw new ArgumentException(string.Format($"ファイル名に使用できない文字[{value[index]}]が使われています。"), nameof(value));
+                    }
+
+                    datePattern = value;
+                }
+            }
+        }
+        private string datePattern = "yyyy-MM-dd";
 
         #endregion
 
@@ -52,7 +85,7 @@ namespace SoftCube.Logger
         /// コンストラクター。
         /// </summary>
         /// <param name="filePath">ファイルパス。</param>
-        /// <param name="append">ファイルにログを追加するかを示す値。</param>
+        /// <param name="append">ファイルにログを追加するか。</param>
         /// <param name="encoding">エンコーディング。</param>
         /// <seealso cref="Open(string, bool, Encoding)"/>
         public DailyRollingFileAppender(string filePath, bool append, Encoding encoding)
@@ -65,7 +98,7 @@ namespace SoftCube.Logger
         /// </summary>
         /// <param name="systemClock">システムクロック。</param>
         /// <param name="filePath">ファイルパス。</param>
-        /// <param name="append">ファイルにログを追加するかを示す値。</param>
+        /// <param name="append">ファイルにログを追加するか。</param>
         /// <param name="encoding">エンコーディング。</param>
         /// <seealso cref="Open(string, bool, Encoding)"/>
         public DailyRollingFileAppender(ISystemClock systemClock, string filePath, bool append, Encoding encoding)

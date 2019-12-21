@@ -1,11 +1,10 @@
 ﻿using NSubstitute;
-using SoftCube.System;
+using SoftCube.Runtime;
 using SoftCube.Test;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Text.RegularExpressions;
 using Xunit;
 
 namespace SoftCube.Logger.UnitTests
@@ -75,23 +74,170 @@ namespace SoftCube.Logger.UnitTests
         public class DatePattern
         {
             [Fact]
-            public void yyyyMMdd_バックアップファイル名が正しい()
+            public void yyyy_バックアップ動作が正しい()
             {
-                //var logFilePath = TestFile.GetFilePath(".log");
-                //ClearLogAndBackupFiles(logFilePath);
+                var logFilePath = TestFile.GetFilePath(".log");
+                ClearLogAndBackupFiles(logFilePath);
+                var clock = Substitute.For<ISystemClock>();
+                var datePattern = "yyyy";
 
-                //using (var appender = new RollingFileAppender(logFilePath, append: false, Encoding.ASCII))
-                //{
-                //    appender.ConversionPattern = "{message}";
-                //    appender.MaxFileSize       = 1;
-                //    appender.MaxBackupCount    = 0;
+                using (var appender = new DailyRollingFileAppender(clock))
+                {
+                    clock.Now.Returns(new DateTime(2019, 12, 30));
+                    appender.DatePattern = datePattern;
+                    appender.Open(logFilePath, append: false, Encoding.ASCII);
+                    appender.Trace("A");
 
-                //    appender.Trace("A");
-                //    appender.Trace("B");
-                //}
+                    clock.Now.Returns(new DateTime(2019, 12, 31));
+                    appender.Trace("B");
 
-                //Assert.Equal("B", File.ReadAllText(logFilePath));
-                //Assert.False(File.Exists(GetBackupFilePath(logFilePath, 0)));
+                    clock.Now.Returns(new DateTime(2020, 1, 1));
+                    appender.Trace("C");
+                }
+
+                Assert.Equal("AB", File.ReadAllText(GetBackupFilePath(logFilePath, new DateTime(2019, 12, 31), datePattern)));
+                Assert.Equal("C", File.ReadAllText(logFilePath));
+            }
+
+            [Fact]
+            public void yyyyMM_バックアップ動作が正しい()
+            {
+                var logFilePath = TestFile.GetFilePath(".log");
+                ClearLogAndBackupFiles(logFilePath);
+                var clock = Substitute.For<ISystemClock>();
+                var datePattern = "yyyyMM";
+
+                using (var appender = new DailyRollingFileAppender(clock))
+                {
+                    clock.Now.Returns(new DateTime(2020, 1, 30));
+                    appender.DatePattern = datePattern;
+                    appender.Open(logFilePath, append: false, Encoding.ASCII);
+                    appender.Trace("A");
+
+                    clock.Now.Returns(new DateTime(2020, 1, 31));
+                    appender.Trace("B");
+
+                    clock.Now.Returns(new DateTime(2020, 2, 1));
+                    appender.Trace("C");
+                }
+
+                Assert.Equal("AB", File.ReadAllText(GetBackupFilePath(logFilePath, new DateTime(2020, 1, 31), datePattern)));
+                Assert.Equal("C", File.ReadAllText(logFilePath));
+            }
+
+            [Fact]
+            public void yyyyMMdd_バックアップ動作が正しい()
+            {
+                var logFilePath = TestFile.GetFilePath(".log");
+                ClearLogAndBackupFiles(logFilePath);
+                var clock = Substitute.For<ISystemClock>();
+                var datePattern = "yyyyMMdd";
+
+                using (var appender = new DailyRollingFileAppender(clock))
+                {
+                    clock.Now.Returns(new DateTime(2020, 1, 30, 23, 59, 58));
+                    appender.DatePattern = datePattern;
+                    appender.Open(logFilePath, append: false, Encoding.ASCII);
+                    appender.Trace("A");
+
+                    clock.Now.Returns(new DateTime(2020, 1, 30, 23, 59, 59));
+                    appender.Trace("B");
+
+                    clock.Now.Returns(new DateTime(2020, 1, 31, 0, 0, 0));
+                    appender.Trace("C");
+                }
+
+                Assert.Equal("AB", File.ReadAllText(GetBackupFilePath(logFilePath, new DateTime(2020, 1, 30, 0, 0, 0), datePattern)));
+                Assert.Equal("C", File.ReadAllText(logFilePath));
+            }
+
+            [Fact]
+            public void yyyyMMddHH_バックアップ動作が正しい()
+            {
+                var logFilePath = TestFile.GetFilePath(".log");
+                ClearLogAndBackupFiles(logFilePath);
+                var clock = Substitute.For<ISystemClock>();
+                var datePattern = "yyyyMMddHH";
+
+                using (var appender = new DailyRollingFileAppender(clock))
+                {
+                    clock.Now.Returns(new DateTime(2020, 1, 31, 22, 59, 58));
+                    appender.DatePattern = datePattern;
+                    appender.Open(logFilePath, append: false, Encoding.ASCII);
+                    appender.Trace("A");
+
+                    clock.Now.Returns(new DateTime(2020, 1, 31, 22, 59, 59));
+                    appender.Trace("B");
+
+                    clock.Now.Returns(new DateTime(2020, 1, 31, 23, 0, 0));
+                    appender.Trace("C");
+                }
+
+                Assert.Equal("AB", File.ReadAllText(GetBackupFilePath(logFilePath, new DateTime(2020, 1, 31, 22, 0, 0), datePattern)));
+                Assert.Equal("C", File.ReadAllText(logFilePath));
+            }
+
+            [Fact]
+            public void yyyyMMddHHmm_バックアップ動作が正しい()
+            {
+                var logFilePath = TestFile.GetFilePath(".log");
+                ClearLogAndBackupFiles(logFilePath);
+                var clock = Substitute.For<ISystemClock>();
+                var datePattern = "yyyyMMddHHmm";
+
+                using (var appender = new DailyRollingFileAppender(clock))
+                {
+                    clock.Now.Returns(new DateTime(2020, 1, 31, 23, 58, 58));
+                    appender.DatePattern = datePattern;
+                    appender.Open(logFilePath, append: false, Encoding.ASCII);
+                    appender.Trace("A");
+
+                    clock.Now.Returns(new DateTime(2020, 1, 31, 23, 58, 59));
+                    appender.Trace("B");
+
+                    clock.Now.Returns(new DateTime(2020, 1, 31, 23, 59, 0));
+                    appender.Trace("C");
+                }
+
+                Assert.Equal("AB", File.ReadAllText(GetBackupFilePath(logFilePath, new DateTime(2020, 1, 31, 23, 58, 0), datePattern)));
+                Assert.Equal("C", File.ReadAllText(logFilePath));
+            }
+
+            [Fact]
+            public void yyyyMMddHHmmss_バックアップ動作が正しい()
+            {
+                var logFilePath = TestFile.GetFilePath(".log");
+                ClearLogAndBackupFiles(logFilePath);
+                var clock = Substitute.For<ISystemClock>();
+                var datePattern = "yyyyMMddHHmmss";
+
+                using (var appender = new DailyRollingFileAppender(clock))
+                {
+                    clock.Now.Returns(new DateTime(2020, 1, 31, 23, 59, 58, 998));
+                    appender.DatePattern = datePattern;
+                    appender.Open(logFilePath, append: false, Encoding.ASCII);
+                    appender.Trace("A");
+
+                    clock.Now.Returns(new DateTime(2020, 1, 31, 23, 59, 58, 999));
+                    appender.Trace("B");
+
+                    clock.Now.Returns(new DateTime(2020, 1, 31, 23, 59, 59, 000));
+                    appender.Trace("C");
+                }
+
+                Assert.Equal("AB", File.ReadAllText(GetBackupFilePath(logFilePath, new DateTime(2020, 1, 31, 23, 59, 58, 000), datePattern)));
+                Assert.Equal("C", File.ReadAllText(logFilePath));
+            }
+
+            [Fact]
+            public void 不正な書式_を投げる()
+            {
+                using (var appender = new DailyRollingFileAppender())
+                {
+                    var ex = Record.Exception(() => appender.DatePattern = "?");
+                    
+                    Assert.IsType<ArgumentException>(ex);
+                }
             }
         }
 
@@ -119,11 +265,11 @@ namespace SoftCube.Logger.UnitTests
             var logFilePath = TestFile.GetFilePath(".log");
             ClearLogAndBackupFiles(logFilePath);
             var clock = Substitute.For<ISystemClock>();
-            clock.Now.Returns(new DateTime(2019, 12, 21));
             var datePattern = "yyyyMMdd";
 
             using (var appender = new DailyRollingFileAppender(clock))
             {
+                clock.Now.Returns(new DateTime(2019, 12, 21));
                 appender.DatePattern = datePattern;
                 appender.Open(logFilePath, append: false, Encoding.ASCII);
                 appender.Trace("A");

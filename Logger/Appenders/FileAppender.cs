@@ -1,5 +1,5 @@
 ﻿using SoftCube.Asserts;
-using SoftCube.System;
+using SoftCube.Runtime;
 using System;
 using System.IO;
 using System.Text;
@@ -67,7 +67,7 @@ namespace SoftCube.Logger
         /// コンストラクター。
         /// </summary>
         /// <param name="filePath">ファイルパス。</param>
-        /// <param name="append">ファイルにログを追加するかを示す値。</param>
+        /// <param name="append">ファイルにログを追加するか。</param>
         /// <param name="encoding">エンコーディング。</param>
         /// <seealso cref="Open(string, bool, Encoding)"/>
         public FileAppender(string filePath, bool append, Encoding encoding)
@@ -80,7 +80,7 @@ namespace SoftCube.Logger
         /// </summary>
         /// <param name="systemClock">システムクロック。</param>
         /// <param name="filePath">ファイルパス。</param>
-        /// <param name="append">ファイルにログを追加するかを示す値。</param>
+        /// <param name="append">ファイルにログを追加するか。</param>
         /// <param name="encoding">エンコーディング。</param>
         /// <seealso cref="Open(string, bool, Encoding)"/>
         public FileAppender(ISystemClock systemClock, string filePath, bool append, Encoding encoding)
@@ -99,7 +99,7 @@ namespace SoftCube.Logger
         /// 破棄します。
         /// </summary>
         /// <param name="disposing">
-        /// <see cref="IDisposable.Dispose"/> から呼び出されたかを示す値。
+        /// <see cref="IDisposable.Dispose"/> から呼び出されたか。
         /// <c>true</c> の場合、マネージリソースを破棄します。
         /// <c>false</c> の場合、マネージリソースを破棄しないでください。
         /// </param>
@@ -140,7 +140,7 @@ namespace SoftCube.Logger
         /// </summary>
         /// <param name="filePath">ファイルパス。</param>
         /// <param name="append">
-        /// ファイルにログを追加するかを示す値。
+        /// ファイルにログを追加するか。
         /// <c>true</c> の場合、ファイルにログを追加します。
         /// <c>false</c> の場合、ファイルのログを上書きします。
         /// </param>
