@@ -1,7 +1,7 @@
 namespace SoftCube.Asserts
 {
     /// <summary>
-    /// NotEmpty アサート例外。
+    /// <see cref="Assert.NotEmpty"/> アサート例外。
     /// </summary>
     /// <remarks>
     /// 本例外は、<see cref="Assert.NotEmpty"/> の失敗時に投げられます。

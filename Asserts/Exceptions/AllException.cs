@@ -6,7 +6,7 @@ using System.Linq;
 namespace SoftCube.Asserts
 {
     /// <summary>
-    /// All アサート例外。
+    /// <see cref="Assert.All"/> アサート例外。
     /// </summary>
     /// <remarks>
     /// 本例外は、<see cref="Assert.All"/> の失敗時に投げられます。

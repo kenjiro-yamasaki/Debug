@@ -3,7 +3,7 @@
 namespace SoftCube.Asserts
 {
     /// <summary>
-    /// IsAssignableFrom アサート例外。
+    /// <see cref="Assert.IsAssignableFrom"/> アサート例外。
     /// </summary>
     /// <remarks>
     /// 本例外は、<see cref="Assert.IsAssignableFrom"/> の失敗時に投げられます。

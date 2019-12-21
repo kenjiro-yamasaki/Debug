@@ -4,7 +4,7 @@ using System.Globalization;
 namespace SoftCube.Asserts
 {
     /// <summary>
-    /// EndsWith アサート例外。
+    /// <see cref="Assert.EndsWith"/> アサート例外。
     /// </summary>
     /// <remarks>
     /// 本例外は、<see cref="Assert.EndsWith"/> の失敗時に投げられます。

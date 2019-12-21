@@ -1,7 +1,7 @@
 namespace SoftCube.Asserts
 {
     /// <summary>
-    /// IsType アサート例外。
+    /// <see cref="Assert.IsType"/> アサート例外。
     /// </summary>
     /// <remarks>
     /// 本例外は、<see cref="Assert.IsType"/> の失敗時に投げられます。

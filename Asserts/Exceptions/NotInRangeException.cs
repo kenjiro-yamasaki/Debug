@@ -3,7 +3,7 @@ using System.Globalization;
 namespace SoftCube.Asserts
 {
     /// <summary>
-    /// NotInRange アサート例外。
+    /// <see cref="Assert.NotInRange"/> アサート例外。
     /// </summary>
     /// <remarks>
     /// 本例外は、<see cref="Assert.NotInRange"/> の失敗時に投げられます。

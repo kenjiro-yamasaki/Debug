@@ -4,7 +4,7 @@ using System.Collections;
 namespace SoftCube.Asserts
 {
     /// <summary>
-    /// Empty アサート例外。
+    /// <see cref="Assert.Empty"/> アサート例外。
     /// </summary>
     /// <remarks>
     /// 本例外は、<see cref="Assert.Empty"/> の失敗時に投げられます。

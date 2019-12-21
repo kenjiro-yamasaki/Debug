@@ -3,7 +3,7 @@ using System.Collections;
 namespace SoftCube.Asserts
 {
     /// <summary>
-    /// Subset アサート例外。
+    /// <see cref="Assert.Subset"/> アサート例外。
     /// </summary>
     /// <remarks>
     /// 本例外は、<see cref="Assert.Subset"/> の失敗時に投げられます。

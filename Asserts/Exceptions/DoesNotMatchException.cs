@@ -4,7 +4,7 @@ using System.Globalization;
 namespace SoftCube.Asserts
 {
     /// <summary>
-    /// DoesNotMatch アサート例外。
+    /// <see cref="Assert.DoesNotMatch"/> アサート例外。
     /// </summary>
     /// <remarks>
     /// 本例外は、<see cref="Assert.DoesNotMatch"/> の失敗時に投げられます。

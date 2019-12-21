@@ -7,7 +7,7 @@ namespace SoftCube.Asserts
     /// <summary>
     /// アサートのデフォルト比較子。
     /// </summary>
-    /// <typeparam name="T">比較対象の型。</typeparam>
+    /// <typeparam name="T">比較対象のオブジェクトの型。</typeparam>
     internal class AssertComparer<T> : IComparer<T>
         where T : IComparable
     {

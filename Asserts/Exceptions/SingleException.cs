@@ -1,7 +1,7 @@
 ﻿namespace SoftCube.Asserts
 {
     /// <summary>
-    /// Single アサート例外。
+    /// <see cref="Assert.Single"/> アサート例外。
     /// </summary>
     /// <remarks>
     /// 本例外は、<see cref="Assert.Single"/> の失敗時に投げられます。

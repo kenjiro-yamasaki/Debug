@@ -3,7 +3,7 @@ using System;
 namespace SoftCube.Asserts
 {
     /// <summary>
-    /// IsNotType アサート例外。
+    /// <see cref="Assert.IsNotType"/> アサート例外。
     /// </summary>
     /// <remarks>
     /// 本例外は、<see cref="Assert.IsNotType"/> の失敗時に投げられます。

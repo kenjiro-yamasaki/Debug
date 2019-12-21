@@ -6,7 +6,7 @@ using System.Text;
 namespace SoftCube.Asserts
 {
     /// <summary>
-    /// Equal アサート例外。
+    /// <see cref="Assert.Equal"/> アサート例外。
     /// </summary>
     /// <remarks>
     /// 本例外は、<see cref="Assert.Equal"/> の失敗時に投げられます。

@@ -1,7 +1,7 @@
 namespace SoftCube.Asserts
 {
     /// <summary>
-    /// Same アサート例外。
+    /// <see cref="Assert.Same"/> アサート例外。
     /// </summary>
     /// <remarks>
     /// 本例外は、<see cref="Assert.Same"/> の失敗時に投げられます。

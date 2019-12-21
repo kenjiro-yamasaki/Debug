@@ -1,7 +1,7 @@
 namespace SoftCube.Asserts
 {
     /// <summary>
-    /// DoesNotContain アサート例外。
+    /// <see cref="Assert.DoesNotContain"/> アサート例外。
     /// </summary>
     /// <remarks>
     /// 本例外は、<see cref="Assert.DoesNotContain"/> の失敗時に投げられます。

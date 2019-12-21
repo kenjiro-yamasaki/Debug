@@ -5,7 +5,7 @@ using System.Linq;
 namespace SoftCube.Asserts
 {
     /// <summary>
-    /// Collection アサート例外。
+    /// <see cref="Assert.Collection"/> アサート例外。
     /// </summary>
     /// <remarks>
     /// 本例外は、<see cref="Assert.Collection"/> の失敗時に投げられます。

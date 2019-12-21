@@ -1,7 +1,7 @@
 namespace SoftCube.Asserts
 {
     /// <summary>
-    /// NotNull アサート例外。
+    /// <see cref="Assert.NotNull"/> アサート例外。
     /// </summary>
     /// <remarks>
     /// 本例外は、<see cref="Assert.NotNull"/> の失敗時に投げられます。

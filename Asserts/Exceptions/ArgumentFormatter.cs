@@ -70,6 +70,8 @@ namespace SoftCube.Asserts
 
         #endregion
 
+        #region 静的メソッド
+
         /// <summary>
         /// 値をフォーマットします。
         /// </summary>
@@ -396,5 +398,7 @@ namespace SoftCube.Asserts
                     return (false, null);
             }
         }
+
+        #endregion
     }
 }
