@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>SoftCube.Logger</AssemblyName>
+    <RootNamespace>SoftCube.Logger</RootNamespace>
+    <Platforms>AnyCPU;x64;x86</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Asserts\Asserts.csproj" />
+    <ProjectReference Include="..\System\System.csproj" />
+  </ItemGroup>
+
+</Project>
