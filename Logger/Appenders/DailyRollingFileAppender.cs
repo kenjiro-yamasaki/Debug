@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using System;
 
-namespace SoftCube.Logger
+namespace SoftCube.Logger.Appenders
 {
     /// <summary>
     /// 日付ローリングファイルアペンダー。
@@ -113,15 +113,16 @@ namespace SoftCube.Logger
         /// <summary>
         /// ログを出力します。
         /// </summary>
+        /// <param name="level">ログレベル。</param>
         /// <param name="log">ログ。</param>
-        public override void Log(string log)
+        public override void Log(Level level, string log)
         {
             if (CreationTime.ToString(DatePattern) != SystemClock.Now.ToString(DatePattern))
             {
                 RollLogAndBackupFiles();
             }
 
-            base.Log(log);
+            base.Log(level, log);
         }
 
         /// <summary>

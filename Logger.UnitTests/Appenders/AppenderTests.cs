@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Threading;
 using Xunit;
 
-namespace SoftCube.Logger.UnitTests
+namespace SoftCube.Logger.Appenders.UnitTests
 {
     public class AppenderTests
     {
@@ -17,19 +17,19 @@ namespace SoftCube.Logger.UnitTests
                 var appender = Substitute.For<Appender>();
                 appender.MinLevel = Level.Trace;
 
-                appender.Trace("Trace");
-                appender.Debug("Debug");
-                appender.Info("Info");
-                appender.Warning("Warning");
-                appender.Error("Error");
-                appender.Fatal("Fatal");
+                appender.Trace("");
+                appender.Debug("");
+                appender.Info("");
+                appender.Warning("");
+                appender.Error("");
+                appender.Fatal("");
 
-                appender.Received(1).Log("Trace");
-                appender.Received(1).Log("Debug");
-                appender.Received(1).Log("Info");
-                appender.Received(1).Log("Warning");
-                appender.Received(1).Log("Error");
-                appender.Received(1).Log("Fatal");
+                appender.Received(1).Log(Level.Trace, Arg.Any<string>());
+                appender.Received(1).Log(Level.Debug, Arg.Any<string>());
+                appender.Received(1).Log(Level.Info, Arg.Any<string>());
+                appender.Received(1).Log(Level.Warning, Arg.Any<string>());
+                appender.Received(1).Log(Level.Error, Arg.Any<string>());
+                appender.Received(1).Log(Level.Fatal, Arg.Any<string>());
             }
 
             [Fact]
@@ -38,19 +38,19 @@ namespace SoftCube.Logger.UnitTests
                 var appender = Substitute.For<Appender>();
                 appender.MinLevel = Level.Debug;
 
-                appender.Trace("Trace");
-                appender.Debug("Debug");
-                appender.Info("Info");
-                appender.Warning("Warning");
-                appender.Error("Error");
-                appender.Fatal("Fatal");
+                appender.Trace("");
+                appender.Debug("");
+                appender.Info("");
+                appender.Warning("");
+                appender.Error("");
+                appender.Fatal("");
 
-                appender.DidNotReceive().Log("Trace");
-                appender.Received(1).Log("Debug");
-                appender.Received(1).Log("Info");
-                appender.Received(1).Log("Warning");
-                appender.Received(1).Log("Error");
-                appender.Received(1).Log("Fatal");
+                appender.DidNotReceive().Log(Level.Trace, Arg.Any<string>());
+                appender.Received(1).Log(Level.Debug, Arg.Any<string>());
+                appender.Received(1).Log(Level.Info, Arg.Any<string>());
+                appender.Received(1).Log(Level.Warning, Arg.Any<string>());
+                appender.Received(1).Log(Level.Error, Arg.Any<string>());
+                appender.Received(1).Log(Level.Fatal, Arg.Any<string>());
             }
 
             [Fact]
@@ -59,19 +59,19 @@ namespace SoftCube.Logger.UnitTests
                 var appender = Substitute.For<Appender>();
                 appender.MinLevel = Level.Info;
 
-                appender.Trace("Trace");
-                appender.Debug("Debug");
-                appender.Info("Info");
-                appender.Warning("Warning");
-                appender.Error("Error");
-                appender.Fatal("Fatal");
+                appender.Trace("");
+                appender.Debug("");
+                appender.Info("");
+                appender.Warning("");
+                appender.Error("");
+                appender.Fatal("");
 
-                appender.DidNotReceive().Log("Trace");
-                appender.DidNotReceive().Log("Debug");
-                appender.Received(1).Log("Info");
-                appender.Received(1).Log("Warning");
-                appender.Received(1).Log("Error");
-                appender.Received(1).Log("Fatal");
+                appender.DidNotReceive().Log(Level.Trace, Arg.Any<string>());
+                appender.DidNotReceive().Log(Level.Debug, Arg.Any<string>());
+                appender.Received(1).Log(Level.Info, Arg.Any<string>());
+                appender.Received(1).Log(Level.Warning, Arg.Any<string>());
+                appender.Received(1).Log(Level.Error, Arg.Any<string>());
+                appender.Received(1).Log(Level.Fatal, Arg.Any<string>());
             }
 
             [Fact]
@@ -80,19 +80,19 @@ namespace SoftCube.Logger.UnitTests
                 var appender = Substitute.For<Appender>();
                 appender.MinLevel = Level.Warning;
 
-                appender.Trace("Trace");
-                appender.Debug("Debug");
-                appender.Info("Info");
-                appender.Warning("Warning");
-                appender.Error("Error");
-                appender.Fatal("Fatal");
+                appender.Trace("");
+                appender.Debug("");
+                appender.Info("");
+                appender.Warning("");
+                appender.Error("");
+                appender.Fatal("");
 
-                appender.DidNotReceive().Log("Trace");
-                appender.DidNotReceive().Log("Debug");
-                appender.DidNotReceive().Log("Info");
-                appender.Received(1).Log("Warning");
-                appender.Received(1).Log("Error");
-                appender.Received(1).Log("Fatal");
+                appender.DidNotReceive().Log(Level.Trace, Arg.Any<string>());
+                appender.DidNotReceive().Log(Level.Debug, Arg.Any<string>());
+                appender.DidNotReceive().Log(Level.Info, Arg.Any<string>());
+                appender.Received(1).Log(Level.Warning, Arg.Any<string>());
+                appender.Received(1).Log(Level.Error, Arg.Any<string>());
+                appender.Received(1).Log(Level.Fatal, Arg.Any<string>());
             }
 
             [Fact]
@@ -101,19 +101,19 @@ namespace SoftCube.Logger.UnitTests
                 var appender = Substitute.For<Appender>();
                 appender.MinLevel = Level.Error;
 
-                appender.Trace("Trace");
-                appender.Debug("Debug");
-                appender.Info("Info");
-                appender.Warning("Warning");
-                appender.Error("Error");
-                appender.Fatal("Fatal");
+                appender.Trace("");
+                appender.Debug("");
+                appender.Info("");
+                appender.Warning("");
+                appender.Error("");
+                appender.Fatal("");
 
-                appender.DidNotReceive().Log("Trace");
-                appender.DidNotReceive().Log("Debug");
-                appender.DidNotReceive().Log("Info");
-                appender.DidNotReceive().Log("Warning");
-                appender.Received(1).Log("Error");
-                appender.Received(1).Log("Fatal");
+                appender.DidNotReceive().Log(Level.Trace, Arg.Any<string>());
+                appender.DidNotReceive().Log(Level.Debug, Arg.Any<string>());
+                appender.DidNotReceive().Log(Level.Info, Arg.Any<string>());
+                appender.DidNotReceive().Log(Level.Warning, Arg.Any<string>());
+                appender.Received(1).Log(Level.Error, Arg.Any<string>());
+                appender.Received(1).Log(Level.Fatal, Arg.Any<string>());
             }
 
             [Fact]
@@ -122,19 +122,19 @@ namespace SoftCube.Logger.UnitTests
                 var appender = Substitute.For<Appender>();
                 appender.MinLevel = Level.Fatal;
 
-                appender.Trace("Trace");
-                appender.Debug("Debug");
-                appender.Info("Info");
-                appender.Warning("Warning");
-                appender.Error("Error");
-                appender.Fatal("Fatal");
+                appender.Trace("");
+                appender.Debug("");
+                appender.Info("");
+                appender.Warning("");
+                appender.Error("");
+                appender.Fatal("");
 
-                appender.DidNotReceive().Log("Trace");
-                appender.DidNotReceive().Log("Debug");
-                appender.DidNotReceive().Log("Info");
-                appender.DidNotReceive().Log("Warning");
-                appender.DidNotReceive().Log("Error");
-                appender.Received(1).Log("Fatal");
+                appender.DidNotReceive().Log(Level.Trace, Arg.Any<string>());
+                appender.DidNotReceive().Log(Level.Debug, Arg.Any<string>());
+                appender.DidNotReceive().Log(Level.Info, Arg.Any<string>());
+                appender.DidNotReceive().Log(Level.Warning, Arg.Any<string>());
+                appender.DidNotReceive().Log(Level.Error, Arg.Any<string>());
+                appender.Received(1).Log(Level.Fatal, Arg.Any<string>());
             }
         }
 
@@ -146,19 +146,19 @@ namespace SoftCube.Logger.UnitTests
                 var appender = Substitute.For<Appender>();
                 appender.MaxLevel = Level.Fatal;
 
-                appender.Trace("Trace");
-                appender.Debug("Debug");
-                appender.Info("Info");
-                appender.Warning("Warning");
-                appender.Error("Error");
-                appender.Fatal("Fatal");
+                appender.Trace("");
+                appender.Debug("");
+                appender.Info("");
+                appender.Warning("");
+                appender.Error("");
+                appender.Fatal("");
 
-                appender.Received(1).Log("Trace");
-                appender.Received(1).Log("Debug");
-                appender.Received(1).Log("Info");
-                appender.Received(1).Log("Warning");
-                appender.Received(1).Log("Error");
-                appender.Received(1).Log("Fatal");
+                appender.Received(1).Log(Level.Trace, Arg.Any<string>());
+                appender.Received(1).Log(Level.Debug, Arg.Any<string>());
+                appender.Received(1).Log(Level.Info, Arg.Any<string>());
+                appender.Received(1).Log(Level.Warning, Arg.Any<string>());
+                appender.Received(1).Log(Level.Error, Arg.Any<string>());
+                appender.Received(1).Log(Level.Fatal, Arg.Any<string>());
             }
 
             [Fact]
@@ -167,19 +167,19 @@ namespace SoftCube.Logger.UnitTests
                 var appender = Substitute.For<Appender>();
                 appender.MaxLevel = Level.Error;
 
-                appender.Trace("Trace");
-                appender.Debug("Debug");
-                appender.Info("Info");
-                appender.Warning("Warning");
-                appender.Error("Error");
-                appender.Fatal("Fatal");
+                appender.Trace("");
+                appender.Debug("");
+                appender.Info("");
+                appender.Warning("");
+                appender.Error("");
+                appender.Fatal("");
 
-                appender.Received(1).Log("Trace");
-                appender.Received(1).Log("Debug");
-                appender.Received(1).Log("Info");
-                appender.Received(1).Log("Warning");
-                appender.Received(1).Log("Error");
-                appender.DidNotReceive().Log("Fatal");
+                appender.Received(1).Log(Level.Trace, Arg.Any<string>());
+                appender.Received(1).Log(Level.Debug, Arg.Any<string>());
+                appender.Received(1).Log(Level.Info, Arg.Any<string>());
+                appender.Received(1).Log(Level.Warning, Arg.Any<string>());
+                appender.Received(1).Log(Level.Error, Arg.Any<string>());
+                appender.DidNotReceive().Log(Level.Fatal, Arg.Any<string>());
             }
 
             [Fact]
@@ -188,19 +188,19 @@ namespace SoftCube.Logger.UnitTests
                 var appender = Substitute.For<Appender>();
                 appender.MaxLevel = Level.Warning;
 
-                appender.Trace("Trace");
-                appender.Debug("Debug");
-                appender.Info("Info");
-                appender.Warning("Warning");
-                appender.Error("Error");
-                appender.Fatal("Fatal");
+                appender.Trace("");
+                appender.Debug("");
+                appender.Info("");
+                appender.Warning("");
+                appender.Error("");
+                appender.Fatal("");
 
-                appender.Received(1).Log("Trace");
-                appender.Received(1).Log("Debug");
-                appender.Received(1).Log("Info");
-                appender.Received(1).Log("Warning");
-                appender.DidNotReceive().Log("Error");
-                appender.DidNotReceive().Log("Fatal");
+                appender.Received(1).Log(Level.Trace, Arg.Any<string>());
+                appender.Received(1).Log(Level.Debug, Arg.Any<string>());
+                appender.Received(1).Log(Level.Info, Arg.Any<string>());
+                appender.Received(1).Log(Level.Warning, Arg.Any<string>());
+                appender.DidNotReceive().Log(Level.Error, Arg.Any<string>());
+                appender.DidNotReceive().Log(Level.Fatal, Arg.Any<string>());
             }
 
             [Fact]
@@ -209,19 +209,19 @@ namespace SoftCube.Logger.UnitTests
                 var appender = Substitute.For<Appender>();
                 appender.MaxLevel = Level.Info;
 
-                appender.Trace("Trace");
-                appender.Debug("Debug");
-                appender.Info("Info");
-                appender.Warning("Warning");
-                appender.Error("Error");
-                appender.Fatal("Fatal");
+                appender.Trace("");
+                appender.Debug("");
+                appender.Info("");
+                appender.Warning("");
+                appender.Error("");
+                appender.Fatal("");
 
-                appender.Received(1).Log("Trace");
-                appender.Received(1).Log("Debug");
-                appender.Received(1).Log("Info");
-                appender.DidNotReceive().Log("Warning");
-                appender.DidNotReceive().Log("Error");
-                appender.DidNotReceive().Log("Fatal");
+                appender.Received(1).Log(Level.Trace, Arg.Any<string>());
+                appender.Received(1).Log(Level.Debug, Arg.Any<string>());
+                appender.Received(1).Log(Level.Info, Arg.Any<string>());
+                appender.DidNotReceive().Log(Level.Warning, Arg.Any<string>());
+                appender.DidNotReceive().Log(Level.Error, Arg.Any<string>());
+                appender.DidNotReceive().Log(Level.Fatal, Arg.Any<string>());
             }
 
             [Fact]
@@ -230,19 +230,19 @@ namespace SoftCube.Logger.UnitTests
                 var appender = Substitute.For<Appender>();
                 appender.MaxLevel = Level.Debug;
 
-                appender.Trace("Trace");
-                appender.Debug("Debug");
-                appender.Info("Info");
-                appender.Warning("Warning");
-                appender.Error("Error");
-                appender.Fatal("Fatal");
+                appender.Trace("");
+                appender.Debug("");
+                appender.Info("");
+                appender.Warning("");
+                appender.Error("");
+                appender.Fatal("");
 
-                appender.Received(1).Log("Trace");
-                appender.Received(1).Log("Debug");
-                appender.DidNotReceive().Log("Info");
-                appender.DidNotReceive().Log("Warning");
-                appender.DidNotReceive().Log("Error");
-                appender.DidNotReceive().Log("Fatal");
+                appender.Received(1).Log(Level.Trace, Arg.Any<string>());
+                appender.Received(1).Log(Level.Debug, Arg.Any<string>());
+                appender.DidNotReceive().Log(Level.Info, Arg.Any<string>());
+                appender.DidNotReceive().Log(Level.Warning, Arg.Any<string>());
+                appender.DidNotReceive().Log(Level.Error, Arg.Any<string>());
+                appender.DidNotReceive().Log(Level.Fatal, Arg.Any<string>());
             }
 
             [Fact]
@@ -251,19 +251,19 @@ namespace SoftCube.Logger.UnitTests
                 var appender = Substitute.For<Appender>();
                 appender.MaxLevel = Level.Trace;
 
-                appender.Trace("Trace");
-                appender.Debug("Debug");
-                appender.Info("Info");
-                appender.Warning("Warning");
-                appender.Error("Error");
-                appender.Fatal("Fatal");
+                appender.Trace("");
+                appender.Debug("");
+                appender.Info("");
+                appender.Warning("");
+                appender.Error("");
+                appender.Fatal("");
 
-                appender.Received(1).Log("Trace");
-                appender.DidNotReceive().Log("Debug");
-                appender.DidNotReceive().Log("Info");
-                appender.DidNotReceive().Log("Warning");
-                appender.DidNotReceive().Log("Error");
-                appender.DidNotReceive().Log("Fatal");
+                appender.Received(1).Log(Level.Trace, Arg.Any<string>());
+                appender.DidNotReceive().Log(Level.Debug, Arg.Any<string>());
+                appender.DidNotReceive().Log(Level.Info, Arg.Any<string>());
+                appender.DidNotReceive().Log(Level.Warning, Arg.Any<string>());
+                appender.DidNotReceive().Log(Level.Error, Arg.Any<string>());
+                appender.DidNotReceive().Log(Level.Fatal, Arg.Any<string>());
             }
         }
 
@@ -472,7 +472,7 @@ namespace SoftCube.Logger.UnitTests
 
                 appender.Trace("");
 
-                appender.Received().Log("");
+                appender.Received().Log(Level.Trace, "");
             }
 
             [Fact]
@@ -482,7 +482,7 @@ namespace SoftCube.Logger.UnitTests
 
                 appender.Trace("A");
 
-                appender.Received().Log("A");
+                appender.Received().Log(Level.Trace, "A");
             }
         }
 
@@ -505,7 +505,7 @@ namespace SoftCube.Logger.UnitTests
 
                 appender.Debug("");
 
-                appender.Received().Log("");
+                appender.Received().Log(Level.Debug, "");
             }
 
             [Fact]
@@ -515,7 +515,7 @@ namespace SoftCube.Logger.UnitTests
 
                 appender.Debug("A");
 
-                appender.Received().Log("A");
+                appender.Received().Log(Level.Debug, "A");
             }
         }
 
@@ -538,7 +538,7 @@ namespace SoftCube.Logger.UnitTests
 
                 appender.Info("");
 
-                appender.Received().Log("");
+                appender.Received().Log(Level.Info, "");
             }
 
             [Fact]
@@ -548,7 +548,7 @@ namespace SoftCube.Logger.UnitTests
 
                 appender.Info("A");
 
-                appender.Received().Log("A");
+                appender.Received().Log(Level.Info, "A");
             }
         }
 
@@ -571,7 +571,7 @@ namespace SoftCube.Logger.UnitTests
 
                 appender.Warning("");
 
-                appender.Received().Log("");
+                appender.Received().Log(Level.Warning, "");
             }
 
             [Fact]
@@ -581,7 +581,7 @@ namespace SoftCube.Logger.UnitTests
 
                 appender.Warning("A");
 
-                appender.Received().Log("A");
+                appender.Received().Log(Level.Warning, "A");
             }
         }
 
@@ -604,7 +604,7 @@ namespace SoftCube.Logger.UnitTests
 
                 appender.Error("");
 
-                appender.Received().Log("");
+                appender.Received().Log(Level.Error, "");
             }
 
             [Fact]
@@ -614,7 +614,7 @@ namespace SoftCube.Logger.UnitTests
 
                 appender.Error("A");
 
-                appender.Received().Log("A");
+                appender.Received().Log(Level.Error, "A");
             }
         }
 
@@ -637,7 +637,7 @@ namespace SoftCube.Logger.UnitTests
 
                 appender.Fatal("");
 
-                appender.Received().Log("");
+                appender.Received().Log(Level.Fatal, "");
             }
 
             [Fact]
@@ -647,7 +647,7 @@ namespace SoftCube.Logger.UnitTests
 
                 appender.Fatal("A");
 
-                appender.Received().Log("A");
+                appender.Received().Log(Level.Fatal, "A");
             }
         }
     }

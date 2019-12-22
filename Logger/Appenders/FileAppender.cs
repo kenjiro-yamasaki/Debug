@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace SoftCube.Logger
+namespace SoftCube.Logger.Appenders
 {
     /// <summary>
     /// ファイルアペンダー。
@@ -118,8 +118,9 @@ namespace SoftCube.Logger
         /// <summary>
         /// ログを出力します。
         /// </summary>
+        /// <param name="level">ログレベル。</param>
         /// <param name="log">ログ。</param>
-        public override void Log(string log)
+        public override void Log(Level level, string log)
         {
             if (Writer == null)
             {

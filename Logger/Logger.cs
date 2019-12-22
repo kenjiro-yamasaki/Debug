@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SoftCube.Logger.Appenders;
+using System.Collections.Generic;
 
 namespace SoftCube.Logger
 {
