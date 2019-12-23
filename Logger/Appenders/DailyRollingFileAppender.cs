@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using System;
+using System.Collections.Generic;
 
 namespace SoftCube.Logger.Appenders
 {
@@ -84,31 +85,23 @@ namespace SoftCube.Logger.Appenders
         /// <summary>
         /// コンストラクター。
         /// </summary>
-        /// <param name="filePath">ファイルパス。</param>
-        /// <param name="append">ファイルにログを追加するか。</param>
-        /// <param name="encoding">エンコーディング。</param>
-        /// <seealso cref="Open(string, bool, Encoding)"/>
-        public DailyRollingFileAppender(string filePath, bool append, Encoding encoding)
-            : base(filePath, append, encoding)
+        /// <param name="params">パラメーター名→値変換。</param>
+        public DailyRollingFileAppender(IReadOnlyDictionary<string, string> @params)
+            : base(@params)
         {
-        }
+            if (@params == null)
+            {
+                throw new ArgumentNullException(nameof(@params));
+            }
 
-        /// <summary>
-        /// コンストラクター。
-        /// </summary>
-        /// <param name="systemClock">システムクロック。</param>
-        /// <param name="filePath">ファイルパス。</param>
-        /// <param name="append">ファイルにログを追加するか。</param>
-        /// <param name="encoding">エンコーディング。</param>
-        /// <seealso cref="Open(string, bool, Encoding)"/>
-        public DailyRollingFileAppender(ISystemClock systemClock, string filePath, bool append, Encoding encoding)
-            : base(systemClock, filePath, append, encoding)
-        {
+            DatePattern = @params[nameof(DatePattern)];
         }
 
         #endregion
 
         #region メソッド
+
+        #region ログ出力
 
         /// <summary>
         /// ログを出力します。
@@ -159,6 +152,8 @@ namespace SoftCube.Logger.Appenders
             // ログファイルを新規作成します。
             Open(filePath, append: false, encoding);
         }
+
+        #endregion
 
         #endregion
     }

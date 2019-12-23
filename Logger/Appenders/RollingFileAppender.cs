@@ -1,6 +1,7 @@
 ﻿using SoftCube.Runtime;
+using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace SoftCube.Logger.Appenders
 {
@@ -13,25 +14,6 @@ namespace SoftCube.Logger.Appenders
     /// </remarks>
     public class RollingFileAppender : FileAppender
     {
-        #region 定数
-
-        /// <summary>
-        /// B (バイト)。
-        /// </summary>
-        public const long B = 1;
-
-        /// <summary>
-        /// KB (キロバイト)。
-        /// </summary>
-        public const long KB = B * 1024;
-
-        /// <summary>
-        /// MB (メガバイト)。
-        /// </summary>
-        public const long MB = KB * 1024;
-
-        #endregion
-
         #region プロパティ
 
         /// <summary>
@@ -40,7 +22,7 @@ namespace SoftCube.Logger.Appenders
         /// <remarks>
         /// ローテンションするログファイルサイズを指定します。
         /// </remarks>
-        public long MaxFileSize { get; set; } = 10 * MB;
+        public long MaxFileSize { get; set; } = 10 * 1024 * 1024;
 
         /// <summary>
         /// 最大バックアップ数。
@@ -76,31 +58,24 @@ namespace SoftCube.Logger.Appenders
         /// <summary>
         /// コンストラクター。
         /// </summary>
-        /// <param name="filePath">ファイルパス。</param>
-        /// <param name="append">ファイルにログを追加するか。</param>
-        /// <param name="encoding">エンコーディング。</param>
-        /// <seealso cref="Open(string, bool, Encoding)"/>
-        public RollingFileAppender(string filePath, bool append, Encoding encoding)
-            : base(filePath, append, encoding)
+        /// <param name="params">パラメーター名→値変換。</param>
+        public RollingFileAppender(IReadOnlyDictionary<string, string> @params)
+            : base(@params)
         {
-        }
+            if (@params == null)
+            {
+                throw new ArgumentNullException(nameof(@params));
+            }
 
-        /// <summary>
-        /// コンストラクター。
-        /// </summary>
-        /// <param name="systemClock">システムクロック。</param>
-        /// <param name="filePath">ファイルパス。</param>
-        /// <param name="append">ファイルにログを追加するか。</param>
-        /// <param name="encoding">エンコーディング。</param>
-        /// <seealso cref="Open(string, bool, Encoding)"/>
-        public RollingFileAppender(ISystemClock systemClock, string filePath, bool append, Encoding encoding)
-            : base(systemClock, filePath, append, encoding)
-        {
+            MaxFileSize    = StringParser.ParseMaxFileSize(@params["MaxFileSize"]);
+            MaxBackupCount = int.Parse(@params[nameof(MaxBackupCount)]);
         }
 
         #endregion
 
         #region メソッド
+
+        #region ログ出力
 
         /// <summary>
         /// ログを出力します。
@@ -169,6 +144,8 @@ namespace SoftCube.Logger.Appenders
             // ログファイルを新規作成します。
             Open(filePath, append: false, encoding);
         }
+
+        #endregion
 
         #endregion
     }

@@ -97,6 +97,38 @@ namespace SoftCube.Logger
             }
         }
 
+        /// <summary>
+        /// ログレベルの表示名をログレベルに変換します。
+        /// </summary>
+        /// <param name="displayName">ログレベルの表示名。</param>
+        /// <returns>ログレベル。</returns>
+        public static Level ToLevel(this string displayName)
+        {
+            switch (displayName)
+            {
+                case nameof(Level.Trace):
+                    return Level.Trace;
+
+                case nameof(Level.Debug):
+                    return Level.Debug;
+
+                case nameof(Level.Info):
+                    return Level.Info;
+
+                case nameof(Level.Warning):
+                    return Level.Warning;
+
+                case nameof(Level.Error):
+                    return Level.Error;
+
+                case nameof(Level.Fatal):
+                    return Level.Fatal;
+
+                default:
+                    throw new NotSupportedException();
+            }
+        }
+
         #endregion
     }
 }

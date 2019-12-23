@@ -74,9 +74,9 @@ namespace SoftCube.Logger.Appenders.UnitTests
                 var logFilePath = TestFile.GetFilePath(".log");
                 ClearLogAndBackupFiles(logFilePath);
 
-                using (var appender = new RollingFileAppender(logFilePath, append: false, Encoding.ASCII))
+                using (var appender = new RollingFileAppender())
                 {
-                    appender.ConversionPattern = "{message}";
+                    appender.Open(logFilePath, append: false, Encoding.ASCII);
                     appender.MaxFileSize = 1;
 
                     appender.Trace("A");
@@ -93,9 +93,9 @@ namespace SoftCube.Logger.Appenders.UnitTests
                 var logFilePath = TestFile.GetFilePath(".log");
                 ClearLogAndBackupFiles(logFilePath);
 
-                using (var appender = new RollingFileAppender(logFilePath, append: false, Encoding.ASCII))
+                using (var appender = new RollingFileAppender())
                 {
-                    appender.ConversionPattern = "{message}";
+                    appender.Open(logFilePath, append: false, Encoding.ASCII);
                     appender.MaxFileSize = 2;
 
                     appender.Trace("A");
@@ -114,11 +114,11 @@ namespace SoftCube.Logger.Appenders.UnitTests
                 var logFilePath = TestFile.GetFilePath(".log");
                 ClearLogAndBackupFiles(logFilePath);
 
-                using (var appender = new RollingFileAppender(logFilePath, append: false, Encoding.ASCII))
+                using (var appender = new RollingFileAppender())
                 {
-                    appender.ConversionPattern = "{message}";
-                    appender.MaxFileSize       = 1;
-                    appender.MaxBackupCount    = 0;
+                    appender.Open(logFilePath, append: false, Encoding.ASCII);
+                    appender.MaxFileSize    = 1;
+                    appender.MaxBackupCount = 0;
 
                     appender.Trace("A");
                     appender.Trace("B");
@@ -134,11 +134,11 @@ namespace SoftCube.Logger.Appenders.UnitTests
                 var logFilePath = TestFile.GetFilePath(".log");
                 ClearLogAndBackupFiles(logFilePath);
 
-                using (var appender = new RollingFileAppender(logFilePath, append: false, Encoding.ASCII))
+                using (var appender = new RollingFileAppender())
                 {
-                    appender.ConversionPattern = "{message}";
-                    appender.MaxFileSize       = 1;
-                    appender.MaxBackupCount    = 1;
+                    appender.Open(logFilePath, append: false, Encoding.ASCII);
+                    appender.MaxFileSize    = 1;
+                    appender.MaxBackupCount = 1;
 
                     appender.Trace("A");
                     appender.Trace("B");
@@ -154,11 +154,11 @@ namespace SoftCube.Logger.Appenders.UnitTests
                 var logFilePath = TestFile.GetFilePath(".log");
                 ClearLogAndBackupFiles(logFilePath);
 
-                using (var appender = new RollingFileAppender(logFilePath, append: false, Encoding.ASCII))
+                using (var appender = new RollingFileAppender())
                 {
-                    appender.ConversionPattern = "{message}";
-                    appender.MaxFileSize       = 1;
-                    appender.MaxBackupCount    = 2;
+                    appender.Open(logFilePath, append: false, Encoding.ASCII);
+                    appender.MaxFileSize    = 1;
+                    appender.MaxBackupCount = 2;
 
                     appender.Trace("A");
                     appender.Trace("B");
@@ -176,11 +176,11 @@ namespace SoftCube.Logger.Appenders.UnitTests
                 var logFilePath = TestFile.GetFilePath(".log");
                 ClearLogAndBackupFiles(logFilePath);
 
-                using (var appender = new RollingFileAppender(logFilePath, append: false, Encoding.ASCII))
+                using (var appender = new RollingFileAppender())
                 {
-                    appender.ConversionPattern = "{message}";
-                    appender.MaxFileSize       = 1;
-                    appender.MaxBackupCount    = 2;
+                    appender.Open(logFilePath, append: false, Encoding.ASCII);
+                    appender.MaxFileSize    = 1;
+                    appender.MaxBackupCount = 2;
 
                     appender.Trace("A");
                     appender.Trace("B");

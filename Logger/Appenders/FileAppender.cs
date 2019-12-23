@@ -1,6 +1,7 @@
 ﻿using SoftCube.Asserts;
 using SoftCube.Runtime;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -66,26 +67,19 @@ namespace SoftCube.Logger.Appenders
         /// <summary>
         /// コンストラクター。
         /// </summary>
-        /// <param name="filePath">ファイルパス。</param>
-        /// <param name="append">ファイルにログを追加するか。</param>
-        /// <param name="encoding">エンコーディング。</param>
-        /// <seealso cref="Open(string, bool, Encoding)"/>
-        public FileAppender(string filePath, bool append, Encoding encoding)
-            : this(new SystemClock(), filePath, append, encoding)
+        /// <param name="params">パラメーター名→値変換。</param>
+        public FileAppender(IReadOnlyDictionary<string, string> @params)
+            : base(@params)
         {
-        }
+            if (@params == null)
+            {
+                throw new ArgumentNullException(nameof(@params));
+            }
 
-        /// <summary>
-        /// コンストラクター。
-        /// </summary>
-        /// <param name="systemClock">システムクロック。</param>
-        /// <param name="filePath">ファイルパス。</param>
-        /// <param name="append">ファイルにログを追加するか。</param>
-        /// <param name="encoding">エンコーディング。</param>
-        /// <seealso cref="Open(string, bool, Encoding)"/>
-        public FileAppender(ISystemClock systemClock, string filePath, bool append, Encoding encoding)
-            : base(systemClock)
-        {
+            var filePath = StringParser.ParseFilePath(@params["FilePath"]);
+            var append   = bool.Parse(@params["Append"]);
+            var encoding = Encoding.GetEncoding(@params["Encoding"]);
+
             Open(filePath, append, encoding);
         }
 
@@ -113,7 +107,7 @@ namespace SoftCube.Logger.Appenders
 
         #endregion
 
-        #region ログ
+        #region ログ出力
 
         /// <summary>
         /// ログを出力します。
@@ -136,6 +130,8 @@ namespace SoftCube.Logger.Appenders
 
         #endregion
 
+        #region ログファイルを開く
+
         /// <summary>
         /// ログファイルを開きます。
         /// </summary>
@@ -157,6 +153,12 @@ namespace SoftCube.Logger.Appenders
                 throw new ArgumentNullException(nameof(encoding));
             }
 
+            var directory = Path.GetDirectoryName(filePath);
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
             Close();
 
             if (!File.Exists(filePath) || !append)
@@ -169,6 +171,10 @@ namespace SoftCube.Logger.Appenders
 
             Writer = new StreamWriter(FileStream, encoding);
         }
+
+        #endregion
+
+        #region ログファイルを閉じる
 
         /// <summary>
         /// ログファイルを閉じます。
@@ -192,6 +198,8 @@ namespace SoftCube.Logger.Appenders
                 Assert.Null(Writer);
             }
         }
+
+        #endregion
 
         #endregion
     }

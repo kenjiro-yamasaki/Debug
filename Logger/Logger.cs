@@ -1,5 +1,11 @@
-﻿using SoftCube.Logger.Appenders;
+﻿using SoftCube.Asserts;
+using SoftCube.Logger.Appenders;
+using SoftCube.Runtime;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace SoftCube.Logger
 {
@@ -8,7 +14,7 @@ namespace SoftCube.Logger
     /// </summary>
     public static class Logger
     {
-        #region プロパティ
+        #region 静的プロパティ
 
         /// <summary>
         /// アペンダーコレクション。
@@ -18,7 +24,45 @@ namespace SoftCube.Logger
 
         #endregion
 
-        #region メソッド
+        #region 静的コンストラクター
+
+        /// <summary>
+        /// 静的コンストラクター。
+        /// </summary>
+        static Logger()
+        {
+            ReadConfigulation();
+        }
+
+        #endregion
+
+        #region 静的メソッド
+
+        #region 構成
+
+        /// <summary>
+        /// 構成する。
+        /// </summary>
+        private static void ReadConfigulation()
+        {
+            var configFilePath = Path.Combine(SystemConstants.ExecutableDirectoryPath, "Logger.config");
+
+            var logger = XElement.Load(configFilePath).Element("logger");
+
+            foreach (var xappender in logger.Elements("appender"))
+            {
+                var name = (string)xappender.Attribute("name");
+                var type = (string)xappender.Attribute("type");
+
+                var @params  = xappender.Elements("param").ToDictionary(e => (string)e.Attribute("name"), e => (string)e.Attribute("value"));
+                var appender = Activator.CreateInstance(Type.GetType(type), @params) as Appender;
+                Assert.NotNull(appender);
+
+                Add(appender);
+            }
+        }
+
+        #endregion
 
         #region アペンダーコレクション
 
@@ -51,6 +95,8 @@ namespace SoftCube.Logger
         }
 
         #endregion
+
+        #region ログ出力
 
         /// <summary>
         /// トレースログを出力します。
@@ -141,6 +187,8 @@ namespace SoftCube.Logger
                 }
             }
         }
+
+        #endregion
 
         #endregion
     }

@@ -1,5 +1,6 @@
 ﻿using SoftCube.Runtime;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 
@@ -39,27 +40,24 @@ namespace SoftCube.Logger.Appenders
                 if (conversionPattern != value)
                 {
                     conversionPattern = value;
-                    replacedConversionPattern = new Lazy<string>(() => {
 
-                        // 置換が成功するように、長い文字列から置換します。
-                        // たとえば、newlineより先にlineを置換すると正しく置換されません。
-                        value = value.Replace("message", "0");
-                        value = value.Replace("newline", "1");
-                        value = value.Replace("method",  "2");
-                        value = value.Replace("thread",  "3");
-                        value = value.Replace("level",   "4");
-                        value = value.Replace("date",    "5");
-                        value = value.Replace("file",    "6");
-                        value = value.Replace("line",    "7");
-                        value = value.Replace("type",    "8");
-
-                        return value;
-                    });
+                    // 置換が成功するように、長い文字列から置換します。
+                    // たとえば、newlineより先にlineを置換すると正しく置換されません。
+                    replacedConversionPattern = value;
+                    replacedConversionPattern = replacedConversionPattern.Replace("message", "0");
+                    replacedConversionPattern = replacedConversionPattern.Replace("newline", "1");
+                    replacedConversionPattern = replacedConversionPattern.Replace("method", "2");
+                    replacedConversionPattern = replacedConversionPattern.Replace("thread", "3");
+                    replacedConversionPattern = replacedConversionPattern.Replace("level", "4");
+                    replacedConversionPattern = replacedConversionPattern.Replace("date", "5");
+                    replacedConversionPattern = replacedConversionPattern.Replace("file", "6");
+                    replacedConversionPattern = replacedConversionPattern.Replace("line", "7");
+                    replacedConversionPattern = replacedConversionPattern.Replace("type", "8");
                 }
             }
         }
         private string conversionPattern;
-        private Lazy<string> replacedConversionPattern = null;
+        private string replacedConversionPattern;
 
         /// <summary>
         /// 最小レベル。
@@ -104,6 +102,23 @@ namespace SoftCube.Logger.Appenders
             SystemClock       = systemClock ?? throw new ArgumentNullException(nameof(systemClock));
         }
 
+        /// <summary>
+        /// コンストラクター。
+        /// </summary>
+        /// <param name="params">パラメーター名→値変換。</param>
+        public Appender(IReadOnlyDictionary<string, string> @params)
+            : this(new SystemClock())
+        {
+            if (@params == null)
+            {
+                throw new ArgumentNullException(nameof(@params));
+            }
+
+            ConversionPattern = @params[nameof(ConversionPattern)];
+            MinLevel          = @params[nameof(MinLevel)].ToLevel();
+            MaxLevel          = @params[nameof(MaxLevel)].ToLevel();
+        }
+
         #endregion
 
         #region メソッド
@@ -137,7 +152,7 @@ namespace SoftCube.Logger.Appenders
 
         #endregion
 
-        #region ログ
+        #region ログ出力
 
         /// <summary>
         /// トレースログを出力します。
@@ -274,7 +289,7 @@ namespace SoftCube.Logger.Appenders
                 var thread     = Thread.CurrentThread.ManagedThreadId;
 
                 return string.Format(
-                    replacedConversionPattern?.Value,
+                    replacedConversionPattern,
                     message,
                     newline,
                     method,

@@ -1,4 +1,5 @@
 ﻿using SoftCube.Runtime;
+using System.Collections.Generic;
 using System.Text;
 
 namespace SoftCube.Logger.Appenders
@@ -36,11 +37,20 @@ namespace SoftCube.Logger.Appenders
         {
         }
 
+        /// <summary>
+        /// コンストラクター。
+        /// </summary>
+        /// <param name="params">パラメーター名→値変換。</param>
+        public StringAppender(IReadOnlyDictionary<string, string> @params)
+            : base(@params)
+        {
+        }
+
         #endregion
 
         #region メソッド
 
-        #region ログ
+        #region ログ出力
 
         /// <summary>
         /// ログを出力します。
