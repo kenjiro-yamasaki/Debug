@@ -7,7 +7,7 @@ using System.IO;
 using System.Text;
 using Xunit;
 
-namespace SoftCube.Logger.Appenders.UnitTests
+namespace SoftCube.Log.Appenders.UnitTests
 {
     public class DailyRollingFileAppenderTests
     {

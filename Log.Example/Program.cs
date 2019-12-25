@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SoftCube.Logger.Example
+namespace SoftCube.Log.Example
 {
     class Program
     {

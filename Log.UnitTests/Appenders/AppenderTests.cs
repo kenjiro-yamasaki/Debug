@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Threading;
 using Xunit;
 
-namespace SoftCube.Logger.Appenders.UnitTests
+namespace SoftCube.Log.Appenders.UnitTests
 {
     public class AppenderTests
     {
@@ -24,12 +24,12 @@ namespace SoftCube.Logger.Appenders.UnitTests
                 appender.Error("");
                 appender.Fatal("");
 
-                appender.Received(1).Log(Level.Trace, Arg.Any<string>());
-                appender.Received(1).Log(Level.Debug, Arg.Any<string>());
-                appender.Received(1).Log(Level.Info, Arg.Any<string>());
-                appender.Received(1).Log(Level.Warning, Arg.Any<string>());
-                appender.Received(1).Log(Level.Error, Arg.Any<string>());
-                appender.Received(1).Log(Level.Fatal, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Trace, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Debug, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Info, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Warning, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Error, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Fatal, Arg.Any<string>());
             }
 
             [Fact]
@@ -45,12 +45,12 @@ namespace SoftCube.Logger.Appenders.UnitTests
                 appender.Error("");
                 appender.Fatal("");
 
-                appender.DidNotReceive().Log(Level.Trace, Arg.Any<string>());
-                appender.Received(1).Log(Level.Debug, Arg.Any<string>());
-                appender.Received(1).Log(Level.Info, Arg.Any<string>());
-                appender.Received(1).Log(Level.Warning, Arg.Any<string>());
-                appender.Received(1).Log(Level.Error, Arg.Any<string>());
-                appender.Received(1).Log(Level.Fatal, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Trace, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Debug, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Info, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Warning, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Error, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Fatal, Arg.Any<string>());
             }
 
             [Fact]
@@ -66,12 +66,12 @@ namespace SoftCube.Logger.Appenders.UnitTests
                 appender.Error("");
                 appender.Fatal("");
 
-                appender.DidNotReceive().Log(Level.Trace, Arg.Any<string>());
-                appender.DidNotReceive().Log(Level.Debug, Arg.Any<string>());
-                appender.Received(1).Log(Level.Info, Arg.Any<string>());
-                appender.Received(1).Log(Level.Warning, Arg.Any<string>());
-                appender.Received(1).Log(Level.Error, Arg.Any<string>());
-                appender.Received(1).Log(Level.Fatal, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Trace, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Debug, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Info, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Warning, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Error, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Fatal, Arg.Any<string>());
             }
 
             [Fact]
@@ -87,12 +87,12 @@ namespace SoftCube.Logger.Appenders.UnitTests
                 appender.Error("");
                 appender.Fatal("");
 
-                appender.DidNotReceive().Log(Level.Trace, Arg.Any<string>());
-                appender.DidNotReceive().Log(Level.Debug, Arg.Any<string>());
-                appender.DidNotReceive().Log(Level.Info, Arg.Any<string>());
-                appender.Received(1).Log(Level.Warning, Arg.Any<string>());
-                appender.Received(1).Log(Level.Error, Arg.Any<string>());
-                appender.Received(1).Log(Level.Fatal, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Trace, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Debug, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Info, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Warning, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Error, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Fatal, Arg.Any<string>());
             }
 
             [Fact]
@@ -108,12 +108,12 @@ namespace SoftCube.Logger.Appenders.UnitTests
                 appender.Error("");
                 appender.Fatal("");
 
-                appender.DidNotReceive().Log(Level.Trace, Arg.Any<string>());
-                appender.DidNotReceive().Log(Level.Debug, Arg.Any<string>());
-                appender.DidNotReceive().Log(Level.Info, Arg.Any<string>());
-                appender.DidNotReceive().Log(Level.Warning, Arg.Any<string>());
-                appender.Received(1).Log(Level.Error, Arg.Any<string>());
-                appender.Received(1).Log(Level.Fatal, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Trace, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Debug, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Info, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Warning, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Error, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Fatal, Arg.Any<string>());
             }
 
             [Fact]
@@ -129,12 +129,12 @@ namespace SoftCube.Logger.Appenders.UnitTests
                 appender.Error("");
                 appender.Fatal("");
 
-                appender.DidNotReceive().Log(Level.Trace, Arg.Any<string>());
-                appender.DidNotReceive().Log(Level.Debug, Arg.Any<string>());
-                appender.DidNotReceive().Log(Level.Info, Arg.Any<string>());
-                appender.DidNotReceive().Log(Level.Warning, Arg.Any<string>());
-                appender.DidNotReceive().Log(Level.Error, Arg.Any<string>());
-                appender.Received(1).Log(Level.Fatal, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Trace, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Debug, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Info, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Warning, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Error, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Fatal, Arg.Any<string>());
             }
         }
 
@@ -153,12 +153,12 @@ namespace SoftCube.Logger.Appenders.UnitTests
                 appender.Error("");
                 appender.Fatal("");
 
-                appender.Received(1).Log(Level.Trace, Arg.Any<string>());
-                appender.Received(1).Log(Level.Debug, Arg.Any<string>());
-                appender.Received(1).Log(Level.Info, Arg.Any<string>());
-                appender.Received(1).Log(Level.Warning, Arg.Any<string>());
-                appender.Received(1).Log(Level.Error, Arg.Any<string>());
-                appender.Received(1).Log(Level.Fatal, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Trace, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Debug, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Info, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Warning, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Error, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Fatal, Arg.Any<string>());
             }
 
             [Fact]
@@ -174,12 +174,12 @@ namespace SoftCube.Logger.Appenders.UnitTests
                 appender.Error("");
                 appender.Fatal("");
 
-                appender.Received(1).Log(Level.Trace, Arg.Any<string>());
-                appender.Received(1).Log(Level.Debug, Arg.Any<string>());
-                appender.Received(1).Log(Level.Info, Arg.Any<string>());
-                appender.Received(1).Log(Level.Warning, Arg.Any<string>());
-                appender.Received(1).Log(Level.Error, Arg.Any<string>());
-                appender.DidNotReceive().Log(Level.Fatal, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Trace, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Debug, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Info, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Warning, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Error, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Fatal, Arg.Any<string>());
             }
 
             [Fact]
@@ -195,12 +195,12 @@ namespace SoftCube.Logger.Appenders.UnitTests
                 appender.Error("");
                 appender.Fatal("");
 
-                appender.Received(1).Log(Level.Trace, Arg.Any<string>());
-                appender.Received(1).Log(Level.Debug, Arg.Any<string>());
-                appender.Received(1).Log(Level.Info, Arg.Any<string>());
-                appender.Received(1).Log(Level.Warning, Arg.Any<string>());
-                appender.DidNotReceive().Log(Level.Error, Arg.Any<string>());
-                appender.DidNotReceive().Log(Level.Fatal, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Trace, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Debug, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Info, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Warning, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Error, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Fatal, Arg.Any<string>());
             }
 
             [Fact]
@@ -216,12 +216,12 @@ namespace SoftCube.Logger.Appenders.UnitTests
                 appender.Error("");
                 appender.Fatal("");
 
-                appender.Received(1).Log(Level.Trace, Arg.Any<string>());
-                appender.Received(1).Log(Level.Debug, Arg.Any<string>());
-                appender.Received(1).Log(Level.Info, Arg.Any<string>());
-                appender.DidNotReceive().Log(Level.Warning, Arg.Any<string>());
-                appender.DidNotReceive().Log(Level.Error, Arg.Any<string>());
-                appender.DidNotReceive().Log(Level.Fatal, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Trace, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Debug, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Info, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Warning, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Error, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Fatal, Arg.Any<string>());
             }
 
             [Fact]
@@ -237,12 +237,12 @@ namespace SoftCube.Logger.Appenders.UnitTests
                 appender.Error("");
                 appender.Fatal("");
 
-                appender.Received(1).Log(Level.Trace, Arg.Any<string>());
-                appender.Received(1).Log(Level.Debug, Arg.Any<string>());
-                appender.DidNotReceive().Log(Level.Info, Arg.Any<string>());
-                appender.DidNotReceive().Log(Level.Warning, Arg.Any<string>());
-                appender.DidNotReceive().Log(Level.Error, Arg.Any<string>());
-                appender.DidNotReceive().Log(Level.Fatal, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Trace, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Debug, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Info, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Warning, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Error, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Fatal, Arg.Any<string>());
             }
 
             [Fact]
@@ -258,12 +258,12 @@ namespace SoftCube.Logger.Appenders.UnitTests
                 appender.Error("");
                 appender.Fatal("");
 
-                appender.Received(1).Log(Level.Trace, Arg.Any<string>());
-                appender.DidNotReceive().Log(Level.Debug, Arg.Any<string>());
-                appender.DidNotReceive().Log(Level.Info, Arg.Any<string>());
-                appender.DidNotReceive().Log(Level.Warning, Arg.Any<string>());
-                appender.DidNotReceive().Log(Level.Error, Arg.Any<string>());
-                appender.DidNotReceive().Log(Level.Fatal, Arg.Any<string>());
+                SubstituteExtensions.Received<Appender>(appender, (int)1).Log(Level.Trace, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Debug, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Info, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Warning, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Error, Arg.Any<string>());
+                SubstituteExtensions.DidNotReceive<Appender>(appender).Log(Level.Fatal, Arg.Any<string>());
             }
         }
 
@@ -472,7 +472,7 @@ namespace SoftCube.Logger.Appenders.UnitTests
 
                 appender.Trace("");
 
-                appender.Received().Log(Level.Trace, "");
+                SubstituteExtensions.Received<Appender>(appender).Log(Level.Trace, "");
             }
 
             [Fact]
@@ -482,7 +482,7 @@ namespace SoftCube.Logger.Appenders.UnitTests
 
                 appender.Trace("A");
 
-                appender.Received().Log(Level.Trace, "A");
+                SubstituteExtensions.Received<Appender>(appender).Log(Level.Trace, "A");
             }
         }
 
@@ -505,7 +505,7 @@ namespace SoftCube.Logger.Appenders.UnitTests
 
                 appender.Debug("");
 
-                appender.Received().Log(Level.Debug, "");
+                SubstituteExtensions.Received<Appender>(appender).Log(Level.Debug, "");
             }
 
             [Fact]
@@ -515,7 +515,7 @@ namespace SoftCube.Logger.Appenders.UnitTests
 
                 appender.Debug("A");
 
-                appender.Received().Log(Level.Debug, "A");
+                SubstituteExtensions.Received<Appender>(appender).Log(Level.Debug, "A");
             }
         }
 
@@ -538,7 +538,7 @@ namespace SoftCube.Logger.Appenders.UnitTests
 
                 appender.Info("");
 
-                appender.Received().Log(Level.Info, "");
+                SubstituteExtensions.Received<Appender>(appender).Log(Level.Info, "");
             }
 
             [Fact]
@@ -548,7 +548,7 @@ namespace SoftCube.Logger.Appenders.UnitTests
 
                 appender.Info("A");
 
-                appender.Received().Log(Level.Info, "A");
+                SubstituteExtensions.Received<Appender>(appender).Log(Level.Info, "A");
             }
         }
 
@@ -571,7 +571,7 @@ namespace SoftCube.Logger.Appenders.UnitTests
 
                 appender.Warning("");
 
-                appender.Received().Log(Level.Warning, "");
+                SubstituteExtensions.Received<Appender>(appender).Log(Level.Warning, "");
             }
 
             [Fact]
@@ -581,7 +581,7 @@ namespace SoftCube.Logger.Appenders.UnitTests
 
                 appender.Warning("A");
 
-                appender.Received().Log(Level.Warning, "A");
+                SubstituteExtensions.Received<Appender>(appender).Log(Level.Warning, "A");
             }
         }
 
@@ -604,7 +604,7 @@ namespace SoftCube.Logger.Appenders.UnitTests
 
                 appender.Error("");
 
-                appender.Received().Log(Level.Error, "");
+                SubstituteExtensions.Received<Appender>(appender).Log(Level.Error, "");
             }
 
             [Fact]
@@ -614,7 +614,7 @@ namespace SoftCube.Logger.Appenders.UnitTests
 
                 appender.Error("A");
 
-                appender.Received().Log(Level.Error, "A");
+                SubstituteExtensions.Received<Appender>(appender).Log(Level.Error, "A");
             }
         }
 
@@ -637,7 +637,7 @@ namespace SoftCube.Logger.Appenders.UnitTests
 
                 appender.Fatal("");
 
-                appender.Received().Log(Level.Fatal, "");
+                SubstituteExtensions.Received<Appender>(appender).Log(Level.Fatal, "");
             }
 
             [Fact]
@@ -647,7 +647,7 @@ namespace SoftCube.Logger.Appenders.UnitTests
 
                 appender.Fatal("A");
 
-                appender.Received().Log(Level.Fatal, "A");
+                SubstituteExtensions.Received<Appender>(appender).Log(Level.Fatal, "A");
             }
         }
     }

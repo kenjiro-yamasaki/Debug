@@ -2,14 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>SoftCube.Logger</AssemblyName>
-    <RootNamespace>SoftCube.Logger</RootNamespace>
-    <Platforms>AnyCPU;x64;x86</Platforms>
+    <AssemblyName>SoftCube.Profiler</AssemblyName>
+    <RootNamespace>SoftCube.Profiler</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Asserts\Asserts.csproj" />
-    <ProjectReference Include="..\Runtime\Runtime.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace SoftCube.Logger.Appenders.UnitTests
+namespace SoftCube.Log.Appenders.UnitTests
 {
     public class StringAppenderTests
     {
