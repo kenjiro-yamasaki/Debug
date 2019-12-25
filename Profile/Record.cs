@@ -56,7 +56,7 @@ namespace SoftCube.Profile
         public int MinIndex { get; private set; }
 
         /// <summary>
-        /// 最大計測インデックス (1～)。
+        /// 最大計測インデックス (0～)。
         /// </summary>
         public int MaxIndex { get; private set; }
 
