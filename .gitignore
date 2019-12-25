@@ -348,3 +348,8 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+# 無視 (ignore) の例外項目を設定します。
+!/Log/
+
+
