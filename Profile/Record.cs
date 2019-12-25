@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace SoftCube.Profiler
+namespace SoftCube.Profile
 {
     /// <summary>
     /// プロファイル記録。
@@ -39,6 +39,7 @@ namespace SoftCube.Profiler
         /// 合計計測時間 (秒)。
         /// </summary>
         public double TotalSeconds => TotalTicks / Stopwatch.Frequency;
+
         /// <summary>
         /// 最小計測時間 (秒)。
         /// </summary>
@@ -71,7 +72,7 @@ namespace SoftCube.Profiler
         /// <summary>
         /// コンストラクター。
         /// </summary>
-        /// <param name="name">計測記録。</param>
+        /// <param name="name">プロファイル名。</param>
         public Record(string name)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));

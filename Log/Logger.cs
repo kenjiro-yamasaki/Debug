@@ -9,7 +9,16 @@ namespace SoftCube.Log
     /// </summary>
     public static class Logger
     {
-        #region プロパティ
+        #region 静的イベント
+
+        /// <summary>
+        /// 終了イベント。
+        /// </summary>
+        public static event EventHandler Exiting;
+
+        #endregion
+
+        #region 静的プロパティ
 
         /// <summary>
         /// アペンダーコレクション。
@@ -19,7 +28,7 @@ namespace SoftCube.Log
 
         #endregion
 
-        #region コンストラクター
+        #region 静的コンストラクター
 
         /// <summary>
         /// コンストラクター。
@@ -35,7 +44,7 @@ namespace SoftCube.Log
 
         #endregion
 
-        #region メソッド
+        #region 静的メソッド
 
         #region アペンダーコレクション
 

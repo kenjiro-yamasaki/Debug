@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SoftCube.Profiler
+namespace SoftCube.Profile
 {
     /// <summary>
     /// プロファイル記録マネージャー。

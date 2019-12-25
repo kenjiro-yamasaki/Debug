@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace SoftCube.Profiler
+namespace SoftCube.Profile
 {
     /// <summary>
-    /// プロファイル。
+    /// プロファイラー。
     /// </summary>
-    public class Profile : IDisposable
+    public class Profiler : IDisposable
     {
         #region プロパティ
 
@@ -22,7 +22,7 @@ namespace SoftCube.Profiler
         /// コンストラクター。
         /// </summary>
         /// <param name="name">プロファイル名。</param>
-        public Profile(string name)
+        public Profiler(string name)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
 
@@ -42,7 +42,7 @@ namespace SoftCube.Profiler
         /// <summary>
         /// ファイナライザー。
         /// </summary>
-        ~Profile()
+        ~Profiler()
         {
             Dispose(false);
         }
