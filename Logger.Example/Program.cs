@@ -1,10 +1,19 @@
-﻿namespace SoftCube.Logger.Example
+﻿using System;
+
+namespace SoftCube.Logger.Example
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Logger.Trace("Hello World!");
+            try
+            {
+                Logger.Trace("Hello World!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

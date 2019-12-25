@@ -73,7 +73,6 @@ namespace SoftCube.Logger.Appenders.UnitTests
 
                 using (var appender = new FileAppender())
                 {
-                    appender.ConversionPattern = "{message}";
                     appender.Open(logFilePath, append: false, Encoding.UTF8);
                     appender.Trace("B");
                 }
@@ -89,7 +88,6 @@ namespace SoftCube.Logger.Appenders.UnitTests
 
                 using (var appender = new FileAppender())
                 {
-                    appender.ConversionPattern = "{message}";
                     appender.Open(logFilePath, append: true, Encoding.UTF8);
                     appender.Trace("B");
                 }

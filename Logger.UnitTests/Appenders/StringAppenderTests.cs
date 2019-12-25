@@ -8,7 +8,6 @@ namespace SoftCube.Logger.Appenders.UnitTests
         public void ToString_A_正しく変換する()
         {
             var appender = new StringAppender();
-            appender.ConversionPattern = "{message}";
             appender.Trace("A");
 
             var actual = appender.ToString();
@@ -20,7 +19,6 @@ namespace SoftCube.Logger.Appenders.UnitTests
         public void ToString_AB_正しく変換する()
         {
             var appender = new StringAppender();
-            appender.ConversionPattern = "{message}";
             appender.Trace("A");
             appender.Trace("B");
 

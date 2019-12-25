@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace SoftCube.Logger.Appenders
+namespace SoftCube.Logger
 {
     /// <summary>
     /// ローリングファイルアペンダー。
@@ -58,17 +58,17 @@ namespace SoftCube.Logger.Appenders
         /// <summary>
         /// コンストラクター。
         /// </summary>
-        /// <param name="params">パラメーター名→値変換。</param>
-        public RollingFileAppender(IReadOnlyDictionary<string, string> @params)
-            : base(@params)
+        /// <param name="xparams">パラメーター名→値変換。</param>
+        public RollingFileAppender(IReadOnlyDictionary<string, string> xparams)
+            : base(xparams)
         {
-            if (@params == null)
+            if (xparams == null)
             {
-                throw new ArgumentNullException(nameof(@params));
+                throw new ArgumentNullException(nameof(xparams));
             }
 
-            MaxFileSize    = StringParser.ParseMaxFileSize(@params["MaxFileSize"]);
-            MaxBackupCount = int.Parse(@params[nameof(MaxBackupCount)]);
+            MaxFileSize    = ParseMaxFileSize(xparams["MaxFileSize"]);
+            MaxBackupCount = int.Parse(xparams[nameof(MaxBackupCount)]);
         }
 
         #endregion
@@ -146,6 +146,39 @@ namespace SoftCube.Logger.Appenders
         }
 
         #endregion
+
+        /// <summary>
+        /// 最大ファイルサイズを解析します。
+        /// </summary>
+        /// <param name="maxFileSize">最大ファイルサイズを示す文字列。</param>
+        /// <returns>最大ファイルサイズ。</returns>
+        /// <remarks>
+        /// 単位を示す以下のプレースフォルダは、このメソッド内で単位変換されます。
+        /// ・KB : キロバイト。
+        /// ・MB : メガバイト。
+        /// ・GB : ギガバイト。
+        /// </remarks>
+        private long ParseMaxFileSize(string maxFileSize)
+        {
+            const long Byte = 1;
+            const long KB = Byte * 1024;
+            const long MB = KB * 1024;
+            const long GB = MB * 1024;
+
+            if (maxFileSize.EndsWith("KB"))
+            {
+                return long.Parse(maxFileSize.Replace("KB", string.Empty)) * KB;
+            }
+            if (maxFileSize.EndsWith("MB"))
+            {
+                return long.Parse(maxFileSize.Replace("MB", string.Empty)) * MB;
+            }
+            if (maxFileSize.EndsWith("GB"))
+            {
+                return long.Parse(maxFileSize.Replace("GB", string.Empty)) * GB;
+            }
+            return long.Parse(maxFileSize) * Byte;
+        }
 
         #endregion
     }

@@ -2,9 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading;
 
-namespace SoftCube.Logger.Appenders
+namespace SoftCube.Logger
 {
     /// <summary>
     /// アペンダー。
@@ -16,48 +15,12 @@ namespace SoftCube.Logger.Appenders
         /// <summary>
         /// 変換パターン。
         /// </summary>
-        /// <remarks>
-        /// 以下の変数を使用してログ出力の変換パターンを指定します。
-        /// ・date    : ログを出力した時刻 (ローカルタイムゾーン)。
-        /// ・file    : ログを出力したファイル名。
-        /// ・level   : ログレベル。
-        /// ・line    : ログを出力したファイル行番号。
-        /// ・message : ログメッセージ。
-        /// ・method  : ログを出力したメソッド名。
-        /// ・newline : 改行文字。
-        /// ・thread  : ログを出力したスレッド番号。
-        /// ・type    : ログを出力した型名。
-        /// </remarks>
-        /// <example>
-        /// 変換パターンは、以下の例のように指定します。
-        /// ・"{date:yyyy-MM-dd HH:mm:ss,fff} [{level,-5}] - {message}{newline}" → "2019-12-17 20:51:29,565 [INFO ] - message\r\n"
-        /// </example>
         public string ConversionPattern
         {
-            get => conversionPattern;
-            set
-            {
-                if (conversionPattern != value)
-                {
-                    conversionPattern = value;
-
-                    // 置換が成功するように、長い文字列から置換します。
-                    // たとえば、newlineより先にlineを置換すると正しく置換されません。
-                    replacedConversionPattern = value;
-                    replacedConversionPattern = replacedConversionPattern.Replace("message", "0");
-                    replacedConversionPattern = replacedConversionPattern.Replace("newline", "1");
-                    replacedConversionPattern = replacedConversionPattern.Replace("method", "2");
-                    replacedConversionPattern = replacedConversionPattern.Replace("thread", "3");
-                    replacedConversionPattern = replacedConversionPattern.Replace("level", "4");
-                    replacedConversionPattern = replacedConversionPattern.Replace("date", "5");
-                    replacedConversionPattern = replacedConversionPattern.Replace("file", "6");
-                    replacedConversionPattern = replacedConversionPattern.Replace("line", "7");
-                    replacedConversionPattern = replacedConversionPattern.Replace("type", "8");
-                }
-            }
+            get => conversionPattern.Pattern;
+            set => conversionPattern = new ConversionPattern(value);
         }
-        private string conversionPattern;
-        private string replacedConversionPattern;
+        private ConversionPattern conversionPattern;
 
         /// <summary>
         /// 最小レベル。
@@ -98,25 +61,25 @@ namespace SoftCube.Logger.Appenders
         /// <param name="systemClock">システムクロック。</param>
         public Appender(ISystemClock systemClock)
         {
+            SystemClock = systemClock ?? throw new ArgumentNullException(nameof(systemClock));
             ConversionPattern = "{message}";
-            SystemClock       = systemClock ?? throw new ArgumentNullException(nameof(systemClock));
         }
 
         /// <summary>
         /// コンストラクター。
         /// </summary>
-        /// <param name="params">パラメーター名→値変換。</param>
-        public Appender(IReadOnlyDictionary<string, string> @params)
+        /// <param name="xparams">パラメーター名→値変換。</param>
+        public Appender(IReadOnlyDictionary<string, string> xparams)
             : this(new SystemClock())
         {
-            if (@params == null)
+            if (xparams == null)
             {
-                throw new ArgumentNullException(nameof(@params));
+                throw new ArgumentNullException(nameof(xparams));
             }
 
-            ConversionPattern = @params[nameof(ConversionPattern)];
-            MinLevel          = @params[nameof(MinLevel)].ToLevel();
-            MaxLevel          = @params[nameof(MaxLevel)].ToLevel();
+            ConversionPattern = xparams[nameof(ConversionPattern)];
+            MinLevel          = xparams[nameof(MinLevel)].ToLevel();
+            MaxLevel          = xparams[nameof(MaxLevel)].ToLevel();
         }
 
         #endregion
@@ -168,7 +131,7 @@ namespace SoftCube.Logger.Appenders
             var level = Level.Trace;
             if (MinLevel <= level && level <= MaxLevel)
             {
-                Log(level, Format(level, message));
+                Log(level, conversionPattern.Convert(SystemClock.Now, level, message, new StackFrame(1, true)));
             }
         }
 
@@ -186,7 +149,7 @@ namespace SoftCube.Logger.Appenders
             var level = Level.Debug;
             if (MinLevel <= level && level <= MaxLevel)
             {
-                Log(level, Format(level, message));
+                Log(level, conversionPattern.Convert(SystemClock.Now, level, message, new StackFrame(1, true)));
             }
         }
 
@@ -204,7 +167,7 @@ namespace SoftCube.Logger.Appenders
             var level = Level.Info;
             if (MinLevel <= level && level <= MaxLevel)
             {
-                Log(level, Format(level, message));
+                Log(level, conversionPattern.Convert(SystemClock.Now, level, message, new StackFrame(1, true)));
             }
         }
 
@@ -222,7 +185,7 @@ namespace SoftCube.Logger.Appenders
             var level = Level.Warning;
             if (MinLevel <= level && level <= MaxLevel)
             {
-                Log(level, Format(level, message));
+                Log(level, conversionPattern.Convert(SystemClock.Now, level, message, new StackFrame(1, true)));
             }
         }
 
@@ -240,7 +203,7 @@ namespace SoftCube.Logger.Appenders
             var level = Level.Error;
             if (MinLevel <= level && level <= MaxLevel)
             {
-                Log(level, Format(level, message));
+                Log(level, conversionPattern.Convert(SystemClock.Now, level, message, new StackFrame(1, true)));
             }
         }
 
@@ -258,7 +221,7 @@ namespace SoftCube.Logger.Appenders
             var level = Level.Fatal;
             if (MinLevel <= level && level <= MaxLevel)
             {
-                Log(level, Format(level, message));
+                Log(level, conversionPattern.Convert(SystemClock.Now, level, message, new StackFrame(1, true)));
             }
         }
 
@@ -268,43 +231,6 @@ namespace SoftCube.Logger.Appenders
         /// <param name="level">ログレベル。</param>
         /// <param name="log">ログ。</param>
         public abstract void Log(Level level, string log);
-
-        /// <summary>
-        /// 変換パターンを使用して、ログをフォーマットします。
-        /// </summary>
-        /// <param name="level">ログレベル。</param>
-        /// <param name="message">ログメッセージ。</param>
-        /// <returns>ログ。</returns>
-        private string Format(Level level, string message)
-        {
-            try
-            {
-                var stackFrame = new StackFrame(2, true);
-                var type       = stackFrame.GetMethod().DeclaringType.FullName;
-                var method     = stackFrame.GetMethod().Name;
-                var file       = stackFrame.GetFileName();
-                var line       = stackFrame.GetFileLineNumber();
-                var date       = SystemClock.Now;
-                var newline    = Environment.NewLine;
-                var thread     = Thread.CurrentThread.ManagedThreadId;
-
-                return string.Format(
-                    replacedConversionPattern,
-                    message,
-                    newline,
-                    method,
-                    thread,
-                    level.ToDisplayName(),
-                    date,
-                    file,
-                    line,
-                    type);
-            }
-            catch (FormatException)
-            {
-                throw new InvalidOperationException($"ConversionPattern[{ConversionPattern}]が不正です。");
-            }
-        }
 
         #endregion
 

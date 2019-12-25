@@ -1,29 +1,20 @@
 ﻿using SoftCube.Runtime;
+using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SoftCube.Logger
 {
     /// <summary>
-    /// 文字列アペンダー。
+    /// コンソールアペンダー。
     /// </summary>
-    public class StringAppender : Appender
+    public class ConsoleAppender : Appender
     {
-        #region プロパティ
-
-        /// <summary>
-        /// 文字列ビルダー。
-        /// </summary>
-        private StringBuilder StringBuilder { get; } = new StringBuilder();
-
-        #endregion
-
         #region コンストラクター
 
         /// <summary>
         /// コンストラクター。
         /// </summary>
-        public StringAppender()
+        public ConsoleAppender()
             : this(new SystemClock())
         {
         }
@@ -32,7 +23,7 @@ namespace SoftCube.Logger
         /// コンストラクター。
         /// </summary>
         /// <param name="systemClock">システムクロック。</param>
-        public StringAppender(ISystemClock systemClock)
+        public ConsoleAppender(ISystemClock systemClock)
             : base(systemClock)
         {
         }
@@ -41,7 +32,7 @@ namespace SoftCube.Logger
         /// コンストラクター。
         /// </summary>
         /// <param name="xparams">パラメーター名→値変換。</param>
-        public StringAppender(IReadOnlyDictionary<string, string> xparams)
+        public ConsoleAppender(IReadOnlyDictionary<string, string> xparams)
             : base(xparams)
         {
         }
@@ -50,8 +41,6 @@ namespace SoftCube.Logger
 
         #region メソッド
 
-        #region ログ出力
-
         /// <summary>
         /// ログを出力します。
         /// </summary>
@@ -59,29 +48,8 @@ namespace SoftCube.Logger
         /// <param name="log">ログ。</param>
         public override void Log(Level level, string log)
         {
-            lock (StringBuilder)
-            {
-                StringBuilder.Append(log);
-            }
+            Console.WriteLine(log);
         }
-
-        #endregion
-
-        #region 変換
-
-        /// <summary>
-        /// 文字列に変換する。
-        /// </summary>
-        /// <returns>文字列。</returns>
-        public override string ToString()
-        {
-            lock (StringBuilder)
-            {
-                return StringBuilder.ToString();
-            }
-        }
-
-        #endregion
 
         #endregion
     }

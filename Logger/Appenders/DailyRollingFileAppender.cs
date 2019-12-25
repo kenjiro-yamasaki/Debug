@@ -1,10 +1,9 @@
 ﻿using SoftCube.Runtime;
-using System.IO;
-using System.Text;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
-namespace SoftCube.Logger.Appenders
+namespace SoftCube.Logger
 {
     /// <summary>
     /// 日付ローリングファイルアペンダー。
@@ -85,16 +84,16 @@ namespace SoftCube.Logger.Appenders
         /// <summary>
         /// コンストラクター。
         /// </summary>
-        /// <param name="params">パラメーター名→値変換。</param>
-        public DailyRollingFileAppender(IReadOnlyDictionary<string, string> @params)
-            : base(@params)
+        /// <param name="xparams">パラメーター名→値変換。</param>
+        public DailyRollingFileAppender(IReadOnlyDictionary<string, string> xparams)
+            : base(xparams)
         {
-            if (@params == null)
+            if (xparams == null)
             {
-                throw new ArgumentNullException(nameof(@params));
+                throw new ArgumentNullException(nameof(xparams));
             }
 
-            DatePattern = @params[nameof(DatePattern)];
+            DatePattern = xparams[nameof(DatePattern)];
         }
 
         #endregion

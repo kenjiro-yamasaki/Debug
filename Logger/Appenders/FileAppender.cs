@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace SoftCube.Logger.Appenders
+namespace SoftCube.Logger
 {
     /// <summary>
     /// ファイルアペンダー。
@@ -67,18 +67,18 @@ namespace SoftCube.Logger.Appenders
         /// <summary>
         /// コンストラクター。
         /// </summary>
-        /// <param name="params">パラメーター名→値変換。</param>
-        public FileAppender(IReadOnlyDictionary<string, string> @params)
-            : base(@params)
+        /// <param name="xparams">パラメーター名→値変換。</param>
+        public FileAppender(IReadOnlyDictionary<string, string> xparams)
+            : base(xparams)
         {
-            if (@params == null)
+            if (xparams == null)
             {
-                throw new ArgumentNullException(nameof(@params));
+                throw new ArgumentNullException(nameof(xparams));
             }
 
-            var filePath = StringParser.ParseFilePath(@params["FilePath"]);
-            var append   = bool.Parse(@params["Append"]);
-            var encoding = Encoding.GetEncoding(@params["Encoding"]);
+            var filePath = ParseFilePath(xparams["FilePath"]);
+            var append   = bool.Parse(xparams["Append"]);
+            var encoding = Encoding.GetEncoding(xparams["Encoding"]);
 
             Open(filePath, append, encoding);
         }
@@ -200,6 +200,70 @@ namespace SoftCube.Logger.Appenders
         }
 
         #endregion
+
+        /// <summary>
+        /// ファイルパスを解析します。
+        /// </summary>
+        /// <param name="filePath">ファイルパスを示す文字列。</param>
+        /// <returns>実際のファイルパス。</returns>
+        /// <remarks>
+        /// 以下の特殊ディレクトリへのプレースフォルダを、このメソッド内で実際のディレクトリパスに置換します。
+        /// ・{ApplicationData}        : 現在のローミングユーザーの Application Data フォルダ (例、C:\Users\UserName\AppData\Roaming)。
+        /// ・{CommonApplicationData}  : すべてのユーザーの Application Data フォルダ (例、C:\ProgramData)。
+        /// ・{CommonDesktopDirectory} : パブリックのデスクトップフォルダ (例、C:\Users\Public\Desktop)。
+        /// ・{CommonDocuments}        : パブリックのドキュメントフォルダ (例、C:\Users\Public\Documents)。
+        /// ・{Desktop}                : デスクトップ (名前空間のルート) を示す仮想フォル (例、C:\Users\UserName\Desktop)。
+        /// ・{DesktopDirectory}       : 物理的なデスクトップ (例、C:\Users\UserName\Desktop)。
+        /// ・{LocalApplicationData}   : ローカル Application Data フォルダ (例、C:\Users\UserName\AppData\Local)。
+        /// ・{MyDocuments}            : マイドキュメント (例、C:\Users\UserName\Documents)。
+        /// ・{Personal}               : マイドキュメント (例、C:\Users\UserName\Documents)。
+        /// ・{UserProfile}            : ユーザーのプロファイルフォルダ (例、C:\Users\UserName)。
+        /// </remarks>
+        private string ParseFilePath(string filePath)
+        {
+            if (filePath.StartsWith("{ApplicationData}"))
+            {
+                return filePath.Replace("{ApplicationData}", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create));
+            }
+            if (filePath.StartsWith("{CommonApplicationData}"))
+            {
+                return filePath.Replace("{CommonApplicationData}", Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData, Environment.SpecialFolderOption.Create));
+            }
+            if (filePath.StartsWith("{CommonDesktopDirectory}"))
+            {
+                return filePath.Replace("{CommonDesktopDirectory}", Environment.GetFolderPath(Environment.SpecialFolder.CommonDesktopDirectory, Environment.SpecialFolderOption.Create));
+            }
+            if (filePath.StartsWith("{CommonDocuments}"))
+            {
+                return filePath.Replace("{CommonDocuments}", Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments, Environment.SpecialFolderOption.Create));
+            }
+            if (filePath.StartsWith("{Desktop}"))
+            {
+                return filePath.Replace("{Desktop}", Environment.GetFolderPath(Environment.SpecialFolder.Desktop, Environment.SpecialFolderOption.Create));
+            }
+            if (filePath.StartsWith("{DesktopDirectory}"))
+            {
+                return filePath.Replace("{DesktopDirectory}", Environment.GetFolderPath(Environment.SpecialFolder.Desktop, Environment.SpecialFolderOption.Create));
+            }
+            if (filePath.StartsWith("{LocalApplicationData}"))
+            {
+                return filePath.Replace("{LocalApplicationData}", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData, Environment.SpecialFolderOption.Create));
+            }
+            if (filePath.StartsWith("{MyDocuments}"))
+            {
+                return filePath.Replace("{MyDocuments}", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments, Environment.SpecialFolderOption.Create));
+            }
+            if (filePath.StartsWith("{Personal}"))
+            {
+                return filePath.Replace("{Personal}", Environment.GetFolderPath(Environment.SpecialFolder.Personal, Environment.SpecialFolderOption.Create));
+            }
+            if (filePath.StartsWith("{UserProfile}"))
+            {
+                return filePath.Replace("{UserProfile}", Environment.GetFolderPath(Environment.SpecialFolder.UserProfile, Environment.SpecialFolderOption.Create));
+            }
+
+            return filePath;
+        }
 
         #endregion
     }
