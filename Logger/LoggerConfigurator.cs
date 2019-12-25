@@ -1,5 +1,6 @@
 ﻿using SoftCube.Asserts;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -25,7 +26,7 @@ namespace SoftCube.Logger
         /// <summary>
         /// ロガーを構成します。
         /// </summary>
-        public void Configurate()
+        internal void Configurate()
         {
             if (ConfigFilePath == null || !File.Exists(ConfigFilePath))
             {
@@ -36,6 +37,8 @@ namespace SoftCube.Logger
             Logger.ClearAndDisposeAppenders();
 
             var xml = XElement.Load(ConfigFilePath).Element("logger");
+
+            var appenders = new Dictionary<string, Appender>();
             foreach (var xappender in xml.Elements("appender"))
             {
                 var appenderName     = (string)xappender.Attribute("name");
@@ -53,7 +56,16 @@ namespace SoftCube.Logger
                 var appender = Activator.CreateInstance(appenderType, xparams) as Appender;
                 Assert.NotNull(appender);
 
-                Logger.Add(appender);
+                appenders.Add(appenderName, appender);
+            }
+
+            foreach (var xappenderReference in xml.Element("root").Elements("appender-ref"))
+            {
+                var appenderName = (string)xappenderReference.Attribute("ref");
+                if (appenders.ContainsKey(appenderName))
+                {
+                    Logger.Add(appenders[appenderName]);
+                }
             }
 
             // プロセス終了時にアペンダーを破棄します。
