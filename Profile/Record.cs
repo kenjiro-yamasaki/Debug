@@ -38,17 +38,17 @@ namespace SoftCube.Profile
         /// <summary>
         /// 合計計測時間 (秒)。
         /// </summary>
-        public double TotalSeconds => TotalTicks / Stopwatch.Frequency;
+        public double TotalSeconds => TotalTicks / (double)Stopwatch.Frequency;
 
         /// <summary>
         /// 最小計測時間 (秒)。
         /// </summary>
-        public double MinSeconds => MinTicks / Stopwatch.Frequency;
+        public double MinSeconds => MinTicks / (double)Stopwatch.Frequency;
 
         /// <summary>
         /// 最大計測時間 (秒)。
         /// </summary>
-        public double MaxSeconds => MaxTicks / Stopwatch.Frequency;
+        public double MaxSeconds => MaxTicks / (double)Stopwatch.Frequency;
 
         /// <summary>
         /// 最小計測インデックス (0～)。
