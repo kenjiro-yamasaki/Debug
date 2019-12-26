@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SoftCube.Log;
+using System;
 using System.Diagnostics;
 
 namespace SoftCube.Profile
@@ -6,19 +7,19 @@ namespace SoftCube.Profile
     /// <summary>
     /// プロファイル記録。
     /// </summary>
-    public class Record
+    internal class Record
     {
         #region プロパティ
 
         /// <summary>
         /// プロファイル名。
         /// </summary>
-        public string Name { get; }
+        internal string Name { get; }
 
         /// <summary>
         /// 計測回数。
         /// </summary>
-        public int Count { get; private set; }
+        internal int Count { get; set; }
 
         /// <summary>
         /// 合計計測チック (タイマー刻み)。
@@ -38,27 +39,32 @@ namespace SoftCube.Profile
         /// <summary>
         /// 合計計測時間 (秒)。
         /// </summary>
-        public double TotalSeconds => TotalTicks / (double)Stopwatch.Frequency;
+        internal double TotalSeconds => TotalTicks / (double)Stopwatch.Frequency;
+
+        /// <summary>
+        /// 平均計測時間 (秒)。
+        /// </summary>
+        internal double AverageSeconds => TotalSeconds / Count;
 
         /// <summary>
         /// 最小計測時間 (秒)。
         /// </summary>
-        public double MinSeconds => MinTicks / (double)Stopwatch.Frequency;
+        internal double MinSeconds => MinTicks / (double)Stopwatch.Frequency;
 
         /// <summary>
         /// 最大計測時間 (秒)。
         /// </summary>
-        public double MaxSeconds => MaxTicks / (double)Stopwatch.Frequency;
+        internal double MaxSeconds => MaxTicks / (double)Stopwatch.Frequency;
 
         /// <summary>
         /// 最小計測インデックス (0～)。
         /// </summary>
-        public int MinIndex { get; private set; }
+        internal int MinIndex { get; set; }
 
         /// <summary>
         /// 最大計測インデックス (0～)。
         /// </summary>
-        public int MaxIndex { get; private set; }
+        internal int MaxIndex { get; set; }
 
         /// <summary>
         /// ストップウォッチ。
@@ -128,26 +134,16 @@ namespace SoftCube.Profile
         /// <summary>
         /// プロファイル結果をログ出力する。
         /// </summary>
-        public void OutputLog()
+        internal void Log()
         {
-            //Assert.True(1 <= Count);
-
-            //var totalTime   = $"{TotalTicks / (double)Stopwatch.Frequency:0.0000000000}";
-            //var averageTime = $"{TotalTicks / Count / (double)Stopwatch.Frequency:0.0000000000}";
-            //var maxTime     = $"{MaxTicks / (double)Stopwatch.Frequency:0.0000000000}";
-            //var minTime     = $"{MinTicks / (double)Stopwatch.Frequency:0.0000000000}";
-            //var maxSequence = $"{MaxIndex}";
-            //var minSequence = $"{MinIndex}";
-            //var count       = $"{Count}";
-
-            //Logger.Trace($"{Name} **************************");
-            //Logger.Trace($"合計プロファイル時間={totalTime}s");
-            //Logger.Trace($"平均プロファイル時間={averageTime}s");
-            //Logger.Trace($"最大プロファイル時間={maxTime}s");
-            //Logger.Trace($"最小プロファイル時間={minTime}s");
-            //Logger.Trace($"最大プロファイル順序={maxSequence}");
-            //Logger.Trace($"最小プロファイル順序={minSequence}");
-            //Logger.Trace($"プロファイル回数={count}");
+            Logger.Trace($"{Name} **************************{Environment.NewLine}");
+            Logger.Trace($"合計プロファイル時間={TotalSeconds:F10}s{Environment.NewLine}");
+            Logger.Trace($"平均プロファイル時間={AverageSeconds:F10}s{Environment.NewLine}");
+            Logger.Trace($"最大プロファイル時間={MaxSeconds:F10}s{Environment.NewLine}");
+            Logger.Trace($"最小プロファイル時間={MinSeconds:F10}s{Environment.NewLine}");
+            Logger.Trace($"最大プロファイル順序={MaxIndex + 1}{Environment.NewLine}");
+            Logger.Trace($"最小プロファイル順序={MinIndex + 1}{Environment.NewLine}");
+            Logger.Trace($"プロファイル回数={Count}{Environment.NewLine}");
         }
 
         #endregion

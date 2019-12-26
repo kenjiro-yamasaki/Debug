@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Asserts\Asserts.csproj" />
+    <ProjectReference Include="..\Log\Log.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,24 +1,35 @@
-﻿using System;
+﻿using SoftCube.Log;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SoftCube.Profile
 {
     /// <summary>
     /// プロファイル記録マネージャー。
     /// </summary>
-    public static class RecordManager
+    internal static class RecordManager
     {
         #region 静的プロパティ
 
         /// <summary>
         /// プロファイル記録コレクション。
         /// </summary>
-        public static IEnumerable<Record> Records => ProfileNameToRecord.Values;
+        private static IEnumerable<Record> Records => ProfileNameToRecord.Values;
 
         /// <summary>
         /// プロファイル名→プロファイル記録変換。
         /// </summary>
         private static Dictionary<string, Record> ProfileNameToRecord { get; } = new Dictionary<string, Record>();
+
+        #endregion
+
+        #region 静的コンストラクター
+
+        static RecordManager()
+        {
+            Logger.Exiting += (s, e) => Log();
+        }
 
         #endregion
 
@@ -72,19 +83,17 @@ namespace SoftCube.Profile
 
         #endregion
 
-        ///// <summary>
-        ///// プロファイル結果をログ出力する。
-        ///// </summary>
-        //public static void OutputLog()
-        //{
-        //    Logger.Trace("----- プロファイル結果 -----");
-        //    foreach (Profile profile in profiles.Values.OrderByDescending(p => p.TotalTime))
-        //    {
-        //        Assert.IsTrue(profile != null);
-        //        Assert.IsTrue(1 <= profile.Count);
-        //        profile.OutputLog();
-        //    }
-        //}
+        /// <summary>
+        /// プロファイル結果をログ出力します。
+        /// </summary>
+        public static void Log()
+        {
+            Logger.Trace("----- プロファイル結果 -----");
+            foreach (var record in Records.OrderByDescending(p => p.TotalSeconds))
+            {
+                record.Log();
+            }
+        }
 
         #endregion
     }

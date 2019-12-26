@@ -16,6 +16,11 @@ namespace SoftCube.Log
         /// </summary>
         public static event EventHandler Exiting;
 
+        /// <summary>
+        /// 終了完了イベント。
+        /// </summary>
+        public static event EventHandler Exited;
+
         #endregion
 
         #region 静的プロパティ
@@ -39,12 +44,32 @@ namespace SoftCube.Log
             configurator?.Configurate();
 
             // プロセス終了時にアペンダーを破棄します。
-            AppDomain.CurrentDomain.ProcessExit += (s, e) => ClearAndDisposeAppenders();
+            AppDomain.CurrentDomain.ProcessExit += (s, e) => Exit();
         }
 
         #endregion
 
         #region 静的メソッド
+
+        #region イベント発生
+
+        /// <summary>
+        /// 終了イベントを発生させます。
+        /// </summary>
+        private static void OnExiting()
+        {
+            Exiting?.Invoke(null, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// 終了完了イベントを発生させます。
+        /// </summary>
+        private static void OnEixted()
+        {
+            Exited?.Invoke(null, EventArgs.Empty);
+        }
+
+        #endregion
 
         #region アペンダーコレクション
 
@@ -171,6 +196,18 @@ namespace SoftCube.Log
         }
 
         #endregion
+
+        /// <summary>
+        /// 終了します。
+        /// </summary>
+        private static void Exit()
+        {
+            OnExiting();
+
+            ClearAndDisposeAppenders();
+
+            OnEixted();
+        }
 
         #endregion
     }
