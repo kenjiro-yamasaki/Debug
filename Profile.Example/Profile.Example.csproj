@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <AssemblyName>SoftCube.Profile.Example</AssemblyName>
+    <RootNamespace>SoftCube.Profile.Example</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Log\Log.csproj" />
+    <ProjectReference Include="..\Profile\Profile.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Logger.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

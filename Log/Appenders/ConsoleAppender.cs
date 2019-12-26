@@ -48,7 +48,7 @@ namespace SoftCube.Log
         /// <param name="log">ログ。</param>
         public override void Log(Level level, string log)
         {
-            Console.WriteLine(log);
+            Console.Write(log);
         }
 
         #endregion

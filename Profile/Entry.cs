@@ -1,13 +1,12 @@
-﻿using SoftCube.Log;
-using System;
+﻿using System;
 using System.Diagnostics;
 
 namespace SoftCube.Profile
 {
     /// <summary>
-    /// プロファイル記録。
+    /// 計測エントリー。
     /// </summary>
-    internal class Record
+    internal class Entry
     {
         #region プロパティ
 
@@ -19,22 +18,7 @@ namespace SoftCube.Profile
         /// <summary>
         /// 計測回数。
         /// </summary>
-        internal int Count { get; set; }
-
-        /// <summary>
-        /// 合計計測チック (タイマー刻み)。
-        /// </summary>
-        private long TotalTicks { get;  set; }
-
-        /// <summary>
-        /// 最小計測チック (タイマー刻み)。
-        /// </summary>
-        private long MinTicks { get; set; }
-
-        /// <summary>
-        /// 最大計測チック (タイマー刻み)。
-        /// </summary>
-        private long MaxTicks { get; set; }
+        internal int Count { get; private set; }
 
         /// <summary>
         /// 合計計測時間 (秒)。
@@ -59,12 +43,27 @@ namespace SoftCube.Profile
         /// <summary>
         /// 最小計測インデックス (0～)。
         /// </summary>
-        internal int MinIndex { get; set; }
+        internal int MinIndex { get; private set; }
 
         /// <summary>
         /// 最大計測インデックス (0～)。
         /// </summary>
-        internal int MaxIndex { get; set; }
+        internal int MaxIndex { get; private set; }
+
+        /// <summary>
+        /// 合計計測チック (タイマー刻み)。
+        /// </summary>
+        private long TotalTicks { get; set; }
+
+        /// <summary>
+        /// 最小計測チック (タイマー刻み)。
+        /// </summary>
+        private long MinTicks { get; set; }
+
+        /// <summary>
+        /// 最大計測チック (タイマー刻み)。
+        /// </summary>
+        private long MaxTicks { get; set; }
 
         /// <summary>
         /// ストップウォッチ。
@@ -79,7 +78,7 @@ namespace SoftCube.Profile
         /// コンストラクター。
         /// </summary>
         /// <param name="name">プロファイル名。</param>
-        public Record(string name)
+        public Entry(string name)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
         }
@@ -103,7 +102,7 @@ namespace SoftCube.Profile
         {
             Stopwatch.Stop();
 
-            long elapsedTicks = Stopwatch.ElapsedTicks;
+            var elapsedTicks = Stopwatch.ElapsedTicks;
             TotalTicks += elapsedTicks;
 
             if (Count == 0)
@@ -129,21 +128,6 @@ namespace SoftCube.Profile
             }
 
             Count++;
-        }
-
-        /// <summary>
-        /// プロファイル結果をログ出力する。
-        /// </summary>
-        internal void Log()
-        {
-            Logger.Trace($"{Name} **************************{Environment.NewLine}");
-            Logger.Trace($"合計プロファイル時間={TotalSeconds:F10}s{Environment.NewLine}");
-            Logger.Trace($"平均プロファイル時間={AverageSeconds:F10}s{Environment.NewLine}");
-            Logger.Trace($"最大プロファイル時間={MaxSeconds:F10}s{Environment.NewLine}");
-            Logger.Trace($"最小プロファイル時間={MinSeconds:F10}s{Environment.NewLine}");
-            Logger.Trace($"最大プロファイル順序={MaxIndex + 1}{Environment.NewLine}");
-            Logger.Trace($"最小プロファイル順序={MinIndex + 1}{Environment.NewLine}");
-            Logger.Trace($"プロファイル回数={Count}{Environment.NewLine}");
         }
 
         #endregion
