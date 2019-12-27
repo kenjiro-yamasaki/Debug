@@ -9,7 +9,7 @@ namespace SoftCube.Log
     /// </summary>
     public static class Logger
     {
-        #region 静的イベント
+        #region イベント
 
         /// <summary>
         /// 終了イベント。
@@ -23,7 +23,7 @@ namespace SoftCube.Log
 
         #endregion
 
-        #region 静的プロパティ
+        #region プロパティ
 
         /// <summary>
         /// アペンダーコレクション。
@@ -33,14 +33,14 @@ namespace SoftCube.Log
 
         #endregion
 
-        #region 静的コンストラクター
+        #region コンストラクター
 
         /// <summary>
         /// コンストラクター。
         /// </summary>
         static Logger()
         {
-            var configurator = Assembly.GetEntryAssembly().GetCustomAttribute<LoggerConfigurator>();
+            var configurator = Assembly.GetEntryAssembly().GetCustomAttribute<Configurator>();
             configurator?.Configurate();
 
             // プロセス終了時にアペンダーを破棄します。
@@ -49,7 +49,7 @@ namespace SoftCube.Log
 
         #endregion
 
-        #region 静的メソッド
+        #region メソッド
 
         #region イベント発生
 

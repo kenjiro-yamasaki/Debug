@@ -273,7 +273,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             public void Date_正しく出力する()
             {
                 var appender = new StringAppender();
-                appender.ConversionPattern = "{date}";
+                appender.ConversionPattern = "{Date}";
 
                 appender.Trace("A");
 
@@ -288,7 +288,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 clock.Now.Returns(new DateTime(2019, 12, 19, 22, 54, 19, 777));
 
                 var appender = new StringAppender(clock);
-                appender.ConversionPattern = "{date:yyyy-MM-dd HH:mm:ss,fff}";
+                appender.ConversionPattern = "{Date:yyyy-MM-dd HH:mm:ss,fff}";
 
                 appender.Trace("A");
 
@@ -301,7 +301,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             public void File_正しく出力する()
             {
                 var appender = new StringAppender();
-                appender.ConversionPattern = "{file}";
+                appender.ConversionPattern = "{File}";
 
                 appender.Trace("A");
 
@@ -314,7 +314,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             public void Level_正しく出力する()
             {
                 var appender = new StringAppender();
-                appender.ConversionPattern = "{level}";
+                appender.ConversionPattern = "{Level}";
 
                 appender.Info("A");
 
@@ -327,7 +327,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             public void Level左詰め_正しく出力する()
             {
                 var appender = new StringAppender();
-                appender.ConversionPattern = "{level,-5}";
+                appender.ConversionPattern = "{Level,-5}";
 
                 appender.Info("A");
 
@@ -340,7 +340,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             public void Level右詰め_正しく出力する()
             {
                 var appender = new StringAppender();
-                appender.ConversionPattern = "{level,5}";
+                appender.ConversionPattern = "{Level,5}";
 
                 appender.Info("A");
 
@@ -352,7 +352,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             public void Line_正しく出力する()
             {
                 var appender = new StringAppender();
-                appender.ConversionPattern = "{line}";
+                appender.ConversionPattern = "{Line}";
 
                 appender.Trace("A");
 
@@ -365,7 +365,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             public void Message_正しく出力する()
             {
                 var appender = new StringAppender();
-                appender.ConversionPattern = "{message}";
+                appender.ConversionPattern = "{Message}";
 
                 appender.Info("A");
 
@@ -377,7 +377,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             public void Method_正しく出力する()
             {
                 var appender = new StringAppender();
-                appender.ConversionPattern = "{method}";
+                appender.ConversionPattern = "{Method}";
 
                 appender.Trace("A");
 
@@ -390,7 +390,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             public void NewLine_正しく出力する()
             {
                 var appender = new StringAppender();
-                appender.ConversionPattern = "{newline}";
+                appender.ConversionPattern = "{NewLine}";
 
                 appender.Info("A");
 
@@ -402,7 +402,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             public void Thread_正しく出力する()
             {
                 var appender = new StringAppender();
-                appender.ConversionPattern = "{thread}";
+                appender.ConversionPattern = "{Thread}";
 
                 appender.Trace("A");
 
@@ -415,7 +415,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             public void Type_正しく出力する()
             {
                 var appender = new StringAppender();
-                appender.ConversionPattern = "{type}";
+                appender.ConversionPattern = "{Type}";
 
                 appender.Trace("A");
 
@@ -431,7 +431,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 clock.Now.Returns(new DateTime(2019, 12, 19, 22, 54, 19, 777));
 
                 var appender = new StringAppender(clock);
-                appender.ConversionPattern = "{date:yyyy-MM-dd HH:mm:ss,fff} [{level,-5}] - {message}{newline}";
+                appender.ConversionPattern = "{Date:yyyy-MM-dd HH:mm:ss,fff} [{Level,-5}] - {Message}{NewLine}";
 
                 appender.Info("A");
 
@@ -444,12 +444,12 @@ namespace SoftCube.Log.Appenders.UnitTests
             public void 不正な書式_を投げる()
             {
                 var appender = new StringAppender();
-                appender.ConversionPattern = "{datetime}";
+                appender.ConversionPattern = "{DateTime}";
 
                 var ex = Record.Exception(() => appender.Trace("A"));
 
                 Assert.IsType<InvalidOperationException>(ex);
-                Assert.Equal("ConversionPattern[{datetime}]が不正です。", ex.Message);
+                Assert.Equal("ConversionPattern[{DateTime}]が不正です。", ex.Message);
             }
         }
 

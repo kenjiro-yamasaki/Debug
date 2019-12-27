@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace SoftCube.Profile
 {
     /// <summary>
-    /// 計測エントリー。
+    /// プロファイルのエントリー。
     /// </summary>
     internal class Entry
     {

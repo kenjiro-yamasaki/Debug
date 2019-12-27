@@ -10,7 +10,7 @@ namespace SoftCube.Log
     /// <summary>
     /// ロガーの構成。
     /// </summary>
-    public class LoggerConfigurator : Attribute
+    public class Configurator : Attribute
     {
         #region プロパティ
 
@@ -34,7 +34,7 @@ namespace SoftCube.Log
             }
  
             // 構成ファイルを読み込み、ロガーを初期化します。
-            var xml = XElement.Load(ConfigFilePath).Element("log");
+            var xml = XElement.Load(ConfigFilePath).Element("logger");
 
             var appenders = new Dictionary<string, Appender>();
             foreach (var xappender in xml.Elements("appender"))

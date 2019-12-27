@@ -3,14 +3,14 @@
 namespace SoftCube.Profile
 {
     /// <summary>
-    /// 計測トランザクション。
+    /// プロファイルのトランザクション。
     /// </summary>
     public class Transaction : IDisposable
     {
         #region プロパティ
 
         /// <summary>
-        /// 計測エントリー。
+        /// エントリー。
         /// </summary>
         internal Entry Entry { get; }
 
@@ -21,7 +21,7 @@ namespace SoftCube.Profile
         /// <summary>
         /// コンストラクター。
         /// </summary>
-        /// <param name="entry">計測エントリー。</param>
+        /// <param name="entry">エントリー。</param>
         internal Transaction(Entry entry)
         {
             Entry = entry ?? throw new ArgumentNullException(nameof(entry));

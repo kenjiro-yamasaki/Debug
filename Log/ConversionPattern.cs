@@ -7,7 +7,7 @@ namespace SoftCube.Log
     /// <summary>
     /// ログ変換パターン。
     /// </summary>
-    public class ConversionPattern
+    internal class ConversionPattern
     {
         #region プロパティ
 
@@ -15,7 +15,7 @@ namespace SoftCube.Log
         /// 変換パターン。
         /// </summary>
         /// <remarks>
-        /// 以下の変数を使用してログ出力の変換パターンを指定します。
+        /// 以下の変数を使用してログ出力の変換パターンを定義します。
         /// ・date    : ログを出力した時刻 (ローカルタイムゾーン)。
         /// ・file    : ログを出力したファイル名。
         /// ・level   : ログレベル。
@@ -30,7 +30,7 @@ namespace SoftCube.Log
         /// 変換パターンは、以下の例のように指定します。
         /// ・"{date:yyyy-MM-dd HH:mm:ss,fff} [{level,-5}] - {message}{newline}" → "2019-12-17 20:51:29,565 [INFO ] - message\r\n"
         /// </example>
-        public string Pattern { get; }
+        internal string Pattern { get; }
 
         /// <summary>
         /// 文字列フォーマット。
@@ -45,19 +45,22 @@ namespace SoftCube.Log
         /// コンストラクター。
         /// </summary>
         /// <param name="pattern">変換パターン。<seealso cref="Pattern"/></param>
-        public ConversionPattern(string pattern)
+        internal ConversionPattern(string pattern)
         {
             Pattern = pattern;
 
-            pattern = pattern.Replace("message", "0");
-            pattern = pattern.Replace("newline", "1");
-            pattern = pattern.Replace("method", "2");
-            pattern = pattern.Replace("thread", "3");
-            pattern = pattern.Replace("level", "4");
-            pattern = pattern.Replace("date", "5");
-            pattern = pattern.Replace("file", "6");
-            pattern = pattern.Replace("line", "7");
-            pattern = pattern.Replace("type", "8");
+            // 変換パターンを文字列フォーマットに置換します。
+            // このとき部分置換を避けるために、文字数の多い変数から置換します。
+            // 例えば、line を newline より先に置換してしまうと正しい文字列フォーマットに置換できません。
+            pattern = pattern.Replace("Message", "0");
+            pattern = pattern.Replace("NewLine", "1");
+            pattern = pattern.Replace("Method",  "2");
+            pattern = pattern.Replace("Thread",  "3");
+            pattern = pattern.Replace("Level",   "4");
+            pattern = pattern.Replace("Date",    "5");
+            pattern = pattern.Replace("File",    "6");
+            pattern = pattern.Replace("Line",    "7");
+            pattern = pattern.Replace("Type",    "8");
             Format = pattern;
         }
 
@@ -66,14 +69,14 @@ namespace SoftCube.Log
         #region メソッド
 
         /// <summary>
-        /// 日付、レベル、ログメッセージ、スタックフレームをログに変換する。
+        /// 日付、レベル、ログメッセージ、スタックフレームをログに変換します。
         /// </summary>
         /// <param name="date">日付。</param>
         /// <param name="level">レベル。</param>
         /// <param name="message">ログメッセージ。</param>
         /// <param name="stackFrame">スタックフレーム。</param>
         /// <returns>ログ。</returns>
-        public string Convert(DateTime date, Level level, string message, StackFrame stackFrame)
+        internal string Convert(DateTime date, Level level, string message, StackFrame stackFrame)
         {
             try
             {

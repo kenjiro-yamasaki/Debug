@@ -62,7 +62,7 @@ namespace SoftCube.Log
         public Appender(ISystemClock systemClock)
         {
             SystemClock = systemClock ?? throw new ArgumentNullException(nameof(systemClock));
-            ConversionPattern = "{message}";
+            ConversionPattern = "{Message}";
         }
 
         /// <summary>

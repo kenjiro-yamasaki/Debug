@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Reflection;
 
 namespace SoftCube.Profile
 {
@@ -11,7 +11,9 @@ namespace SoftCube.Profile
     /// </summary>
     public static class Profiler
     {
-        #region 静的プロパティ
+        #region プロパティ
+
+        #region エントリーコレクション
 
         /// <summary>
         /// エントリーコレクション。
@@ -19,35 +21,59 @@ namespace SoftCube.Profile
         private static IEnumerable<Entry> Entries => NameToEntry.Values;
 
         /// <summary>
-        /// エントリー名→エントリー変換。
+        /// プロファイル名→エントリー変換。
         /// </summary>
         private static Dictionary<string, Entry> NameToEntry { get; } = new Dictionary<string, Entry>();
 
         #endregion
 
-        #region 静的コンストラクター
+        #region ログ
+
+        /// <summary>
+        /// ログレベル。
+        /// </summary>
+        internal static Level LogLevel { get; set; }
+
+        /// <summary>
+        /// タイトル書式。
+        /// </summary>
+        internal static string TitleFormat { get; set; }
+
+        /// <summary>
+        /// エントリー書式コレクション。
+        /// </summary>
+        internal static IEnumerable<EntryFormat> EntryFormats => entryFormats;
+        private readonly static List<EntryFormat> entryFormats = new List<EntryFormat>();
+
+        #endregion
+
+        #endregion
+
+        #region コンストラクター
 
         /// <summary>
         /// 静的コンストラクター。
         /// </summary>
         static Profiler()
         {
+            var configurator = Assembly.GetEntryAssembly().GetCustomAttribute<Configurator>();
+            configurator?.Configurate();
+
             Logger.Exiting += (s, e) => Log();
         }
 
         #endregion
 
-        #region 静的メソッド
+        #region メソッド
 
         /// <summary>
         /// 計測を開始します。
         /// </summary>
         /// <param name="name">プロファイル名。</param>
-        /// <returns>計測トランザクション。</returns>
+        /// <returns>トランザクション。</returns>
         /// <remarks>
-        /// 計測を開始して、計測トランザクションを返します。
-        /// 計測トランザクションは <see cref="IDisposable"/> を実装しています。
-        /// 計測トランザクションの <see cref="IDisposable.Dispose()"/> を呼び出すと計測が終了します。
+        /// 計測を開始して、トランザクションを返します。
+        /// トランザクションの <see cref="IDisposable.Dispose()"/> を呼び出すと計測が終了します。
         /// </remarks>
         /// <example>
         /// このメソッドは以下の例のように使用します。
@@ -77,23 +103,59 @@ namespace SoftCube.Profile
             }
         }
 
+        #region エントリー書式コレクション
+
+        /// <summary>
+        /// エントリー書式を追加します。
+        /// </summary>
+        /// <param name="entryFormat">エントリー書式。</param>
+        internal static void Add(EntryFormat entryFormat)
+        {
+            entryFormats.Add(entryFormat);
+        }
+
+        /// <summary>
+        /// エントリー書式を挿入します。
+        /// </summary>
+        /// <param name="index">インデックス。</param>
+        /// <param name="entryFormat">エントリー書式。</param>
+        internal static void Insert(int index, EntryFormat entryFormat)
+        {
+            entryFormats.Insert(index, entryFormat);
+        }
+
+        /// <summary>
+        /// エントリー書式を削除します。
+        /// </summary>
+        /// <param name="entryFormat">エントリー書式。</param>
+        internal static void Remove(EntryFormat entryFormat)
+        {
+            entryFormats.Remove(entryFormat);
+        }
+
+        /// <summary>
+        /// エントリー書式コレクションをクリアします。
+        /// </summary>
+        internal static void ClearEntryFormats()
+        {
+            entryFormats.Clear();
+        }
+
+        #endregion
+
         /// <summary>
         /// プロファイル結果をログ出力します。
         /// </summary>
-        public static void Log()
+        private static void Log()
         {
-            Logger.Trace($"----- プロファイル結果 -----{Environment.NewLine}");
+            Logger.Trace(TitleFormat);
+
             foreach (var entry in Entries.OrderByDescending(p => p.TotalSeconds))
             {
-                Logger.Trace($"{entry.Name} **************************");
-
-                Logger.Trace($"合計プロファイル時間={entry.TotalSeconds:F10}s");
-                Logger.Trace($"平均プロファイル時間={entry.AverageSeconds:F10}s");
-                Logger.Trace($"最大プロファイル時間={entry.MaxSeconds:F10}s");
-                Logger.Trace($"最小プロファイル時間={entry.MinSeconds:F10}s");
-                Logger.Trace($"最大プロファイル順序={entry.MaxIndex + 1}");
-                Logger.Trace($"最小プロファイル順序={entry.MinIndex + 1}");
-                Logger.Trace($"プロファイル回数={entry.Count}");
+                foreach (var format in EntryFormats)
+                {
+                    Logger.Trace(format.Convert(entry));
+                }
             }
         }
 
