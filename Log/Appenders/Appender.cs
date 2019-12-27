@@ -135,7 +135,7 @@ namespace SoftCube.Log
             var level = Level.Trace;
             if (MinLevel <= level && level <= MaxLevel)
             {
-                Log(level, logFormat.Convert(SystemClock.Now, level, message, new StackFrame(1, true)));
+                Log(logFormat.Convert(SystemClock.Now, level, message, new StackFrame(1, true)));
             }
         }
 
@@ -153,7 +153,7 @@ namespace SoftCube.Log
             var level = Level.Debug;
             if (MinLevel <= level && level <= MaxLevel)
             {
-                Log(level, logFormat.Convert(SystemClock.Now, level, message, new StackFrame(1, true)));
+                Log(logFormat.Convert(SystemClock.Now, level, message, new StackFrame(1, true)));
             }
         }
 
@@ -171,7 +171,7 @@ namespace SoftCube.Log
             var level = Level.Info;
             if (MinLevel <= level && level <= MaxLevel)
             {
-                Log(level, logFormat.Convert(SystemClock.Now, level, message, new StackFrame(1, true)));
+                Log(logFormat.Convert(SystemClock.Now, level, message, new StackFrame(1, true)));
             }
         }
 
@@ -189,7 +189,7 @@ namespace SoftCube.Log
             var level = Level.Warning;
             if (MinLevel <= level && level <= MaxLevel)
             {
-                Log(level, logFormat.Convert(SystemClock.Now, level, message, new StackFrame(1, true)));
+                Log(logFormat.Convert(SystemClock.Now, level, message, new StackFrame(1, true)));
             }
         }
 
@@ -207,7 +207,7 @@ namespace SoftCube.Log
             var level = Level.Error;
             if (MinLevel <= level && level <= MaxLevel)
             {
-                Log(level, logFormat.Convert(SystemClock.Now, level, message, new StackFrame(1, true)));
+                Log(logFormat.Convert(SystemClock.Now, level, message, new StackFrame(1, true)));
             }
         }
 
@@ -225,7 +225,7 @@ namespace SoftCube.Log
             var level = Level.Fatal;
             if (MinLevel <= level && level <= MaxLevel)
             {
-                Log(level, logFormat.Convert(SystemClock.Now, level, message, new StackFrame(1, true)));
+                Log(logFormat.Convert(SystemClock.Now, level, message, new StackFrame(1, true)));
             }
         }
 
@@ -233,8 +233,20 @@ namespace SoftCube.Log
         /// ログを出力します。
         /// </summary>
         /// <param name="level">ログレベル。</param>
+        /// <param name="message">ログメッセージ。</param>
+        public void Log(Level level, string message)
+        {
+            if (MinLevel <= level && level <= MaxLevel)
+            {
+                Log(logFormat.Convert(SystemClock.Now, level, message, new StackFrame(1, true)));
+            }
+        }
+
+        /// <summary>
+        /// ログを出力します。
+        /// </summary>
         /// <param name="log">ログ。</param>
-        public abstract void Log(Level level, string log);
+        public abstract void Log(string log);
 
         #endregion
 

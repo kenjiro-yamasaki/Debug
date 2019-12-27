@@ -105,16 +105,15 @@ namespace SoftCube.Log
         /// <summary>
         /// ログを出力します。
         /// </summary>
-        /// <param name="level">ログレベル。</param>
         /// <param name="log">ログ。</param>
-        public override void Log(Level level, string log)
+        public override void Log(string log)
         {
             if (CreationTime.ToString(DatePattern) != SystemClock.Now.ToString(DatePattern))
             {
                 RollLogAndBackupFiles();
             }
 
-            base.Log(level, log);
+            base.Log(log);
         }
 
         /// <summary>

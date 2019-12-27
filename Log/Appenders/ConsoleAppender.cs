@@ -44,9 +44,8 @@ namespace SoftCube.Log
         /// <summary>
         /// ログを出力します。
         /// </summary>
-        /// <param name="level">ログレベル。</param>
         /// <param name="log">ログ。</param>
-        public override void Log(Level level, string log)
+        public override void Log(string log)
         {
             Console.Write(log);
         }

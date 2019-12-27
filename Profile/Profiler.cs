@@ -148,13 +148,13 @@ namespace SoftCube.Profile
         /// </summary>
         private static void Log()
         {
-            Logger.Trace(TitleFormat);
+            Logger.Log(LogLevel, TitleFormat);
 
             foreach (var entry in Entries.OrderByDescending(p => p.TotalSeconds))
             {
                 foreach (var format in EntryFormats)
                 {
-                    Logger.Trace(format.Convert(entry));
+                    Logger.Log(LogLevel, format.Convert(entry));
                 }
             }
         }

@@ -195,6 +195,22 @@ namespace SoftCube.Log
             }
         }
 
+        /// <summary>
+        /// ログを出力します。
+        /// </summary>
+        /// <param name="level">ログレベル。</param>
+        /// <param name="message">ログメッセージ。</param>
+        public static void Log(Level level, string message)
+        {
+            lock (appenders)
+            {
+                foreach (var appender in appenders)
+                {
+                    appender.Log(level, message);
+                }
+            }
+        }
+
         #endregion
 
         /// <summary>
