@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Asserts\Asserts.csproj" />
+    <ProjectReference Include="..\Configuration\Configuration.csproj" />
     <ProjectReference Include="..\Runtime\Runtime.csproj" />
   </ItemGroup>
 

@@ -10,7 +10,7 @@ namespace SoftCube.Log
     /// <summary>
     /// ロガーの構成。
     /// </summary>
-    public class Configurator : Attribute
+    public class Configuration : Attribute
     {
         #region プロパティ
 
@@ -34,10 +34,10 @@ namespace SoftCube.Log
             }
  
             // 構成ファイルを読み込み、ロガーを初期化します。
-            var xml = XElement.Load(ConfigFilePath).Element("logger");
+            var xlogger = XElement.Load(ConfigFilePath).Element("logger");
 
             var appenders = new Dictionary<string, Appender>();
-            foreach (var xappender in xml.Elements("appender"))
+            foreach (var xappender in xlogger.Elements("appender"))
             {
                 var appenderName     = (string)xappender.Attribute("name");
                 var appenderTypeName = (string)xappender.Attribute("type");
@@ -50,14 +50,13 @@ namespace SoftCube.Log
                         $"この属性には appender の正確な型名 (例：{typeof(FileAppender).FullName}) を指定してください。");
                 }
 
-                var xparams  = xappender.Elements("param").ToDictionary(e => (string)e.Attribute("name"), e => (string)e.Attribute("value"));
-                var appender = Activator.CreateInstance(appenderType, xparams) as Appender;
+                var appender = Activator.CreateInstance(appenderType, xappender) as Appender;
                 Assert.NotNull(appender);
 
                 appenders.Add(appenderName, appender);
             }
 
-            foreach (var xappenderReference in xml.Element("root").Elements("appender-ref"))
+            foreach (var xappenderReference in xlogger.Element("root").Elements("appender-ref"))
             {
                 var appenderName = (string)xappenderReference.Attribute("ref");
                 if (appenders.ContainsKey(appenderName))

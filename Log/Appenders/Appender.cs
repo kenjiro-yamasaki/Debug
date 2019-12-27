@@ -1,7 +1,8 @@
-﻿using SoftCube.Runtime;
+﻿using SoftCube.Configuration;
+using SoftCube.Runtime;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
+using System.Xml.Linq;
 
 namespace SoftCube.Log
 {
@@ -68,18 +69,18 @@ namespace SoftCube.Log
         /// <summary>
         /// コンストラクター。
         /// </summary>
-        /// <param name="xparams">パラメーター名→値変換。</param>
-        public Appender(IReadOnlyDictionary<string, string> xparams)
+        /// <param name="xappender">XML の appender 要素。</param>
+        public Appender(XElement xappender)
             : this(new SystemClock())
         {
-            if (xparams == null)
+            if (xappender == null)
             {
-                throw new ArgumentNullException(nameof(xparams));
+                throw new ArgumentNullException(nameof(xappender));
             }
 
-            LogFormat = xparams[nameof(LogFormat)];
-            MinLevel  = xparams[nameof(MinLevel)].ToLevel();
-            MaxLevel  = xparams[nameof(MaxLevel)].ToLevel();
+            LogFormat = xappender.Property(nameof(LogFormat));
+            MinLevel  = xappender.Property(nameof(MinLevel)).ToLevel();
+            MaxLevel  = xappender.Property(nameof(MaxLevel)).ToLevel();
         }
 
         #endregion

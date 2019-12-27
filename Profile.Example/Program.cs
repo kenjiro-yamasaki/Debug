@@ -1,4 +1,5 @@
-﻿using SoftCube.Profile;
+﻿using SoftCube.Log;
+using SoftCube.Profile;
 using System.Threading;
 
 namespace Profile.Example
@@ -7,25 +8,22 @@ namespace Profile.Example
     {
         static void Main(string[] args)
         {
+            Logger.Trace("A");
             using (var transaction = Profiler.Start("A"))
             {
                 Thread.Sleep(1000);
             }
 
-
-            for (int i = 0; i < 10000; i++)
+            Logger.Trace("B");
+            using (var transaction = Profiler.Start("B"))
             {
-                using var profile = Profiler.Start("A");
+                Thread.Sleep(3000);
             }
 
-            for (int i = 0; i < 10000; i++)
+            Logger.Trace("C");
+            using (var transaction = Profiler.Start("C"))
             {
-                using var profile = Profiler.Start("B");
-            }
-
-            for (int i = 0; i < 10000; i++)
-            {
-                using var profile = Profiler.Start("C");
+                Thread.Sleep(2000);
             }
         }
     }

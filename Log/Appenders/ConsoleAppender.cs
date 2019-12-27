@@ -1,6 +1,6 @@
 ﻿using SoftCube.Runtime;
 using System;
-using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace SoftCube.Log
 {
@@ -31,9 +31,9 @@ namespace SoftCube.Log
         /// <summary>
         /// コンストラクター。
         /// </summary>
-        /// <param name="xparams">パラメーター名→値変換。</param>
-        public ConsoleAppender(IReadOnlyDictionary<string, string> xparams)
-            : base(xparams)
+        /// <param name="xappender">XML の appender 要素。</param>
+        public ConsoleAppender(XElement xappender)
+            : base(xappender)
         {
         }
 

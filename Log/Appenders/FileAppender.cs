@@ -1,9 +1,10 @@
 ﻿using SoftCube.Asserts;
+using SoftCube.Configuration;
 using SoftCube.Runtime;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Xml.Linq;
 
 namespace SoftCube.Log
 {
@@ -67,18 +68,18 @@ namespace SoftCube.Log
         /// <summary>
         /// コンストラクター。
         /// </summary>
-        /// <param name="xparams">パラメーター名→値変換。</param>
-        public FileAppender(IReadOnlyDictionary<string, string> xparams)
-            : base(xparams)
+        /// <param name="xappender">XML の appender 要素。</param>
+        public FileAppender(XElement xappender)
+            : base(xappender)
         {
-            if (xparams == null)
+            if (xappender == null)
             {
-                throw new ArgumentNullException(nameof(xparams));
+                throw new ArgumentNullException(nameof(xappender));
             }
 
-            var filePath = ParseFilePath(xparams["FilePath"]);
-            var append   = bool.Parse(xparams["Append"]);
-            var encoding = Encoding.GetEncoding(xparams["Encoding"]);
+            var filePath = ParseFilePath(xappender.Property("FilePath"));
+            var append   = bool.Parse(xappender.Property("Append"));
+            var encoding = Encoding.GetEncoding(xappender.Property("Encoding"));
 
             Open(filePath, append, encoding);
         }

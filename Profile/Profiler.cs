@@ -56,7 +56,7 @@ namespace SoftCube.Profile
         /// </summary>
         static Profiler()
         {
-            var configurator = Assembly.GetEntryAssembly().GetCustomAttribute<Configurator>();
+            var configurator = Assembly.GetEntryAssembly().GetCustomAttribute<Configuration>();
             configurator?.Configurate();
 
             Logger.Exiting += (s, e) => Log();

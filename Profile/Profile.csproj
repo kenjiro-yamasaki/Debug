@@ -4,10 +4,12 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>SoftCube.Profile</AssemblyName>
     <RootNamespace>SoftCube.Profile</RootNamespace>
+    <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Asserts\Asserts.csproj" />
+    <ProjectReference Include="..\Configuration\Configuration.csproj" />
     <ProjectReference Include="..\Log\Log.csproj" />
   </ItemGroup>
 

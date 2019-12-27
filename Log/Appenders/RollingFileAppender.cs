@@ -1,7 +1,8 @@
 ﻿using SoftCube.Runtime;
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Xml.Linq;
+using SoftCube.Configuration;
 
 namespace SoftCube.Log
 {
@@ -58,17 +59,17 @@ namespace SoftCube.Log
         /// <summary>
         /// コンストラクター。
         /// </summary>
-        /// <param name="xparams">パラメーター名→値変換。</param>
-        public RollingFileAppender(IReadOnlyDictionary<string, string> xparams)
-            : base(xparams)
+        /// <param name="xappender">XML の appender 要素。</param>
+        public RollingFileAppender(XElement xappender)
+            : base(xappender)
         {
-            if (xparams == null)
+            if (xappender == null)
             {
-                throw new ArgumentNullException(nameof(xparams));
+                throw new ArgumentNullException(nameof(xappender));
             }
 
-            MaxFileSize    = ParseMaxFileSize(xparams["MaxFileSize"]);
-            MaxBackupCount = int.Parse(xparams[nameof(MaxBackupCount)]);
+            MaxFileSize    = ParseMaxFileSize(xappender.Property("MaxFileSize"));
+            MaxBackupCount = int.Parse(xappender.Property(nameof(MaxBackupCount)));
         }
 
         #endregion
