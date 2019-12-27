@@ -273,7 +273,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             public void Date_正しく出力する()
             {
                 var appender = new StringAppender();
-                appender.LogFormat = "{Date}";
+                appender.LogFormat = "{DateTime}";
 
                 appender.Trace("A");
 
@@ -288,7 +288,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 clock.Now.Returns(new DateTime(2019, 12, 19, 22, 54, 19, 777));
 
                 var appender = new StringAppender(clock);
-                appender.LogFormat = "{Date:yyyy-MM-dd HH:mm:ss,fff}";
+                appender.LogFormat = "{DateTime:yyyy-MM-dd HH:mm:ss,fff}";
 
                 appender.Trace("A");
 
@@ -431,7 +431,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 clock.Now.Returns(new DateTime(2019, 12, 19, 22, 54, 19, 777));
 
                 var appender = new StringAppender(clock);
-                appender.LogFormat = "{Date:yyyy-MM-dd HH:mm:ss,fff} [{Level,-5}] - {Message}{NewLine}";
+                appender.LogFormat = "{DateTime:yyyy-MM-dd HH:mm:ss,fff} [{Level,-5}] - {Message}{NewLine}";
 
                 appender.Info("A");
 
@@ -444,12 +444,12 @@ namespace SoftCube.Log.Appenders.UnitTests
             public void 不正な書式_を投げる()
             {
                 var appender = new StringAppender();
-                appender.LogFormat = "{DateTime}";
+                appender.LogFormat = "{Date}";
 
                 var ex = Record.Exception(() => appender.Trace("A"));
 
                 Assert.IsType<InvalidOperationException>(ex);
-                Assert.Equal("ConversionPattern[{DateTime}]が不正です。", ex.Message);
+                Assert.Equal("ConversionPattern[{Date}]が不正です。", ex.Message);
             }
         }
 

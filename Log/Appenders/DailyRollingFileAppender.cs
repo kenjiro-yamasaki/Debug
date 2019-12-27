@@ -18,11 +18,11 @@ namespace SoftCube.Log
         #region プロパティ
 
         /// <summary>
-        /// 日付パターン。
+        /// 日付の書式。
         /// </summary>
         /// <remarks>
-        /// ここで指定した日付パターンがログファイルの後ろに添えられることになるのですが、
-        /// 日付パターンで使用する文字列は、<see cref="DateTime.ToString(string)"/> で決められたものを使用します。
+        /// 指定した書式にしたっがて、日付をフォーマットした文字列がログファイルの後ろに添えられます。
+        /// 日付の書式に指定する文字列は、<see cref="DateTime.ToString(string)"/> で決められたものを使用します。
         /// 使用できる文字列のうち、主なものを紹介します。
         /// ・yyyyy : 年の下 5 桁。
         /// ・M     : 月 (1～12)。
@@ -43,12 +43,12 @@ namespace SoftCube.Log
         /// 変換パターンは、以下の例のように指定します。
         /// ・"yyyy-MM-dd" → "2019-12-17"
         /// </example>
-        public string DatePattern
+        public string DateTimeFormat
         {
-            get => datePattern;
+            get => dateTimeFormat;
             set
             {
-                if (datePattern != value)
+                if (dateTimeFormat != value)
                 {
                     int index = value.IndexOfAny(Path.GetInvalidFileNameChars());
                     if (0 <= index)
@@ -56,11 +56,11 @@ namespace SoftCube.Log
                         throw new ArgumentException(string.Format($"ファイル名に使用できない文字[{value[index]}]が使われています。"), nameof(value));
                     }
 
-                    datePattern = value;
+                    dateTimeFormat = value;
                 }
             }
         }
-        private string datePattern = "yyyy-MM-dd";
+        private string dateTimeFormat = "yyyy-MM-dd";
 
         #endregion
 
@@ -94,7 +94,7 @@ namespace SoftCube.Log
                 throw new ArgumentNullException(nameof(xappender));
             }
 
-            DatePattern = xappender.Property(nameof(DatePattern));
+            DateTimeFormat = xappender.Property(nameof(DateTimeFormat));
         }
 
         #endregion
@@ -109,7 +109,7 @@ namespace SoftCube.Log
         /// <param name="log">ログ。</param>
         public override void Log(string log)
         {
-            if (CreationTime.ToString(DatePattern) != SystemClock.Now.ToString(DatePattern))
+            if (CreationTime.ToString(DateTimeFormat) != SystemClock.Now.ToString(DateTimeFormat))
             {
                 RollLogAndBackupFiles();
             }
@@ -137,7 +137,7 @@ namespace SoftCube.Log
             {
                 var logFilePath = filePath;
 
-                var backupFileName = string.Format($"{{0}}{{1}}.{{2:{DatePattern}}}", baseName, extension, date);
+                var backupFileName = string.Format($"{{0}}{{1}}.{{2:{DateTimeFormat}}}", baseName, extension, date);
                 var backupFilePath = Path.Combine(directoryName, backupFileName);
 
                 if (File.Exists(backupFilePath))

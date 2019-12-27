@@ -16,19 +16,19 @@ namespace SoftCube.Log
         /// </summary>
         /// <remarks>
         /// 以下の変数を使用してログの書式を定義します。
-        /// ・Date    : ログを出力した時刻 (ローカルタイムゾーン)。
-        /// ・File    : ログを出力したファイル名。
-        /// ・Level   : ログレベル。
-        /// ・Line    : ログを出力したファイル行番号。
-        /// ・Message : ログメッセージ。
-        /// ・Method  : ログを出力したメソッド名。
-        /// ・NewLine : 改行文字。
-        /// ・Thread  : ログを出力したスレッド番号。
-        /// ・Type    : ログを出力した型名。
+        /// ・DateTime : ログを出力した時刻 (ローカルタイムゾーン)。
+        /// ・File     : ログを出力したファイル名。
+        /// ・Level    : ログレベル。
+        /// ・Line     : ログを出力したファイル行番号。
+        /// ・Message  : ログメッセージ。
+        /// ・Method   : ログを出力したメソッド名。
+        /// ・NewLine  : 改行文字。
+        /// ・Thread   : ログを出力したスレッド番号。
+        /// ・Type     : ログを出力した型名。
         /// </remarks>
         /// <example>
         /// 書式文字列は、以下の例のように指定します。
-        /// ・"{Date:yyyy-MM-dd HH:mm:ss,fff} [{Level,-5}] - {Message}{NewLine}" → "2019-12-17 20:51:29,565 [INFO ] - message\r\n"
+        /// ・"{DateTime:yyyy-MM-dd HH:mm:ss,fff} [{Level,-5}] - {Message}{NewLine}" → "2019-12-17 20:51:29,565 [INFO ] - message\r\n"
         /// </example>
         internal string Format { get; }
 
@@ -52,12 +52,12 @@ namespace SoftCube.Log
             // 変換パターンを文字列フォーマットに置換します。
             // このとき部分置換を避けるために、文字数の多い変数から置換します。
             // 例えば、line を newline より先に置換してしまうと正しい文字列フォーマットに置換できません。
+            format = format.Replace("DateTime", "5");
             format = format.Replace("Message", "0");
             format = format.Replace("NewLine", "1");
             format = format.Replace("Method",  "2");
             format = format.Replace("Thread",  "3");
             format = format.Replace("Level",   "4");
-            format = format.Replace("Date",    "5");
             format = format.Replace("File",    "6");
             format = format.Replace("Line",    "7");
             format = format.Replace("Type",    "8");

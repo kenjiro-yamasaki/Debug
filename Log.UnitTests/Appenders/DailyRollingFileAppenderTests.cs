@@ -84,7 +84,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 using (var appender = new DailyRollingFileAppender(clock))
                 {
                     clock.Now.Returns(new DateTime(2019, 12, 30));
-                    appender.DatePattern = datePattern;
+                    appender.DateTimeFormat = datePattern;
                     appender.Open(logFilePath, append: false, Encoding.ASCII);
                     appender.Trace("A");
 
@@ -110,7 +110,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 using (var appender = new DailyRollingFileAppender(clock))
                 {
                     clock.Now.Returns(new DateTime(2020, 1, 30));
-                    appender.DatePattern = datePattern;
+                    appender.DateTimeFormat = datePattern;
                     appender.Open(logFilePath, append: false, Encoding.ASCII);
                     appender.Trace("A");
 
@@ -136,7 +136,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 using (var appender = new DailyRollingFileAppender(clock))
                 {
                     clock.Now.Returns(new DateTime(2020, 1, 30, 23, 59, 58));
-                    appender.DatePattern = datePattern;
+                    appender.DateTimeFormat = datePattern;
                     appender.Open(logFilePath, append: false, Encoding.ASCII);
                     appender.Trace("A");
 
@@ -162,7 +162,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 using (var appender = new DailyRollingFileAppender(clock))
                 {
                     clock.Now.Returns(new DateTime(2020, 1, 31, 22, 59, 58));
-                    appender.DatePattern = datePattern;
+                    appender.DateTimeFormat = datePattern;
                     appender.Open(logFilePath, append: false, Encoding.ASCII);
                     appender.Trace("A");
 
@@ -188,7 +188,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 using (var appender = new DailyRollingFileAppender(clock))
                 {
                     clock.Now.Returns(new DateTime(2020, 1, 31, 23, 58, 58));
-                    appender.DatePattern = datePattern;
+                    appender.DateTimeFormat = datePattern;
                     appender.Open(logFilePath, append: false, Encoding.ASCII);
                     appender.Trace("A");
 
@@ -214,7 +214,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 using (var appender = new DailyRollingFileAppender(clock))
                 {
                     clock.Now.Returns(new DateTime(2020, 1, 31, 23, 59, 58, 998));
-                    appender.DatePattern = datePattern;
+                    appender.DateTimeFormat = datePattern;
                     appender.Open(logFilePath, append: false, Encoding.ASCII);
                     appender.Trace("A");
 
@@ -234,7 +234,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             {
                 using (var appender = new DailyRollingFileAppender())
                 {
-                    var ex = Record.Exception(() => appender.DatePattern = "?");
+                    var ex = Record.Exception(() => appender.DateTimeFormat = "?");
                     
                     Assert.IsType<ArgumentException>(ex);
                 }
@@ -270,7 +270,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             using (var appender = new DailyRollingFileAppender(clock))
             {
                 clock.Now.Returns(new DateTime(2019, 12, 21));
-                appender.DatePattern = datePattern;
+                appender.DateTimeFormat = datePattern;
                 appender.Open(logFilePath, append: false, Encoding.ASCII);
                 appender.Trace("A");
 
