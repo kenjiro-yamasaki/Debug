@@ -32,9 +32,9 @@ namespace SoftCube.Profile
         public string Format { get; }
 
         /// <summary>
-        /// 内部ログ書式。
+        /// 文字列フォーマット。
         /// </summary>
-        private string InnerFormat { get; }
+        private string StringFormat { get; }
 
         #endregion
 
@@ -61,7 +61,7 @@ namespace SoftCube.Profile
             format = format.Replace("Count",          "1");
             format = format.Replace("Name",           "0");
 
-            InnerFormat = format;
+            StringFormat = format;
         }
 
         #endregion
@@ -78,7 +78,7 @@ namespace SoftCube.Profile
             try
             {
                 return string.Format(
-                    InnerFormat,
+                    StringFormat,
                     entry.Name,
                     entry.Count,
                     entry.TotalSeconds,

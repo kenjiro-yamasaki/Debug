@@ -5,37 +5,37 @@ using System.Threading;
 namespace SoftCube.Log
 {
     /// <summary>
-    /// ログ変換パターン。
+    /// ログの書式。
     /// </summary>
-    internal class ConversionPattern
+    internal class LogFormat
     {
         #region プロパティ
 
         /// <summary>
-        /// 変換パターン。
+        /// 書式。
         /// </summary>
         /// <remarks>
-        /// 以下の変数を使用してログ出力の変換パターンを定義します。
-        /// ・date    : ログを出力した時刻 (ローカルタイムゾーン)。
-        /// ・file    : ログを出力したファイル名。
-        /// ・level   : ログレベル。
-        /// ・line    : ログを出力したファイル行番号。
-        /// ・message : ログメッセージ。
-        /// ・method  : ログを出力したメソッド名。
-        /// ・newline : 改行文字。
-        /// ・thread  : ログを出力したスレッド番号。
-        /// ・type    : ログを出力した型名。
+        /// 以下の変数を使用してログの書式を定義します。
+        /// ・Date    : ログを出力した時刻 (ローカルタイムゾーン)。
+        /// ・File    : ログを出力したファイル名。
+        /// ・Level   : ログレベル。
+        /// ・Line    : ログを出力したファイル行番号。
+        /// ・Message : ログメッセージ。
+        /// ・Method  : ログを出力したメソッド名。
+        /// ・NewLine : 改行文字。
+        /// ・Thread  : ログを出力したスレッド番号。
+        /// ・Type    : ログを出力した型名。
         /// </remarks>
         /// <example>
-        /// 変換パターンは、以下の例のように指定します。
-        /// ・"{date:yyyy-MM-dd HH:mm:ss,fff} [{level,-5}] - {message}{newline}" → "2019-12-17 20:51:29,565 [INFO ] - message\r\n"
+        /// 書式文字列は、以下の例のように指定します。
+        /// ・"{Date:yyyy-MM-dd HH:mm:ss,fff} [{Level,-5}] - {Message}{NewLine}" → "2019-12-17 20:51:29,565 [INFO ] - message\r\n"
         /// </example>
-        internal string Pattern { get; }
+        internal string Format { get; }
 
         /// <summary>
         /// 文字列フォーマット。
         /// </summary>
-        private string Format { get; }
+        private string StringFormat { get; }
 
         #endregion
 
@@ -44,24 +44,24 @@ namespace SoftCube.Log
         /// <summary>
         /// コンストラクター。
         /// </summary>
-        /// <param name="pattern">変換パターン。<seealso cref="Pattern"/></param>
-        internal ConversionPattern(string pattern)
+        /// <param name="format">変換パターン。<seealso cref="Format"/></param>
+        internal LogFormat(string format)
         {
-            Pattern = pattern;
+            Format = format;
 
             // 変換パターンを文字列フォーマットに置換します。
             // このとき部分置換を避けるために、文字数の多い変数から置換します。
             // 例えば、line を newline より先に置換してしまうと正しい文字列フォーマットに置換できません。
-            pattern = pattern.Replace("Message", "0");
-            pattern = pattern.Replace("NewLine", "1");
-            pattern = pattern.Replace("Method",  "2");
-            pattern = pattern.Replace("Thread",  "3");
-            pattern = pattern.Replace("Level",   "4");
-            pattern = pattern.Replace("Date",    "5");
-            pattern = pattern.Replace("File",    "6");
-            pattern = pattern.Replace("Line",    "7");
-            pattern = pattern.Replace("Type",    "8");
-            Format = pattern;
+            format = format.Replace("Message", "0");
+            format = format.Replace("NewLine", "1");
+            format = format.Replace("Method",  "2");
+            format = format.Replace("Thread",  "3");
+            format = format.Replace("Level",   "4");
+            format = format.Replace("Date",    "5");
+            format = format.Replace("File",    "6");
+            format = format.Replace("Line",    "7");
+            format = format.Replace("Type",    "8");
+            StringFormat = format;
         }
 
         #endregion
@@ -88,7 +88,7 @@ namespace SoftCube.Log
                 var thread  = Thread.CurrentThread.ManagedThreadId;
 
                 return string.Format(
-                    Format,
+                    StringFormat,
                     message,
                     newline,
                     method,
@@ -101,7 +101,7 @@ namespace SoftCube.Log
             }
             catch (FormatException)
             {
-                throw new InvalidOperationException($"ConversionPattern[{Pattern}]が不正です。");
+                throw new InvalidOperationException($"ConversionPattern[{Format}]が不正です。");
             }
         }
 

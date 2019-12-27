@@ -38,17 +38,16 @@ namespace SoftCube.Profile
             Profiler.LogLevel    = xprofiler.Param(nameof(Profiler.LogLevel)).ToLevel();
             Profiler.TitleFormat = xprofiler.Param(nameof(Profiler.TitleFormat));
 
-            foreach (var format in xprofiler.Params("EntryFormat"))
+            foreach (var format in xprofiler.Params(nameof(EntryFormat)))
             {
                 Profiler.Add(new EntryFormat(format));
-            
             }
         }
 
         #endregion
     }
 
-    static class XElementExtensions
+    internal static class XElementExtensions
     {
         public static string Param(this XElement xelement, string name)
         {
