@@ -19,7 +19,7 @@ namespace SoftCube.Configuration
         /// <returns>プロパティ値。</returns>
         public static string Property(this XElement xelement, string name)
         {
-            return (string)xelement.Elements("param").Single(e => (string)e.Attribute("name") == name).Attribute("value");
+            return (string)xelement.Elements("property").Single(e => (string)e.Attribute("name") == name).Attribute("value");
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace SoftCube.Configuration
         /// <returns>プロパティ値コレクション。</returns>
         public static IEnumerable<string> Properties(this XElement xelement, string name)
         {
-            return xelement.Elements("param").Where(e => (string)e.Attribute("name") == name).Select(e => (string)e.Attribute("value"));
+            return xelement.Elements("property").Where(e => (string)e.Attribute("name") == name).Select(e => (string)e.Attribute("value"));
         }
 
         #endregion

@@ -56,9 +56,9 @@ namespace SoftCube.Log
                 appenders.Add(appenderName, appender);
             }
 
-            foreach (var xappenderReference in xlogger.Element("root").Elements("appender-ref"))
+            foreach (var xappenderReference in xlogger.Elements("use-appender"))
             {
-                var appenderName = (string)xappenderReference.Attribute("ref");
+                var appenderName = (string)xappenderReference.Attribute("name");
                 if (appenders.ContainsKey(appenderName))
                 {
                     Logger.Add(appenders[appenderName]);
