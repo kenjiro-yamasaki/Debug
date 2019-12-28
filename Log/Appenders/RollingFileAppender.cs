@@ -97,9 +97,8 @@ namespace SoftCube.Log
         /// </summary>
         private void RollLogAndBackupFiles()
         {
-            var filePath      = FilePath;
-            var directoryName = Path.GetDirectoryName(filePath);
-            var fileName      = Path.GetFileName(filePath);
+            var directoryName = Path.GetDirectoryName(FilePath);
+            var fileName      = Path.GetFileName(FilePath);
             var baseName      = Path.GetFileNameWithoutExtension(fileName);
             var extension     = Path.GetExtension(fileName);
             var encoding      = Encoding;
@@ -129,7 +128,6 @@ namespace SoftCube.Log
             // 現在のログファイルを新規バックアップファイルとします。
             if (1 <= MaxBackupCount)
             {
-                var logFilePath    = filePath;
                 var backupNumber   = 1;
                 var backupFilePath = Path.Combine(directoryName, $"{baseName}{extension}.{backupNumber}");
 
@@ -138,11 +136,11 @@ namespace SoftCube.Log
                     File.Delete(backupFilePath);
                 }
 
-                File.Move(logFilePath, backupFilePath);
+                File.Move(FilePath, backupFilePath);
             }
 
             // ログファイルを新規作成します。
-            Open(filePath, append: false, encoding);
+            Open(FilePath, append: false, encoding);
         }
 
         #endregion

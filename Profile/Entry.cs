@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SoftCube.Asserts;
+using System;
 using System.Diagnostics;
 
 namespace SoftCube.Profile
@@ -7,7 +8,10 @@ namespace SoftCube.Profile
     /// エントリー。
     /// </summary>
     /// <remarks>
-    /// プロファイルのエントリーを表現します。
+    /// エントリーは、計測と計測結果の管理をおこないます。
+    /// <see cref="Start()"/> を呼び出すと計測を開始します。
+    /// <see cref="Stop()"/> を呼び出すと計測を終了し、計測結果をプロパティに反映します。
+    /// <see cref="Start()"/> と <see cref="Stop()"/> の呼び出しは、<see cref="Transaction"/> がおこないます。
     /// </remarks>
     internal class Entry
     {
@@ -95,6 +99,7 @@ namespace SoftCube.Profile
         /// </summary>
         public void Start()
         {
+            Assert.False(Stopwatch.IsRunning);
             Stopwatch.Restart();
         }
 
@@ -103,6 +108,7 @@ namespace SoftCube.Profile
         /// </summary>
         public void Stop()
         {
+            Assert.True(Stopwatch.IsRunning);
             Stopwatch.Stop();
 
             var elapsedTicks = Stopwatch.ElapsedTicks;

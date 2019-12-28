@@ -21,7 +21,7 @@ namespace SoftCube.Log
         /// 日付の書式。
         /// </summary>
         /// <remarks>
-        /// 指定した書式にしたっがて、日付をフォーマットした文字列がログファイルの後ろに添えられます。
+        /// 指定した書式にしたがって、日付をフォーマットした文字列がログファイルの後ろに添えられます。
         /// 日付の書式に指定する文字列は、<see cref="DateTime.ToString(string)"/> で決められたものを使用します。
         /// 使用できる文字列のうち、主なものを紹介します。
         /// ・yyyyy : 年の下 5 桁。
@@ -122,9 +122,8 @@ namespace SoftCube.Log
         /// </summary>
         private void RollLogAndBackupFiles()
         {
-            var filePath      = FilePath;
-            var directoryName = Path.GetDirectoryName(filePath);
-            var fileName      = Path.GetFileName(filePath);
+            var directoryName = Path.GetDirectoryName(FilePath);
+            var fileName      = Path.GetFileName(FilePath);
             var baseName      = Path.GetFileNameWithoutExtension(fileName);
             var extension     = Path.GetExtension(fileName);
             var encoding      = Encoding;
@@ -135,8 +134,6 @@ namespace SoftCube.Log
 
             // 現在のログファイルを新規バックアップファイルとします。
             {
-                var logFilePath = filePath;
-
                 var backupFileName = string.Format($"{{0}}{{1}}.{{2:{DateTimeFormat}}}", baseName, extension, date);
                 var backupFilePath = Path.Combine(directoryName, backupFileName);
 
@@ -145,11 +142,11 @@ namespace SoftCube.Log
                     File.Delete(backupFilePath);
                 }
 
-                File.Move(logFilePath, backupFilePath);
+                File.Move(FilePath, backupFilePath);
             }
 
             // ログファイルを新規作成します。
-            Open(filePath, append: false, encoding);
+            Open(FilePath, append: false, encoding);
         }
 
         #endregion
