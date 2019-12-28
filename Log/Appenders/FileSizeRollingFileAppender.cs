@@ -7,13 +7,13 @@ using SoftCube.Configuration;
 namespace SoftCube.Log
 {
     /// <summary>
-    /// ローリングファイルアペンダー。
+    /// ファイル容量ローリングファイルアペンダー。
     /// </summary>
     /// <remarks>
-    /// <see cref="RollingFileAppender"/> は <see cref="FileAppender"/> クラスを継承したクラスです。
+    /// <see cref="FileSizeRollingFileAppender"/> は <see cref="FileAppender"/> クラスを継承したクラスです。
     /// ログファイルが一定のサイズを超えたとき、バックアップファイルを作成したい場合に使用します。
     /// </remarks>
-    public class RollingFileAppender : FileAppender
+    public class FileSizeRollingFileAppender : FileAppender
     {
         #region プロパティ
 
@@ -43,7 +43,7 @@ namespace SoftCube.Log
         /// <summary>
         /// コンストラクター。
         /// </summary>
-        public RollingFileAppender()
+        public FileSizeRollingFileAppender()
         {
         }
 
@@ -51,7 +51,7 @@ namespace SoftCube.Log
         /// コンストラクター。
         /// </summary>
         /// <param name="systemClock">システムクロック。</param>
-        public RollingFileAppender(ISystemClock systemClock)
+        public FileSizeRollingFileAppender(ISystemClock systemClock)
             : base(systemClock)
         {
         }
@@ -60,7 +60,7 @@ namespace SoftCube.Log
         /// コンストラクター。
         /// </summary>
         /// <param name="xappender">XML の appender 要素。</param>
-        public RollingFileAppender(XElement xappender)
+        public FileSizeRollingFileAppender(XElement xappender)
             : base(xappender)
         {
             if (xappender == null)
@@ -97,8 +97,9 @@ namespace SoftCube.Log
         /// </summary>
         private void RollLogAndBackupFiles()
         {
-            var directoryName = Path.GetDirectoryName(FilePath);
-            var fileName      = Path.GetFileName(FilePath);
+            var filePath      = FilePath;
+            var directoryName = Path.GetDirectoryName(filePath);
+            var fileName      = Path.GetFileName(filePath);
             var baseName      = Path.GetFileNameWithoutExtension(fileName);
             var extension     = Path.GetExtension(fileName);
             var encoding      = Encoding;
@@ -136,11 +137,11 @@ namespace SoftCube.Log
                     File.Delete(backupFilePath);
                 }
 
-                File.Move(FilePath, backupFilePath);
+                File.Move(filePath, backupFilePath);
             }
 
             // ログファイルを新規作成します。
-            Open(FilePath, append: false, encoding);
+            Open(filePath, append: false, encoding);
         }
 
         #endregion

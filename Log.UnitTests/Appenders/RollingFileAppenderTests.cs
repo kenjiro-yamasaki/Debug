@@ -74,7 +74,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 var logFilePath = TestFile.GetFilePath(".log");
                 ClearLogAndBackupFiles(logFilePath);
 
-                using (var appender = new RollingFileAppender())
+                using (var appender = new FileSizeRollingFileAppender())
                 {
                     appender.Open(logFilePath, append: false, Encoding.ASCII);
                     appender.MaxFileSize = 1;
@@ -93,7 +93,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 var logFilePath = TestFile.GetFilePath(".log");
                 ClearLogAndBackupFiles(logFilePath);
 
-                using (var appender = new RollingFileAppender())
+                using (var appender = new FileSizeRollingFileAppender())
                 {
                     appender.Open(logFilePath, append: false, Encoding.ASCII);
                     appender.MaxFileSize = 2;
@@ -114,7 +114,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 var logFilePath = TestFile.GetFilePath(".log");
                 ClearLogAndBackupFiles(logFilePath);
 
-                using (var appender = new RollingFileAppender())
+                using (var appender = new FileSizeRollingFileAppender())
                 {
                     appender.Open(logFilePath, append: false, Encoding.ASCII);
                     appender.MaxFileSize    = 1;
@@ -134,7 +134,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 var logFilePath = TestFile.GetFilePath(".log");
                 ClearLogAndBackupFiles(logFilePath);
 
-                using (var appender = new RollingFileAppender())
+                using (var appender = new FileSizeRollingFileAppender())
                 {
                     appender.Open(logFilePath, append: false, Encoding.ASCII);
                     appender.MaxFileSize    = 1;
@@ -154,7 +154,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 var logFilePath = TestFile.GetFilePath(".log");
                 ClearLogAndBackupFiles(logFilePath);
 
-                using (var appender = new RollingFileAppender())
+                using (var appender = new FileSizeRollingFileAppender())
                 {
                     appender.Open(logFilePath, append: false, Encoding.ASCII);
                     appender.MaxFileSize    = 1;
@@ -176,7 +176,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 var logFilePath = TestFile.GetFilePath(".log");
                 ClearLogAndBackupFiles(logFilePath);
 
-                using (var appender = new RollingFileAppender())
+                using (var appender = new FileSizeRollingFileAppender())
                 {
                     appender.Open(logFilePath, append: false, Encoding.ASCII);
                     appender.MaxFileSize    = 1;

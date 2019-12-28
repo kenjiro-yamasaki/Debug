@@ -81,7 +81,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 var clock = Substitute.For<ISystemClock>();
                 var datePattern = "yyyy";
 
-                using (var appender = new DailyRollingFileAppender(clock))
+                using (var appender = new DateTimeRollingFileAppender(clock))
                 {
                     clock.Now.Returns(new DateTime(2019, 12, 30));
                     appender.DateTimeFormat = datePattern;
@@ -107,7 +107,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 var clock = Substitute.For<ISystemClock>();
                 var datePattern = "yyyyMM";
 
-                using (var appender = new DailyRollingFileAppender(clock))
+                using (var appender = new DateTimeRollingFileAppender(clock))
                 {
                     clock.Now.Returns(new DateTime(2020, 1, 30));
                     appender.DateTimeFormat = datePattern;
@@ -133,7 +133,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 var clock = Substitute.For<ISystemClock>();
                 var datePattern = "yyyyMMdd";
 
-                using (var appender = new DailyRollingFileAppender(clock))
+                using (var appender = new DateTimeRollingFileAppender(clock))
                 {
                     clock.Now.Returns(new DateTime(2020, 1, 30, 23, 59, 58));
                     appender.DateTimeFormat = datePattern;
@@ -159,7 +159,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 var clock = Substitute.For<ISystemClock>();
                 var datePattern = "yyyyMMddHH";
 
-                using (var appender = new DailyRollingFileAppender(clock))
+                using (var appender = new DateTimeRollingFileAppender(clock))
                 {
                     clock.Now.Returns(new DateTime(2020, 1, 31, 22, 59, 58));
                     appender.DateTimeFormat = datePattern;
@@ -185,7 +185,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 var clock = Substitute.For<ISystemClock>();
                 var datePattern = "yyyyMMddHHmm";
 
-                using (var appender = new DailyRollingFileAppender(clock))
+                using (var appender = new DateTimeRollingFileAppender(clock))
                 {
                     clock.Now.Returns(new DateTime(2020, 1, 31, 23, 58, 58));
                     appender.DateTimeFormat = datePattern;
@@ -211,7 +211,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 var clock = Substitute.For<ISystemClock>();
                 var datePattern = "yyyyMMddHHmmss";
 
-                using (var appender = new DailyRollingFileAppender(clock))
+                using (var appender = new DateTimeRollingFileAppender(clock))
                 {
                     clock.Now.Returns(new DateTime(2020, 1, 31, 23, 59, 58, 998));
                     appender.DateTimeFormat = datePattern;
@@ -232,7 +232,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             [Fact]
             public void 不正な書式_を投げる()
             {
-                using (var appender = new DailyRollingFileAppender())
+                using (var appender = new DateTimeRollingFileAppender())
                 {
                     var ex = Record.Exception(() => appender.DateTimeFormat = "?");
                     
@@ -249,7 +249,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             var clock = Substitute.For<ISystemClock>();
             clock.Now.Returns(new DateTime(2019, 12, 21));
 
-            using (var appender = new DailyRollingFileAppender(clock))
+            using (var appender = new DateTimeRollingFileAppender(clock))
             {
                 appender.Open(logFilePath, append: false, Encoding.ASCII);
                 appender.Trace("A");
@@ -267,7 +267,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             var clock = Substitute.For<ISystemClock>();
             var datePattern = "yyyyMMdd";
 
-            using (var appender = new DailyRollingFileAppender(clock))
+            using (var appender = new DateTimeRollingFileAppender(clock))
             {
                 clock.Now.Returns(new DateTime(2019, 12, 21));
                 appender.DateTimeFormat = datePattern;

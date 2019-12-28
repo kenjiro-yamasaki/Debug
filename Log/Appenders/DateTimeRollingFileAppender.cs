@@ -10,10 +10,10 @@ namespace SoftCube.Log
     /// 日付ローリングファイルアペンダー。
     /// </summary>
     /// <remarks>
-    /// <see cref="DailyRollingFileAppender"/> は <see cref="FileAppender"/> クラスを継承したクラスです。
+    /// <see cref="DateTimeRollingFileAppender"/> は <see cref="FileAppender"/> クラスを継承したクラスです。
     /// 日付や時間によりログファイルのバックアップを作成したい場合に使用します。
     /// </remarks>
-    public class DailyRollingFileAppender : FileAppender
+    public class DateTimeRollingFileAppender : FileAppender
     {
         #region プロパティ
 
@@ -69,7 +69,7 @@ namespace SoftCube.Log
         /// <summary>
         /// コンストラクター。
         /// </summary>
-        public DailyRollingFileAppender()
+        public DateTimeRollingFileAppender()
         {
         }
 
@@ -77,7 +77,7 @@ namespace SoftCube.Log
         /// コンストラクター。
         /// </summary>
         /// <param name="systemClock">システムクロック。</param>
-        public DailyRollingFileAppender(ISystemClock systemClock)
+        public DateTimeRollingFileAppender(ISystemClock systemClock)
             : base(systemClock)
         {
         }
@@ -86,7 +86,7 @@ namespace SoftCube.Log
         /// コンストラクター。
         /// </summary>
         /// <param name="xappender">XML の appender 要素。</param>
-        public DailyRollingFileAppender(XElement xappender)
+        public DateTimeRollingFileAppender(XElement xappender)
             : base(xappender)
         {
             if (xappender == null)
@@ -122,8 +122,9 @@ namespace SoftCube.Log
         /// </summary>
         private void RollLogAndBackupFiles()
         {
-            var directoryName = Path.GetDirectoryName(FilePath);
-            var fileName      = Path.GetFileName(FilePath);
+            var filePath      = FilePath;
+            var directoryName = Path.GetDirectoryName(filePath);
+            var fileName      = Path.GetFileName(filePath);
             var baseName      = Path.GetFileNameWithoutExtension(fileName);
             var extension     = Path.GetExtension(fileName);
             var encoding      = Encoding;
@@ -142,11 +143,11 @@ namespace SoftCube.Log
                     File.Delete(backupFilePath);
                 }
 
-                File.Move(FilePath, backupFilePath);
+                File.Move(filePath, backupFilePath);
             }
 
             // ログファイルを新規作成します。
-            Open(FilePath, append: false, encoding);
+            Open(filePath, append: false, encoding);
         }
 
         #endregion
