@@ -4,8 +4,11 @@ using System.Diagnostics;
 namespace SoftCube.Profile
 {
     /// <summary>
-    /// プロファイルのエントリー。
+    /// エントリー。
     /// </summary>
+    /// <remarks>
+    /// プロファイルのエントリーを表現します。
+    /// </remarks>
     internal class Entry
     {
         #region プロパティ

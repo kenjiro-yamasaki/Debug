@@ -3,8 +3,12 @@
 namespace SoftCube.Profile
 {
     /// <summary>
-    /// プロファイルのトランザクション。
+    /// トランザクション。
     /// </summary>
+    /// <remarks>
+    /// トランザクションは自分が担当するエントリーに対して、計測の開始と終了を指示します。
+    /// 具体的には、<see cref="Transaction(Entry)"/> で計測開始を指示し、<see cref="Dispose(bool)"/> で計測終了を指示します。
+    /// </remarks>
     public class Transaction : IDisposable
     {
         #region プロパティ

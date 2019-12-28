@@ -7,7 +7,7 @@ using System.Xml.Linq;
 namespace SoftCube.Profile
 {
     /// <summary>
-    /// プロファイラーの構成。
+    /// <see cref="Profiler"> の構成。
     /// </summary>
     public class Configuration : Attribute
     {
@@ -20,10 +20,21 @@ namespace SoftCube.Profile
 
         #endregion
 
+        #region コンストラクター
+
+        /// <summary>
+        /// コンストラクター。
+        /// </summary>
+        public Configuration()
+        {
+        }
+
+        #endregion
+
         #region メソッド
 
         /// <summary>
-        /// ロガーを構成します。
+        /// <see cref="Profiler"> を構成します。
         /// </summary>
         internal void Configurate()
         {
@@ -32,7 +43,7 @@ namespace SoftCube.Profile
                 return;
             }
 
-            // 構成ファイルを読み込み、ロガーを初期化します。
+            // 構成ファイルを読み込み、プロファイラーを構成します。
             var xprofiler = XElement.Load(ConfigFilePath).Element("profiler");
 
             Profiler.LogLevel    = xprofiler.Property(nameof(Profiler.LogLevel)).ToLevel();

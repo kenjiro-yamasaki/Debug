@@ -8,7 +8,7 @@ using System.Xml.Linq;
 namespace SoftCube.Log
 {
     /// <summary>
-    /// ロガーの構成。
+    /// <see cref="Logger"/> の構成。
     /// </summary>
     public class Configuration : Attribute
     {
@@ -24,7 +24,7 @@ namespace SoftCube.Log
         #region メソッド
 
         /// <summary>
-        /// ロガーを構成します。
+        /// <see cref="Logger"/> を構成します。
         /// </summary>
         internal void Configurate()
         {
@@ -33,7 +33,7 @@ namespace SoftCube.Log
                 return;
             }
  
-            // 構成ファイルを読み込み、ロガーを初期化します。
+            // 構成ファイルを読み込み、ロガーを構成します。
             var xlogger = XElement.Load(ConfigFilePath).Element("logger");
 
             var appenders = new Dictionary<string, Appender>();
