@@ -16,15 +16,15 @@ namespace SoftCube.Test
         /// ファイルパスを取得します。
         /// </summary>
         /// <param name="extension">拡張子。</param>
-        /// <param name="callingMemberName">呼び出し元のメソッド名。</param>
-        /// <param name="callingLineNumber">呼び出し元の行番号。</param>
+        /// <param name="callerMemberName">呼び出し元のメソッド名。</param>
+        /// <param name="callerLineNumber">呼び出し元の行番号。</param>
         /// <returns>ファイルパス。</returns>
-        public static string GetFilePath(string extension, int skipFrames = 0, [CallerMemberName] string callingMemberName = "", [CallerLineNumber] int callingLineNumber = 0)
+        public static string GetFilePath(string extension, int skipFrames = 0, [CallerMemberName] string callerMemberName = "", [CallerLineNumber] int callerLineNumber = 0)
         {
             var stackFrame = new StackFrame(skipFrames + 1, true);
             var type       = stackFrame.GetMethod().DeclaringType.FullName;
 
-            var filePath = Path.Combine(Environment.CurrentDirectory, $"{type}_{callingMemberName}{callingLineNumber}{extension}");
+            var filePath = Path.Combine(Environment.CurrentDirectory, $"{type}_{callerMemberName}{callerLineNumber}{extension}");
             DeleteIfExists(filePath);
 
             return filePath;

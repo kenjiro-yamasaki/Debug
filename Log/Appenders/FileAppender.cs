@@ -31,7 +31,12 @@ namespace SoftCube.Log
         /// <summary>
         /// エンコーディング。
         /// </summary>
-        public Encoding Encoding { get; set; } = Encoding.UTF8;
+        public Encoding Encoding
+        {
+            get => encoding;
+            set => encoding = value ?? throw new ArgumentNullException(nameof(value));
+        }
+        private Encoding encoding = Encoding.UTF8;
 
         /// <summary>
         /// ファイルパス。
@@ -102,6 +107,11 @@ namespace SoftCube.Log
             get => dateTimeFormat;
             set
             {
+                if (value == null)
+                {
+                    throw new ArgumentNullException(nameof(value));
+                }
+
                 if (dateTimeFormat != value)
                 {
                     int index = value.IndexOfAny(Path.GetInvalidFileNameChars());
@@ -125,9 +135,31 @@ namespace SoftCube.Log
         /// インデックスの書式に指定する文字列は、<see cref="int.ToString(string)"/> で決められたものを使用します。
         /// </remarks>
         /// <example>
-        /// ・"000" → "007"
+        /// ・"D3" → "007"
         /// </example>
-        public string IndexFormat { get; set; } = "000";
+        public string IndexFormat
+        {
+            get => indexFormat;
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException(nameof(value));
+                }
+
+                if (dateTimeFormat != value)
+                {
+                    int index = value.IndexOfAny(Path.GetInvalidFileNameChars());
+                    if (0 <= index)
+                    {
+                        throw new ArgumentException(string.Format($"ファイル名に使用できない文字[{value[index]}]が使われています。"), nameof(value));
+                    }
+
+                    dateTimeFormat = value;
+                }
+            }
+        }
+        private string indexFormat = "D3";
 
         #endregion
 
@@ -221,7 +253,7 @@ namespace SoftCube.Log
             Close();
 
             // ログファイルを開きます。
-            if (FileOpenPolicy != FileOpenPolicy.Append || !File.Exists(filePath))
+            if (FileOpenPolicy == FileOpenPolicy.Overwrite || !File.Exists(filePath))
             {
                 File.Create(filePath).Dispose();
                 File.SetCreationTime(filePath, SystemClock.Now);

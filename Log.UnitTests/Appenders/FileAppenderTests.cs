@@ -2,7 +2,6 @@
 using SoftCube.Runtime;
 using SoftCube.Test;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -12,17 +11,17 @@ namespace SoftCube.Log.Appenders.UnitTests
 {
     public class FileAppenderTests
     {
-        #region テスト用ユーティリティ
+        #region テストユーティリティ
 
         /// <summary>
         /// ログファイルパスを取得します。
         /// </summary>
-        /// <param name="callingMemberName"></param>
-        /// <param name="callingLineNumber"></param>
+        /// <param name="callerMemberName">呼び出し元のメソッド名。</param>
+        /// <param name="callerLineNumber">呼び出し元の行番号。</param>
         /// <returns>ログファイルパス。</returns>
-        private static string GetLogFilePath([CallerMemberName] string callingMemberName = "", [CallerLineNumber] int callingLineNumber = 0)
+        private static string GetLogFilePath([CallerMemberName] string callerMemberName = "", [CallerLineNumber] int callerLineNumber = 0)
         {
-            var logFilePath = TestFile.GetFilePath(".log", 1, callingMemberName, callingLineNumber);
+            var logFilePath = TestFile.GetFilePath(".log", 1, callerMemberName, callerLineNumber);
             ClearLogAndBackupFiles(logFilePath);
             return logFilePath;
         }
@@ -42,6 +41,22 @@ namespace SoftCube.Log.Appenders.UnitTests
         }
 
         /// <summary>
+        /// ログファイルを生成します。
+        /// </summary>
+        /// <param name="logFilePath">ログファイルパス。</param>
+        /// <param name="log">ログ。</param>
+        private static void CreateLogFile(string logFilePath, string log, DateTime dateTime)
+        {
+            var clock = Substitute.For<ISystemClock>();
+            using (var appender = new FileAppender(clock))
+            {
+                clock.Now.Returns(dateTime);
+                appender.Open(logFilePath);
+                appender.Trace(log);
+            }
+        }
+
+        /// <summary>
         /// ログファイルとバックアップファイルをクリアします。
         /// </summary>
         /// <param name="logFilePath">ログファイルパス。</param>
@@ -52,9 +67,13 @@ namespace SoftCube.Log.Appenders.UnitTests
                 File.Delete(logFilePath);
             }
 
-            foreach (var path in GetBackupFilePathes(logFilePath))
+            foreach (var filePath in Directory.GetFiles(Path.GetDirectoryName(logFilePath), "*", SearchOption.TopDirectoryOnly))
             {
-                File.Delete(path);
+                var fileName = Path.GetFileName(filePath);
+                if (fileName.StartsWith(Path.GetFileNameWithoutExtension(logFilePath)))
+                {
+                    File.Delete(filePath);
+                }
             }
         }
 
@@ -97,29 +116,269 @@ namespace SoftCube.Log.Appenders.UnitTests
             return Path.Combine(directoryName, backupFileName);
         }
 
-        /// <summary>
-        /// バックアップファイルパスコレクションを取得します。
-        /// </summary>
-        /// <param name="logFilePath">ログファイルパス。</param>
-        /// <returns>バックアップファイルパスコレクション。</returns>
-        private static IEnumerable<string> GetBackupFilePathes(string logFilePath)
+        #endregion
+
+        public class FileOpenPolicy
         {
-            var directoryName = Path.GetDirectoryName(logFilePath);
-            var extension = Path.GetExtension(logFilePath);
-
-            string[] files = Directory.GetFiles(directoryName, "*", SearchOption.TopDirectoryOnly);
-            foreach (var file in files)
+            [Fact]
+            public void Append_既存ログファイルの末尾に追加する()
             {
-                var fileName = Path.GetFileName(file);
+                var logFilePath = GetLogFilePath();
+                CreateLogFile(logFilePath, "A");
 
-                if (fileName.StartsWith(Path.GetFileNameWithoutExtension(logFilePath)))
+                using (var appender = new FileAppender())
                 {
-                    yield return file;
+                    appender.FileOpenPolicy = SoftCube.Log.FileOpenPolicy.Append;
+                    appender.Open(logFilePath);
+                    appender.Trace("B");
+                }
+
+                var actual = File.ReadAllText(logFilePath);
+                Assert.Equal("AB", actual);
+            }
+
+            [Fact]
+            public void Backup_既存ログファイルを上書きする()
+            {
+                var logFilePath = GetLogFilePath();
+                CreateLogFile(logFilePath, "A", new DateTime(2020, 1, 1));
+
+                var clock = Substitute.For<ISystemClock>();
+                using (var appender = new FileAppender(clock))
+                {
+                    clock.Now.Returns(new DateTime(2020, 1, 1));
+                    appender.FileOpenPolicy = SoftCube.Log.FileOpenPolicy.Backup;
+                    appender.Open(logFilePath);
+
+                    Assert.Equal("A", File.ReadAllText(GetBackupFilePath(appender, new DateTime(2020, 1, 1))));
+
+                    appender.Trace("B");
+                }
+
+                Assert.Equal("B", File.ReadAllText(logFilePath));
+            }
+
+            [Fact]
+            public void Overwrite_既存ログファイルを上書きする()
+            {
+                var logFilePath = GetLogFilePath();
+                CreateLogFile(logFilePath, "A");
+
+                var clock = Substitute.For<ISystemClock>();
+                using (var appender = new FileAppender(clock))
+                {
+                    clock.Now.Returns(new DateTime(2020, 1, 1));
+                    appender.FileOpenPolicy = SoftCube.Log.FileOpenPolicy.Overwrite;
+                    appender.Open(logFilePath);
+
+                    Assert.False(File.Exists(GetBackupFilePath(appender, new DateTime(2020, 1, 1))));
+                    Assert.False(File.Exists(GetBackupFilePath(appender, new DateTime(2020, 1, 1), 0)));
+
+                    appender.Trace("B");
+                }
+
+                Assert.Equal("B", File.ReadAllText(logFilePath));
+            }
+        }
+
+        public class Encoding
+        {
+            [Fact]
+            public void null_ArgumentNullExceptionを投げる()
+            {
+                var appender = new FileAppender();
+
+                var ex = Record.Exception(() => appender.Encoding = null);
+
+                Assert.IsType<ArgumentNullException>(ex);
+            }
+
+            [Fact]
+            public void UTF8_許容する()
+            {
+                var appender = new FileAppender();
+
+                appender.Encoding = System.Text.Encoding.UTF8;
+
+                Assert.Equal(System.Text.Encoding.UTF8, appender.Encoding);
+            }
+        }
+
+        public class MaxFileSize
+        {
+            [Fact]
+            public void MaxFileSizeを超える_バックアップファイルを作成する()
+            {
+                var logFilePath = GetLogFilePath();
+                var clock = Substitute.For<ISystemClock>();
+
+                using (var appender = new FileAppender(clock))
+                {
+                    clock.Now.Returns(new DateTime(2020, 1, 1));
+                    appender.DateTimeFormat = "yyyyMMdd";
+                    appender.MaxFileSize = 1;
+                    appender.Open(logFilePath);
+                    appender.Trace("A");
+
+                    clock.Now.Returns(new DateTime(2020, 1, 2));
+                    appender.Trace("D");
+
+                    Assert.Equal("A", File.ReadAllText(GetBackupFilePath(appender, new DateTime(2020, 1, 1))));
+                }
+
+                Assert.Equal("D", File.ReadAllText(logFilePath));
+            }
+
+            [Fact]
+            public void MaxFileSizeを超えない_バックアップファイルを作成しない()
+            {
+                var logFilePath = GetLogFilePath();
+
+                using (var appender = new FileAppender())
+                {
+                    appender.Encoding = System.Text.Encoding.ASCII;
+                    appender.MaxFileSize = 2;
+                    appender.Open(logFilePath);
+
+                    appender.Trace("A");
+                    appender.Trace("B");
+                }
+
+                Assert.Equal("AB", File.ReadAllText(logFilePath));
+            }
+        }
+
+        public class DateTimeFormat
+        {
+            [Fact]
+            public void yyyyMMdd_バックアップ動作が正しい()
+            {
+                var logFilePath = GetLogFilePath();
+                var clock = Substitute.For<ISystemClock>();
+
+                using (var appender = new FileAppender(clock))
+                {
+                    clock.Now.Returns(new DateTime(2020, 1, 30, 23, 59, 58));
+                    appender.DateTimeFormat = "yyyyMMdd";
+                    appender.Open(logFilePath);
+                    appender.Trace("A");
+
+                    clock.Now.Returns(new DateTime(2020, 1, 30, 23, 59, 59));
+                    appender.Trace("B");
+
+                    clock.Now.Returns(new DateTime(2020, 1, 31, 0, 0, 0));
+                    appender.Trace("C");
+
+                    Assert.Equal("AB", File.ReadAllText(GetBackupFilePath(appender, new DateTime(2020, 1, 30, 0, 0, 0))));
+                }
+
+                Assert.Equal("C", File.ReadAllText(logFilePath));
+            }
+
+            [Fact]
+            public void null_ArgumentNullExceptionを投げる()
+            {
+                using (var appender = new FileAppender())
+                {
+                    var ex = Record.Exception(() => appender.DateTimeFormat = null);
+
+                    Assert.IsType<ArgumentNullException>(ex);
+                }
+            }
+
+            [Fact]
+            public void 不正な書式_ArgumentExceptionを投げる()
+            {
+                using (var appender = new FileAppender())
+                {
+                    var ex = Record.Exception(() => appender.DateTimeFormat = "?");
+
+                    Assert.IsType<ArgumentException>(ex);
                 }
             }
         }
 
-        #endregion
+        public class IndexFormat
+        {
+            [Fact]
+            public void Log_000_バックアップ動作が正しい()
+            {
+                var logFilePath = GetLogFilePath();
+                var clock = Substitute.For<ISystemClock>();
+                clock.Now.Returns(new DateTime(2020, 1, 1));
+
+                using (var appender = new FileAppender(clock))
+                {
+                    appender.MaxFileSize    = 1;
+                    appender.DateTimeFormat = "yyyyMMdd";
+                    appender.IndexFormat    = "000";
+                    appender.FileOpenPolicy = SoftCube.Log.FileOpenPolicy.Backup;
+                    appender.Open(logFilePath);
+
+                    appender.Log("A");
+                    appender.Log("B");
+                    Assert.Equal("A", File.ReadAllText(GetBackupFilePath(appender, new DateTime(2020, 1, 1))));
+
+                    appender.Log("C");
+                    Assert.Equal("A", File.ReadAllText(GetBackupFilePath(appender, new DateTime(2020, 1, 1), 0)));
+                    Assert.Equal("B", File.ReadAllText(GetBackupFilePath(appender, new DateTime(2020, 1, 1), 1)));
+                }
+
+                Assert.Equal("C", File.ReadAllText(logFilePath));
+            }
+        
+            [Fact]
+            public void Open_000_バックアップ動作が正しい()
+            {
+                var logFilePath = GetLogFilePath();
+                var clock = Substitute.For<ISystemClock>();
+                clock.Now.Returns(new DateTime(2020, 1, 1));
+
+                using (var appender = new FileAppender(clock))
+                {
+                    appender.MaxFileSize    = 1;
+                    appender.DateTimeFormat = "yyyyMMdd";
+                    appender.IndexFormat    = "000";
+                    appender.FileOpenPolicy = SoftCube.Log.FileOpenPolicy.Backup;
+
+                    appender.Open(logFilePath);
+                    appender.Log("A");
+
+                    appender.Open(logFilePath);
+                    appender.Log("B");
+                    Assert.Equal("A", File.ReadAllText(GetBackupFilePath(appender, new DateTime(2020, 1, 1))));
+
+                    appender.Open(logFilePath);
+                    appender.Log("C");
+                    Assert.Equal("A", File.ReadAllText(GetBackupFilePath(appender, new DateTime(2020, 1, 1), 0)));
+                    Assert.Equal("B", File.ReadAllText(GetBackupFilePath(appender, new DateTime(2020, 1, 1), 1)));
+                }
+
+                Assert.Equal("C", File.ReadAllText(logFilePath));
+            }
+
+            [Fact]
+            public void null_ArgumentNullExceptionを投げる()
+            {
+                using (var appender = new FileAppender())
+                {
+                    var ex = Record.Exception(() => appender.IndexFormat = null);
+
+                    Assert.IsType<ArgumentNullException>(ex);
+                }
+            }
+
+            [Fact]
+            public void 不正な書式_ArgumentExceptionを投げる()
+            {
+                using (var appender = new FileAppender())
+                {
+                    var ex = Record.Exception(() => appender.IndexFormat = "?");
+
+                    Assert.IsType<ArgumentException>(ex);
+                }
+            }
+        }
 
         public class Open
         {
@@ -155,59 +414,6 @@ namespace SoftCube.Log.Appenders.UnitTests
                     Assert.IsType<ArgumentException>(ex);
                 }
             }
-
-            #endregion
-
-            #region append
-
-            [Fact]
-            public void append_false_ログを上書きする()
-            {
-                var logFilePath = GetLogFilePath();
-                CreateLogFile(logFilePath, "A");
-
-                using (var appender = new FileAppender())
-                {
-                    appender.FileOpenPolicy = FileOpenPolicy.Overwrite;
-                    appender.Open(logFilePath);
-                    appender.Trace("B");
-                }
-
-                Assert.Equal("B", File.ReadAllText(logFilePath));
-            }
-
-            [Fact]
-            public void append_true_ログを追加する()
-            {
-                var logFilePath = GetLogFilePath();
-                CreateLogFile(logFilePath, "A");
-
-                using (var appender = new FileAppender())
-                {
-                    appender.Open(logFilePath);
-                    appender.Trace("B");
-                }
-
-                var actual = File.ReadAllText(logFilePath);
-                Assert.Equal("AB", actual);
-            }
-
-            #endregion
-
-            #region encoding
-
-            //[Fact]
-            //public void encoding_null_ArgumentNullExceptionを投げる()
-            //{
-            //    var logFilePath = GetLogFilePath();
-
-            //    using (var appender = new FileAppender())
-            //    {
-            //        var ex = Record.Exception(() => appender.Open(logFilePath, append: true, encoding: null));
-
-            //        Assert.IsType<ArgumentNullException>(ex);
-            //    }
-            //}
 
             #endregion
 
@@ -338,92 +544,6 @@ namespace SoftCube.Log.Appenders.UnitTests
                 }
 
                 Assert.Equal("C", File.ReadAllText(logFilePath));
-            }
-        }
-
-
-
-
-        public class DateTimeFormat
-        {
-            [Fact]
-            public void yyyyMMdd_バックアップ動作が正しい()
-            {
-                var logFilePath = GetLogFilePath();
-                var clock = Substitute.For<ISystemClock>();
-
-                using (var appender = new FileAppender(clock))
-                {
-                    clock.Now.Returns(new DateTime(2020, 1, 30, 23, 59, 58));
-                    appender.DateTimeFormat = "yyyyMMdd";
-                    appender.Open(logFilePath);
-                    appender.Trace("A");
-
-                    clock.Now.Returns(new DateTime(2020, 1, 30, 23, 59, 59));
-                    appender.Trace("B");
-
-                    clock.Now.Returns(new DateTime(2020, 1, 31, 0, 0, 0));
-                    appender.Trace("C");
-
-                    Assert.Equal("AB", File.ReadAllText(GetBackupFilePath(appender, new DateTime(2020, 1, 30, 0, 0, 0))));
-                }
-
-                Assert.Equal("C", File.ReadAllText(logFilePath));
-            }
-
-            [Fact]
-            public void 不正な書式_を投げる()
-            {
-                using (var appender = new FileAppender())
-                {
-                    var ex = Record.Exception(() => appender.DateTimeFormat = "?");
-
-                    Assert.IsType<ArgumentException>(ex);
-                }
-            }
-        }
-
-        public class MaxFileSize
-        {
-            [Fact]
-            public void MaxFileSizeを超える_バックアップファイルを作成する()
-            {
-                var logFilePath = GetLogFilePath();
-                var clock = Substitute.For<ISystemClock>();
-
-                using (var appender = new FileAppender(clock))
-                {
-                    clock.Now.Returns(new DateTime(2020, 1, 1));
-                    appender.DateTimeFormat = "yyyyMMdd";
-                    appender.MaxFileSize = 1;
-                    appender.Open(logFilePath);
-                    appender.Trace("A");
-
-                    clock.Now.Returns(new DateTime(2020, 1, 2));
-                    appender.Trace("D");
-
-                    Assert.Equal("A", File.ReadAllText(GetBackupFilePath(appender, new DateTime(2020, 1, 1))));
-                }
-
-                Assert.Equal("D", File.ReadAllText(logFilePath));
-            }
-
-            [Fact]
-            public void MaxFileSizeを超えない_バックアップファイルを作成しない()
-            {
-                var logFilePath = GetLogFilePath();
-
-                using (var appender = new FileAppender())
-                {
-                    appender.Encoding = Encoding.ASCII;
-                    appender.MaxFileSize = 2;
-                    appender.Open(logFilePath);
-
-                    appender.Trace("A");
-                    appender.Trace("B");
-                }
-
-                Assert.Equal("AB", File.ReadAllText(logFilePath));
             }
         }
     }
