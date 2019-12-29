@@ -75,22 +75,22 @@ namespace SoftCube.Log
             switch (level)
             {
                 case Level.Trace:
-                    return "TRACE";
+                    return nameof(Level.Trace);
 
                 case Level.Debug:
-                    return "DEBUG";
+                    return nameof(Level.Debug);
 
                 case Level.Info:
-                    return "INFO";
+                    return nameof(Level.Info);
 
                 case Level.Warning:
-                    return "WARNING";
+                    return nameof(Level.Warning);
 
                 case Level.Error:
-                    return "ERROR";
+                    return nameof(Level.Error);
 
                 case Level.Fatal:
-                    return "FATAL";
+                    return nameof(Level.Fatal);
 
                 default:
                     throw new NotSupportedException();

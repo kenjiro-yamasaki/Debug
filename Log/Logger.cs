@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace SoftCube.Log
 {
@@ -109,13 +110,16 @@ namespace SoftCube.Log
         /// トレースログを出力します。
         /// </summary>
         /// <param name="message">ログメッセージ。</param>
-        public static void Trace(string message)
+        /// <param name="file">ログを出力したファイル名。</param>
+        /// <param name="line">ログを出力したファイル行番号。</param>
+        /// <param name="method">ログを出力したメソッド名。</param>
+        public static void Trace(string message, [CallerFilePath] string file = "", [CallerLineNumber] int line = 0, [CallerMemberName] string method = "")
         {
             lock (appenders)
             {
                 foreach (var appender in appenders)
                 {
-                    appender.Trace(message);
+                    appender.Trace(message, file, line, method);
                 }
             }
         }
@@ -124,13 +128,16 @@ namespace SoftCube.Log
         /// デバッグログを出力します。
         /// </summary>
         /// <param name="message">ログメッセージ。</param>
-        public static void Debug(string message)
+        /// <param name="file">ログを出力したファイル名。</param>
+        /// <param name="line">ログを出力したファイル行番号。</param>
+        /// <param name="method">ログを出力したメソッド名。</param>
+        public static void Debug(string message, [CallerFilePath] string file = "", [CallerLineNumber] int line = 0, [CallerMemberName] string method = "")
         {
             lock (appenders)
             {
                 foreach (var appender in appenders)
                 {
-                    appender.Debug(message);
+                    appender.Debug(message, file, line, method);
                 }
             }
         }
@@ -139,13 +146,16 @@ namespace SoftCube.Log
         /// 情報ログを出力します。
         /// </summary>
         /// <param name="message">ログメッセージ。</param>
-        public static void Info(string message)
+        /// <param name="file">ログを出力したファイル名。</param>
+        /// <param name="line">ログを出力したファイル行番号。</param>
+        /// <param name="method">ログを出力したメソッド名。</param>
+        public static void Info(string message, [CallerFilePath] string file = "", [CallerLineNumber] int line = 0, [CallerMemberName] string method = "")
         {
             lock (appenders)
             {
                 foreach (var appender in appenders)
                 {
-                    appender.Info(message);
+                    appender.Info(message, file, line, method);
                 }
             }
         }
@@ -154,13 +164,16 @@ namespace SoftCube.Log
         /// 警告ログを出力します。
         /// </summary>
         /// <param name="message">ログメッセージ。</param>
-        public static void Warning(string message)
+        /// <param name="file">ログを出力したファイル名。</param>
+        /// <param name="line">ログを出力したファイル行番号。</param>
+        /// <param name="method">ログを出力したメソッド名。</param>
+        public static void Warning(string message, [CallerFilePath] string file = "", [CallerLineNumber] int line = 0, [CallerMemberName] string method = "")
         {
             lock (appenders)
             {
                 foreach (var appender in appenders)
                 {
-                    appender.Warning(message);
+                    appender.Warning(message, file, line, method);
                 }
             }
         }
@@ -169,13 +182,16 @@ namespace SoftCube.Log
         /// エラーログを出力します。
         /// </summary>
         /// <param name="message">ログメッセージ。</param>
-        public static void Error(string message)
+        /// <param name="file">ログを出力したファイル名。</param>
+        /// <param name="line">ログを出力したファイル行番号。</param>
+        /// <param name="method">ログを出力したメソッド名。</param>
+        public static void Error(string message, [CallerFilePath] string file = "", [CallerLineNumber] int line = 0, [CallerMemberName] string method = "")
         {
             lock (appenders)
             {
                 foreach (var appender in appenders)
                 {
-                    appender.Error(message);
+                    appender.Error(message, file, line, method);
                 }
             }
         }
@@ -184,13 +200,16 @@ namespace SoftCube.Log
         /// 致命的なエラーログを出力します。
         /// </summary>
         /// <param name="message">ログメッセージ。</param>
-        public static void Fatal(string message)
+        /// <param name="file">ログを出力したファイル名。</param>
+        /// <param name="line">ログを出力したファイル行番号。</param>
+        /// <param name="method">ログを出力したメソッド名。</param>
+        public static void Fatal(string message, [CallerFilePath] string file = "", [CallerLineNumber] int line = 0, [CallerMemberName] string method = "")
         {
             lock (appenders)
             {
                 foreach (var appender in appenders)
                 {
-                    appender.Fatal(message);
+                    appender.Fatal(message, file, line, method);
                 }
             }
         }
@@ -200,13 +219,16 @@ namespace SoftCube.Log
         /// </summary>
         /// <param name="level">ログレベル。</param>
         /// <param name="message">ログメッセージ。</param>
-        public static void Log(Level level, string message)
+        /// <param name="file">ログを出力したファイル名。</param>
+        /// <param name="line">ログを出力したファイル行番号。</param>
+        /// <param name="method">ログを出力したメソッド名。</param>
+        public static void Log(Level level, string message, [CallerFilePath] string file = "", [CallerLineNumber] int line = 0, [CallerMemberName] string method = "")
         {
             lock (appenders)
             {
                 foreach (var appender in appenders)
                 {
-                    appender.Log(level, message);
+                    appender.Log(level, message, file, line, method);
                 }
             }
         }

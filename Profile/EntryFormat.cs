@@ -92,7 +92,7 @@ namespace SoftCube.Profile
             }
             catch (FormatException)
             {
-                throw new InvalidOperationException($"ConversionPattern[{Format}]が不正です。");
+                throw new InvalidOperationException($"EntryFormat[{Format}]が不正です。");
             }
         }
 

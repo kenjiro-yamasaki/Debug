@@ -318,7 +318,7 @@ namespace SoftCube.Log.Appenders.UnitTests
 
                 appender.Info("A");
 
-                var expected = "INFO";
+                var expected = "Info";
                 var actual   = appender.ToString();
                 Assert.Equal(expected, actual);
             }
@@ -331,7 +331,7 @@ namespace SoftCube.Log.Appenders.UnitTests
 
                 appender.Info("A");
 
-                var expected = "INFO ";
+                var expected = "Info ";
                 var actual   = appender.ToString();
                 Assert.Equal(expected, actual);
             }
@@ -345,7 +345,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 appender.Info("A");
 
                 var log = appender.ToString();
-                Assert.Equal(" INFO", log);
+                Assert.Equal(" Info", log);
             }
 
             [Fact]
@@ -412,19 +412,6 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void Type_正しく出力する()
-            {
-                var appender = new StringAppender();
-                appender.LogFormat = "{Type}";
-
-                appender.Trace("A");
-
-                var expected = new StackFrame(true).GetMethod().DeclaringType.FullName;
-                var actual   = appender.ToString();
-                Assert.Equal(expected, actual);
-            }
-
-            [Fact]
             public void 推奨書式_正しく出力する()
             {
                 var clock = Substitute.For<ISystemClock>();
@@ -435,7 +422,7 @@ namespace SoftCube.Log.Appenders.UnitTests
 
                 appender.Info("A");
 
-                var expected = $@"{clock.Now:yyyy-MM-dd HH:mm:ss,fff} [INFO ] - A{Environment.NewLine}";
+                var expected = $@"{clock.Now:yyyy-MM-dd HH:mm:ss,fff} [Info ] - A{Environment.NewLine}";
                 var actual   = appender.ToString();
                 Assert.Equal(expected, actual);
             }

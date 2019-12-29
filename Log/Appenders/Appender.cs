@@ -2,6 +2,7 @@
 using SoftCube.Runtime;
 using System;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 
 namespace SoftCube.Log
@@ -127,7 +128,10 @@ namespace SoftCube.Log
         /// トレースログを出力します。
         /// </summary>
         /// <param name="message">ログメッセージ。</param>
-        public void Trace(string message)
+        /// <param name="file">ログを出力したファイル名。</param>
+        /// <param name="line">ログを出力したファイル行番号。</param>
+        /// <param name="method">ログを出力したメソッド名。</param>
+        public void Trace(string message, [CallerFilePath] string file = "", [CallerLineNumber] int line = 0, [CallerMemberName] string method = "")
         {
             if (message == null)
             {
@@ -137,7 +141,7 @@ namespace SoftCube.Log
             var level = Level.Trace;
             if (MinLevel <= level && level <= MaxLevel)
             {
-                Log(logFormat.Convert(SystemClock.Now, level, message, new StackFrame(1, true)));
+                Log(logFormat.Convert(SystemClock.Now, file, level, line, message, method));
             }
         }
 
@@ -145,7 +149,10 @@ namespace SoftCube.Log
         /// デバッグログを出力します。
         /// </summary>
         /// <param name="message">ログメッセージ。</param>
-        public void Debug(string message)
+        /// <param name="file">ログを出力したファイル名。</param>
+        /// <param name="line">ログを出力したファイル行番号。</param>
+        /// <param name="method">ログを出力したメソッド名。</param>
+        public void Debug(string message, [CallerFilePath] string file = "", [CallerLineNumber] int line = 0, [CallerMemberName] string method = "")
         {
             if (message == null)
             {
@@ -155,7 +162,7 @@ namespace SoftCube.Log
             var level = Level.Debug;
             if (MinLevel <= level && level <= MaxLevel)
             {
-                Log(logFormat.Convert(SystemClock.Now, level, message, new StackFrame(1, true)));
+                Log(logFormat.Convert(SystemClock.Now, file, level, line, message, method));
             }
         }
 
@@ -163,7 +170,10 @@ namespace SoftCube.Log
         /// 情報ログを出力します。
         /// </summary>
         /// <param name="message">ログメッセージ。</param>
-        public void Info(string message)
+        /// <param name="file">ログを出力したファイル名。</param>
+        /// <param name="line">ログを出力したファイル行番号。</param>
+        /// <param name="method">ログを出力したメソッド名。</param>
+        public void Info(string message, [CallerFilePath] string file = "", [CallerLineNumber] int line = 0, [CallerMemberName] string method = "")
         {
             if (message == null)
             {
@@ -173,7 +183,7 @@ namespace SoftCube.Log
             var level = Level.Info;
             if (MinLevel <= level && level <= MaxLevel)
             {
-                Log(logFormat.Convert(SystemClock.Now, level, message, new StackFrame(1, true)));
+                Log(logFormat.Convert(SystemClock.Now, file, level, line, message, method));
             }
         }
 
@@ -181,7 +191,10 @@ namespace SoftCube.Log
         /// 警告ログを出力します。
         /// </summary>
         /// <param name="message">ログメッセージ。</param>
-        public void Warning(string message)
+        /// <param name="file">ログを出力したファイル名。</param>
+        /// <param name="line">ログを出力したファイル行番号。</param>
+        /// <param name="method">ログを出力したメソッド名。</param>
+        public void Warning(string message, [CallerFilePath] string file = "", [CallerLineNumber] int line = 0, [CallerMemberName] string method = "")
         {
             if (message == null)
             {
@@ -191,7 +204,7 @@ namespace SoftCube.Log
             var level = Level.Warning;
             if (MinLevel <= level && level <= MaxLevel)
             {
-                Log(logFormat.Convert(SystemClock.Now, level, message, new StackFrame(1, true)));
+                Log(logFormat.Convert(SystemClock.Now, file, level, line, message, method));
             }
         }
 
@@ -199,7 +212,10 @@ namespace SoftCube.Log
         /// エラーログを出力します。
         /// </summary>
         /// <param name="message">ログメッセージ。</param>
-        public void Error(string message)
+        /// <param name="file">ログを出力したファイル名。</param>
+        /// <param name="line">ログを出力したファイル行番号。</param>
+        /// <param name="method">ログを出力したメソッド名。</param>
+        public void Error(string message, [CallerFilePath] string file = "", [CallerLineNumber] int line = 0, [CallerMemberName] string method = "")
         {
             if (message == null)
             {
@@ -209,7 +225,7 @@ namespace SoftCube.Log
             var level = Level.Error;
             if (MinLevel <= level && level <= MaxLevel)
             {
-                Log(logFormat.Convert(SystemClock.Now, level, message, new StackFrame(1, true)));
+                Log(logFormat.Convert(SystemClock.Now, file, level, line, message, method));
             }
         }
 
@@ -217,7 +233,10 @@ namespace SoftCube.Log
         /// 致命的なエラーログを出力します。
         /// </summary>
         /// <param name="message">ログメッセージ。</param>
-        public void Fatal(string message)
+        /// <param name="file">ログを出力したファイル名。</param>
+        /// <param name="line">ログを出力したファイル行番号。</param>
+        /// <param name="method">ログを出力したメソッド名。</param>
+        public void Fatal(string message, [CallerFilePath] string file = "", [CallerLineNumber] int line = 0, [CallerMemberName] string method = "")
         {
             if (message == null)
             {
@@ -227,7 +246,7 @@ namespace SoftCube.Log
             var level = Level.Fatal;
             if (MinLevel <= level && level <= MaxLevel)
             {
-                Log(logFormat.Convert(SystemClock.Now, level, message, new StackFrame(1, true)));
+                Log(logFormat.Convert(SystemClock.Now, file, level, line, message, method));
             }
         }
 
@@ -236,7 +255,10 @@ namespace SoftCube.Log
         /// </summary>
         /// <param name="level">ログレベル。</param>
         /// <param name="message">ログメッセージ。</param>
-        public void Log(Level level, string message)
+        /// <param name="file">ログを出力したファイル名。</param>
+        /// <param name="line">ログを出力したファイル行番号。</param>
+        /// <param name="method">ログを出力したメソッド名。</param>
+        public void Log(Level level, string message, [CallerFilePath] string file = "", [CallerLineNumber] int line = 0, [CallerMemberName] string method = "")
         {
             if (message == null)
             {
@@ -245,7 +267,7 @@ namespace SoftCube.Log
 
             if (MinLevel <= level && level <= MaxLevel)
             {
-                Log(logFormat.Convert(SystemClock.Now, level, message, new StackFrame(1, true)));
+                Log(logFormat.Convert(SystemClock.Now, file, level, line, message, method));
             }
         }
 
