@@ -6,7 +6,7 @@ namespace SoftCube.Log
     /// ファイルオープン方針。
     /// </summary>
     /// <remarks>
-    /// ファイルオープン時の既存ログファイルの取り扱い方針を指定します。
+    /// ファイルオープン時の既存ログファイルの取り扱い方針を表現します。
     /// </remarks>
     public enum FileOpenPolicy
     {

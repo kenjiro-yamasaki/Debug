@@ -219,12 +219,6 @@ namespace SoftCube.Log
             // ログファイルを閉じます。
             Close();
 
-            // バックアップ条件に適合している場合、現在のログファイルをバックアップとします。
-            if (FileOpenPolicy == FileOpenPolicy.Backup && File.Exists(filePath))
-            {
-                Backup(filePath);
-            }
-
             // ログファイルを開きます。
             if (FileOpenPolicy != FileOpenPolicy.Append || !File.Exists(filePath))
             {
@@ -235,6 +229,12 @@ namespace SoftCube.Log
             FileStream = File.Open(filePath, FileMode.Open, FileAccess.Write);
             FileStream.Seek(0, SeekOrigin.End);
             Writer = new StreamWriter(FileStream, Encoding);
+
+            // バックアップ条件に適合している場合、現在のログファイルをバックアップします。
+            if (FileOpenPolicy == FileOpenPolicy.Backup && FileSize != 0)
+            {
+                Backup();
+            }
         }
 
         #endregion
@@ -281,17 +281,13 @@ namespace SoftCube.Log
 
             lock (Writer)
             {
-                // バックアップ条件に適合している場合、現在のログファイルをバックアップとします。
+                // バックアップ条件に適合している場合、現在のログファイルをバックアップします。
                 // その後、新たにログファイルを開きます。
                 var isDateTimeChanged = CreationTime.ToString(DateTimeFormat) != SystemClock.Now.ToString(DateTimeFormat);
                 var isOverCapacity    = MaxFileSize <= FileSize;
                 if (isDateTimeChanged || isOverCapacity)
                 {
-                    var filePath = FilePath;
-
-                    Close();
-                    Backup(filePath);
-                    Open(filePath);
+                    Backup();
                 }
 
                 //
@@ -305,11 +301,16 @@ namespace SoftCube.Log
         #region バックアップ
 
         /// <summary>
-        /// バックアップします。
+        /// 現在のログファイルをバックアップします。
         /// </summary>
-        /// <param name="filePath">ファイルパス。</param>
-        private void Backup(string filePath)
+        public void Backup()
         {
+            Assert.NotNull(FileStream);
+
+            var filePath = FilePath;
+
+            Close();
+
             Assert.True(File.Exists(filePath));
             var directoryName  = Path.GetDirectoryName(filePath);
             var fileName       = Path.GetFileName(filePath);
@@ -321,59 +322,68 @@ namespace SoftCube.Log
             {
                 if (backupIndex == 0)
                 {
-                    var backupFileName0 = string.Format("{0}.{1}{2}", baseName, backupDateTime.ToString(DateTimeFormat), extension);
+                    var backupFileName0 = $"{baseName}.{backupDateTime.ToString(DateTimeFormat)}{extension}";
                     var backupFilePath0 = Path.Combine(directoryName, backupFileName0);
 
-                    var backupFileName1 = string.Format("{0}.{1}.{2}{3}", baseName, backupDateTime.ToString(DateTimeFormat), backupIndex.ToString(IndexFormat), extension);
+                    var backupFileName1 = $"{baseName}.{backupDateTime.ToString(DateTimeFormat)}.{backupIndex.ToString(IndexFormat)}{extension}";
                     var backupFilePath1 = Path.Combine(directoryName, backupFileName1);
 
                     if (!File.Exists(backupFilePath0) && !File.Exists(backupFilePath1))
                     {
+                        // ログファイルをログバックアップファイルに名前変更します。
                         Assert.True(File.Exists(filePath));
                         Assert.False(File.Exists(backupFilePath0));
                         File.Move(filePath, backupFilePath0);
-                        return;
+                        break;
                     }
                 }
                 else if (backupIndex == 1)
                 {
-                    var backupFileName = string.Format("{0}.{1}.{2}{3}", baseName, backupDateTime.ToString(DateTimeFormat), backupIndex.ToString(IndexFormat), extension);
+                    var backupFileName = $"{baseName}.{backupDateTime.ToString(DateTimeFormat)}.{backupIndex.ToString(IndexFormat)}{extension}";
                     var backupFilePath = Path.Combine(directoryName, backupFileName);
 
                     if (!File.Exists(backupFilePath))
                     {
-                        //
-                        var srcBackupFileName0 = string.Format("{0}.{1}{2}", baseName, backupDateTime.ToString(DateTimeFormat), extension);
+                        // バックアップファイル 0 を名前変更します。
+                        var srcBackupFileName0 = $"{baseName}.{backupDateTime.ToString(DateTimeFormat)}{extension}";
                         var srcBackupFilePath0 = Path.Combine(directoryName, srcBackupFileName0);
 
-                        var destBackupFileName0 = string.Format("{0}.{1}.{2}{3}", baseName, backupDateTime.ToString(DateTimeFormat), 0.ToString(IndexFormat), extension);
+                        var destBackupFileName0 = $"{baseName}.{backupDateTime.ToString(DateTimeFormat)}.{0.ToString(IndexFormat)}{extension}";
                         var destBackupFilePath0 = Path.Combine(directoryName, destBackupFileName0);
 
                         Assert.True(File.Exists(srcBackupFilePath0));
                         Assert.False(File.Exists(destBackupFilePath0));
                         File.Move(srcBackupFilePath0, destBackupFilePath0);
 
-                        //
+                        // ログファイルをログバックアップファイルに名前変更します。
                         Assert.True(File.Exists(filePath));
                         Assert.False(File.Exists(backupFilePath));
                         File.Move(filePath, backupFilePath);
-                        return;
+                        break;
                     }
                 }
                 else
                 {
-                    var backupFileName = string.Format("{0}.{1}.{2}{3}", baseName, backupDateTime.ToString(DateTimeFormat), backupIndex.ToString(IndexFormat), extension);
+                    var backupFileName = $"{baseName}.{backupDateTime.ToString(DateTimeFormat)}.{backupIndex.ToString(IndexFormat)}{extension}";
                     var backupFilePath = Path.Combine(directoryName, backupFileName);
 
                     if (!File.Exists(backupFilePath))
                     {
+                        // ログファイルをログバックアップファイルに名前変更します。
                         Assert.True(File.Exists(filePath));
                         Assert.False(File.Exists(backupFilePath));
                         File.Move(filePath, backupFilePath);
-                        return;
+                        break;
                     }
                 }
             }
+
+            // 新たにログファイルを開きます。
+            File.Create(filePath).Dispose();
+            File.SetCreationTime(filePath, SystemClock.Now);
+
+            FileStream = File.Open(filePath, FileMode.Create, FileAccess.Write);
+            Writer = new StreamWriter(FileStream, Encoding);
         }
 
         #endregion
