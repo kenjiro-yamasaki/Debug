@@ -4,7 +4,6 @@ using SoftCube.Test;
 using System;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Text;
 using Xunit;
 
 namespace SoftCube.Log.Appenders.UnitTests

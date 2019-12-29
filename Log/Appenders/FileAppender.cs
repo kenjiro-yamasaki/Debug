@@ -147,7 +147,7 @@ namespace SoftCube.Log
                     throw new ArgumentNullException(nameof(value));
                 }
 
-                if (dateTimeFormat != value)
+                if (indexFormat != value)
                 {
                     int index = value.IndexOfAny(Path.GetInvalidFileNameChars());
                     if (0 <= index)
@@ -155,7 +155,7 @@ namespace SoftCube.Log
                         throw new ArgumentException(string.Format($"ファイル名に使用できない文字[{value[index]}]が使われています。"), nameof(value));
                     }
 
-                    dateTimeFormat = value;
+                    indexFormat = value;
                 }
             }
         }
