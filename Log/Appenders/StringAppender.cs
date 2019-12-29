@@ -31,18 +31,18 @@ namespace SoftCube.Log
         /// <summary>
         /// コンストラクター。
         /// </summary>
-        /// <param name="systemClock">システムクロック。</param>
-        public StringAppender(ISystemClock systemClock)
-            : base(systemClock)
+        /// <param name="xappender">XML の appender 要素。</param>
+        public StringAppender(XElement xappender)
+            : base(xappender)
         {
         }
 
         /// <summary>
         /// コンストラクター。
         /// </summary>
-        /// <param name="xappender">XML の appender 要素。</param>
-        public StringAppender(XElement xappender)
-            : base(xappender)
+        /// <param name="systemClock">システムクロック。</param>
+        internal StringAppender(ISystemClock systemClock)
+            : base(systemClock)
         {
         }
 

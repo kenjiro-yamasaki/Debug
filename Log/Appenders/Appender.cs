@@ -1,7 +1,6 @@
 ﻿using SoftCube.Configuration;
 using SoftCube.Runtime;
 using System;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 
@@ -61,16 +60,6 @@ namespace SoftCube.Log
         /// <summary>
         /// コンストラクター。
         /// </summary>
-        /// <param name="systemClock">システムクロック。</param>
-        public Appender(ISystemClock systemClock)
-        {
-            SystemClock = systemClock ?? throw new ArgumentNullException(nameof(systemClock));
-            LogFormat = "{Message}";
-        }
-
-        /// <summary>
-        /// コンストラクター。
-        /// </summary>
         /// <param name="xappender">XML の appender 要素。</param>
         public Appender(XElement xappender)
             : this(new SystemClock())
@@ -83,6 +72,16 @@ namespace SoftCube.Log
             LogFormat = xappender.Property(nameof(LogFormat));
             MinLevel  = xappender.Property(nameof(MinLevel)).ToLevel();
             MaxLevel  = xappender.Property(nameof(MaxLevel)).ToLevel();
+        }
+
+        /// <summary>
+        /// コンストラクター。
+        /// </summary>
+        /// <param name="systemClock">システムクロック。</param>
+        internal Appender(ISystemClock systemClock)
+        {
+            SystemClock = systemClock ?? throw new ArgumentNullException(nameof(systemClock));
+            LogFormat = "{Message}";
         }
 
         #endregion

@@ -5,9 +5,9 @@
 
     <IsPackable>false</IsPackable>
 
-    <AssemblyName>SoftCube.Logger.UnitTests</AssemblyName>
+    <AssemblyName>SoftCube.Log.UnitTests</AssemblyName>
 
-    <RootNamespace>SoftCube.Logger.UnitTests</RootNamespace>
+    <RootNamespace>SoftCube.Log.UnitTests</RootNamespace>
 
     <Platforms>AnyCPU;x86;x64</Platforms>
   </PropertyGroup>

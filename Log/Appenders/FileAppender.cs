@@ -177,15 +177,6 @@ namespace SoftCube.Log
         /// <summary>
         /// コンストラクター。
         /// </summary>
-        /// <param name="systemClock">システムクロック。</param>
-        public FileAppender(ISystemClock systemClock)
-            : base(systemClock)
-        {
-        }
-
-        /// <summary>
-        /// コンストラクター。
-        /// </summary>
         /// <param name="xappender">XML の appender 要素。</param>
         public FileAppender(XElement xappender)
             : base(xappender)
@@ -203,6 +194,15 @@ namespace SoftCube.Log
 
             var filePath = ParseFilePath(xappender.Property("FilePath"));
             Open(filePath);
+        }
+
+        /// <summary>
+        /// コンストラクター。
+        /// </summary>
+        /// <param name="systemClock">システムクロック。</param>
+        internal FileAppender(ISystemClock systemClock)
+            : base(systemClock)
+        {
         }
 
         #endregion
