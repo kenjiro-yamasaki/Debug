@@ -101,7 +101,7 @@ namespace SoftCube.Log
             }
             catch (FormatException)
             {
-                throw new InvalidOperationException($"ConversionPattern[{Format}]が不正です。");
+                throw new InvalidOperationException($"LogFormat[{Format}]が不正です。");
             }
         }
 

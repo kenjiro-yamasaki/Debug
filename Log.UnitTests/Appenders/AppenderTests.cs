@@ -1,4 +1,4 @@
-using NSubstitute;
+ï»¿using NSubstitute;
 using SoftCube.Runtime;
 using System;
 using System.Diagnostics;
@@ -12,7 +12,7 @@ namespace SoftCube.Log.Appenders.UnitTests
         public class MinLevel
         {
             [Fact]
-            public void Trace_TraceˆÈã‚ğo—Í‚·‚é()
+            public void Trace_Traceä»¥ä¸Šã‚’å‡ºåŠ›ã™ã‚‹()
             {
                 var appender = Substitute.For<Appender>();
                 appender.MinLevel = Level.Trace;
@@ -33,7 +33,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void Debug_DebugˆÈã‚ğo—Í‚·‚é()
+            public void Debug_Debugä»¥ä¸Šã‚’å‡ºåŠ›ã™ã‚‹()
             {
                 var appender = Substitute.For<Appender>();
                 appender.MinLevel = Level.Debug;
@@ -54,7 +54,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void Info_InfoˆÈã‚ğo—Í‚·‚é()
+            public void Info_Infoä»¥ä¸Šã‚’å‡ºåŠ›ã™ã‚‹()
             {
                 var appender = Substitute.For<Appender>();
                 appender.MinLevel = Level.Info;
@@ -75,7 +75,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void Warning_WarningˆÈã‚ğo—Í‚·‚é()
+            public void Warning_Warningä»¥ä¸Šã‚’å‡ºåŠ›ã™ã‚‹()
             {
                 var appender = Substitute.For<Appender>();
                 appender.MinLevel = Level.Warning;
@@ -96,7 +96,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void Error_ErrorˆÈã‚ğo—Í‚·‚é()
+            public void Error_Errorä»¥ä¸Šã‚’å‡ºåŠ›ã™ã‚‹()
             {
                 var appender = Substitute.For<Appender>();
                 appender.MinLevel = Level.Error;
@@ -117,7 +117,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void Fatal_FatalˆÈã‚ğo—Í‚·‚é()
+            public void Fatal_Fatalä»¥ä¸Šã‚’å‡ºåŠ›ã™ã‚‹()
             {
                 var appender = Substitute.For<Appender>();
                 appender.MinLevel = Level.Fatal;
@@ -141,7 +141,7 @@ namespace SoftCube.Log.Appenders.UnitTests
         public class MaxLevel
         {
             [Fact]
-            public void Fatal_FatalˆÈ‰º‚ğo—Í‚·‚é()
+            public void Fatal_Fatalä»¥ä¸‹ã‚’å‡ºåŠ›ã™ã‚‹()
             {
                 var appender = Substitute.For<Appender>();
                 appender.MaxLevel = Level.Fatal;
@@ -162,7 +162,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void Error_ErrorˆÈ‰º‚ğo—Í‚·‚é()
+            public void Error_Errorä»¥ä¸‹ã‚’å‡ºåŠ›ã™ã‚‹()
             {
                 var appender = Substitute.For<Appender>();
                 appender.MaxLevel = Level.Error;
@@ -183,7 +183,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void Warning_WarningˆÈ‰º‚ğo—Í‚·‚é()
+            public void Warning_Warningä»¥ä¸‹ã‚’å‡ºåŠ›ã™ã‚‹()
             {
                 var appender = Substitute.For<Appender>();
                 appender.MaxLevel = Level.Warning;
@@ -204,7 +204,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void Info_InfoˆÈ‰º‚ğo—Í‚·‚é()
+            public void Info_Infoä»¥ä¸‹ã‚’å‡ºåŠ›ã™ã‚‹()
             {
                 var appender = Substitute.For<Appender>();
                 appender.MaxLevel = Level.Info;
@@ -225,7 +225,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void Debug_DebugˆÈ‰º‚ğo—Í‚·‚é()
+            public void Debug_Debugä»¥ä¸‹ã‚’å‡ºåŠ›ã™ã‚‹()
             {
                 var appender = Substitute.For<Appender>();
                 appender.MaxLevel = Level.Debug;
@@ -246,7 +246,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void Trace_TraceˆÈ‰º‚ğo—Í‚·‚é()
+            public void Trace_Traceä»¥ä¸‹ã‚’å‡ºåŠ›ã™ã‚‹()
             {
                 var appender = Substitute.For<Appender>();
                 appender.MaxLevel = Level.Trace;
@@ -267,10 +267,10 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
         }
 
-        public class ConversionPattern
+        public class LogFormat
         {
             [Fact]
-            public void Date_³‚µ‚­o—Í‚·‚é()
+            public void Date_æ­£ã—ãå‡ºåŠ›ã™ã‚‹()
             {
                 var appender = new StringAppender();
                 appender.LogFormat = "{DateTime}";
@@ -282,7 +282,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void Date‘®w’è_³‚µ‚­o—Í‚·‚é()
+            public void Dateæ›¸å¼æŒ‡å®š_æ­£ã—ãå‡ºåŠ›ã™ã‚‹()
             {
                 var clock = Substitute.For<ISystemClock>();
                 clock.Now.Returns(new DateTime(2019, 12, 19, 22, 54, 19, 777));
@@ -298,7 +298,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void File_³‚µ‚­o—Í‚·‚é()
+            public void File_æ­£ã—ãå‡ºåŠ›ã™ã‚‹()
             {
                 var appender = new StringAppender();
                 appender.LogFormat = "{File}";
@@ -311,7 +311,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void Level_³‚µ‚­o—Í‚·‚é()
+            public void Level_æ­£ã—ãå‡ºåŠ›ã™ã‚‹()
             {
                 var appender = new StringAppender();
                 appender.LogFormat = "{Level}";
@@ -324,7 +324,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void Level¶‹l‚ß_³‚µ‚­o—Í‚·‚é()
+            public void Levelå·¦è©°ã‚_æ­£ã—ãå‡ºåŠ›ã™ã‚‹()
             {
                 var appender = new StringAppender();
                 appender.LogFormat = "{Level,-5}";
@@ -337,7 +337,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void Level‰E‹l‚ß_³‚µ‚­o—Í‚·‚é()
+            public void Levelå³è©°ã‚_æ­£ã—ãå‡ºåŠ›ã™ã‚‹()
             {
                 var appender = new StringAppender();
                 appender.LogFormat = "{Level,5}";
@@ -349,7 +349,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void Line_³‚µ‚­o—Í‚·‚é()
+            public void Line_æ­£ã—ãå‡ºåŠ›ã™ã‚‹()
             {
                 var appender = new StringAppender();
                 appender.LogFormat = "{Line}";
@@ -362,7 +362,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void Message_³‚µ‚­o—Í‚·‚é()
+            public void Message_æ­£ã—ãå‡ºåŠ›ã™ã‚‹()
             {
                 var appender = new StringAppender();
                 appender.LogFormat = "{Message}";
@@ -374,20 +374,20 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void Method_³‚µ‚­o—Í‚·‚é()
+            public void Method_æ­£ã—ãå‡ºåŠ›ã™ã‚‹()
             {
                 var appender = new StringAppender();
                 appender.LogFormat = "{Method}";
 
                 appender.Trace("A");
 
-                var expected = nameof(Method_³‚µ‚­o—Í‚·‚é);
+                var expected = nameof(Method_æ­£ã—ãå‡ºåŠ›ã™ã‚‹);
                 var actual   = appender.ToString();
                 Assert.Equal(expected, actual);
             }
 
             [Fact]
-            public void NewLine_³‚µ‚­o—Í‚·‚é()
+            public void NewLine_æ­£ã—ãå‡ºåŠ›ã™ã‚‹()
             {
                 var appender = new StringAppender();
                 appender.LogFormat = "{NewLine}";
@@ -399,7 +399,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void Thread_³‚µ‚­o—Í‚·‚é()
+            public void Thread_æ­£ã—ãå‡ºåŠ›ã™ã‚‹()
             {
                 var appender = new StringAppender();
                 appender.LogFormat = "{Thread}";
@@ -412,7 +412,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void Type_³‚µ‚­o—Í‚·‚é()
+            public void Type_æ­£ã—ãå‡ºåŠ›ã™ã‚‹()
             {
                 var appender = new StringAppender();
                 appender.LogFormat = "{Type}";
@@ -425,7 +425,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void „§‘®_³‚µ‚­o—Í‚·‚é()
+            public void æ¨å¥¨æ›¸å¼_æ­£ã—ãå‡ºåŠ›ã™ã‚‹()
             {
                 var clock = Substitute.For<ISystemClock>();
                 clock.Now.Returns(new DateTime(2019, 12, 19, 22, 54, 19, 777));
@@ -441,7 +441,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void •s³‚È‘®_‚ğ“Š‚°‚é()
+            public void ä¸æ­£ãªæ›¸å¼_ã‚’æŠ•ã’ã‚‹()
             {
                 var appender = new StringAppender();
                 appender.LogFormat = "{Date}";
@@ -449,14 +449,14 @@ namespace SoftCube.Log.Appenders.UnitTests
                 var ex = Record.Exception(() => appender.Trace("A"));
 
                 Assert.IsType<InvalidOperationException>(ex);
-                Assert.Equal("ConversionPattern[{Date}]‚ª•s³‚Å‚·B", ex.Message);
+                Assert.Equal("LogFormat[{Date}]ãŒä¸æ­£ã§ã™ã€‚", ex.Message);
             }
         }
 
         public class Trace
         {
             [Fact]
-            public void null_ArgumentNullException‚ª“Š‚°‚ç‚ê‚é()
+            public void null_ArgumentNullExceptionãŒæŠ•ã’ã‚‰ã‚Œã‚‹()
             {
                 var appender = Substitute.For<Appender>();
 
@@ -466,30 +466,30 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void ‹ó”’_‹–—e‚·‚é()
+            public void ç©ºç™½_è¨±å®¹ã™ã‚‹()
             {
                 var appender = Substitute.For<Appender>();
 
                 appender.Trace("");
 
-                SubstituteExtensions.Received<Appender>(appender).Log(Level.Trace, "");
+                appender.Received().Log(Level.Trace, "");
             }
 
             [Fact]
-            public void A_¬Œ÷‚·‚é()
+            public void A_æˆåŠŸã™ã‚‹()
             {
                 var appender = Substitute.For<Appender>();
 
                 appender.Trace("A");
 
-                SubstituteExtensions.Received<Appender>(appender).Log(Level.Trace, "A");
+                appender.Received().Log(Level.Trace, "A");
             }
         }
 
         public class Debug
         {
             [Fact]
-            public void null_ArgumentNullException‚ª“Š‚°‚ç‚ê‚é()
+            public void null_ArgumentNullExceptionãŒæŠ•ã’ã‚‰ã‚Œã‚‹()
             {
                 var appender = Substitute.For<Appender>();
 
@@ -499,30 +499,30 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void ‹ó”’_‹–—e‚·‚é()
+            public void ç©ºç™½_è¨±å®¹ã™ã‚‹()
             {
                 var appender = Substitute.For<Appender>();
 
                 appender.Debug("");
 
-                SubstituteExtensions.Received<Appender>(appender).Log(Level.Debug, "");
+                appender.Received().Log(Level.Debug, "");
             }
 
             [Fact]
-            public void A_¬Œ÷‚·‚é()
+            public void A_æˆåŠŸã™ã‚‹()
             {
                 var appender = Substitute.For<Appender>();
 
                 appender.Debug("A");
 
-                SubstituteExtensions.Received<Appender>(appender).Log(Level.Debug, "A");
+                appender.Received().Log(Level.Debug, "A");
             }
         }
 
         public class Info
         {
             [Fact]
-            public void null_ArgumentNullException‚ª“Š‚°‚ç‚ê‚é()
+            public void null_ArgumentNullExceptionãŒæŠ•ã’ã‚‰ã‚Œã‚‹()
             {
                 var appender = Substitute.For<Appender>();
 
@@ -532,30 +532,30 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void ‹ó”’_‹–—e‚·‚é()
+            public void ç©ºç™½_è¨±å®¹ã™ã‚‹()
             {
                 var appender = Substitute.For<Appender>();
 
                 appender.Info("");
 
-                SubstituteExtensions.Received<Appender>(appender).Log(Level.Info, "");
+                appender.Received().Log(Level.Info, "");
             }
 
             [Fact]
-            public void A_¬Œ÷‚·‚é()
+            public void A_æˆåŠŸã™ã‚‹()
             {
                 var appender = Substitute.For<Appender>();
 
                 appender.Info("A");
 
-                SubstituteExtensions.Received<Appender>(appender).Log(Level.Info, "A");
+                appender.Received().Log(Level.Info, "A");
             }
         }
 
         public class Warning
         {
             [Fact]
-            public void null_ArgumentNullException‚ª“Š‚°‚ç‚ê‚é()
+            public void null_ArgumentNullExceptionãŒæŠ•ã’ã‚‰ã‚Œã‚‹()
             {
                 var appender = Substitute.For<Appender>();
 
@@ -565,30 +565,30 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void ‹ó”’_‹–—e‚·‚é()
+            public void ç©ºç™½_è¨±å®¹ã™ã‚‹()
             {
                 var appender = Substitute.For<Appender>();
 
                 appender.Warning("");
 
-                SubstituteExtensions.Received<Appender>(appender).Log(Level.Warning, "");
+                appender.Received().Log(Level.Warning, "");
             }
 
             [Fact]
-            public void A_¬Œ÷‚·‚é()
+            public void A_æˆåŠŸã™ã‚‹()
             {
                 var appender = Substitute.For<Appender>();
 
                 appender.Warning("A");
 
-                SubstituteExtensions.Received<Appender>(appender).Log(Level.Warning, "A");
+                appender.Received().Log(Level.Warning, "A");
             }
         }
 
         public class Error
         {
             [Fact]
-            public void null_ArgumentNullException‚ª“Š‚°‚ç‚ê‚é()
+            public void null_ArgumentNullExceptionãŒæŠ•ã’ã‚‰ã‚Œã‚‹()
             {
                 var appender = Substitute.For<Appender>();
 
@@ -598,30 +598,30 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void ‹ó”’_‹–—e‚·‚é()
+            public void ç©ºç™½_è¨±å®¹ã™ã‚‹()
             {
                 var appender = Substitute.For<Appender>();
 
                 appender.Error("");
 
-                SubstituteExtensions.Received<Appender>(appender).Log(Level.Error, "");
+                appender.Received().Log(Level.Error, "");
             }
 
             [Fact]
-            public void A_¬Œ÷‚·‚é()
+            public void A_æˆåŠŸã™ã‚‹()
             {
                 var appender = Substitute.For<Appender>();
 
                 appender.Error("A");
 
-                SubstituteExtensions.Received<Appender>(appender).Log(Level.Error, "A");
+                appender.Received().Log(Level.Error, "A");
             }
         }
 
         public class Fatal
         {
             [Fact]
-            public void null_ArgumentNullException‚ª“Š‚°‚ç‚ê‚é()
+            public void null_ArgumentNullExceptionãŒæŠ•ã’ã‚‰ã‚Œã‚‹()
             {
                 var appender = Substitute.For<Appender>();
 
@@ -631,23 +631,132 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void ‹ó”’_‹–—e‚·‚é()
+            public void ç©ºç™½_è¨±å®¹ã™ã‚‹()
             {
                 var appender = Substitute.For<Appender>();
 
                 appender.Fatal("");
 
-                SubstituteExtensions.Received<Appender>(appender).Log(Level.Fatal, "");
+                appender.Received().Log(Level.Fatal, "");
             }
 
             [Fact]
-            public void A_¬Œ÷‚·‚é()
+            public void A_æˆåŠŸã™ã‚‹()
             {
                 var appender = Substitute.For<Appender>();
 
                 appender.Fatal("A");
 
-                SubstituteExtensions.Received<Appender>(appender).Log(Level.Fatal, "A");
+                appender.Received().Log(Level.Fatal, "A");
+            }
+        }
+
+        public class Log
+        {
+            [Fact]
+            public void level_Trace_æˆåŠŸã™ã‚‹()
+            {
+                var appender = Substitute.For<Appender>();
+                appender.MinLevel = Level.Trace;
+                appender.MaxLevel = Level.Trace;
+
+                appender.Log(Level.Trace, "A");
+
+                SubstituteExtensions.Received<Appender>(appender).Log("A");
+            }
+
+            [Fact]
+            public void level_Debug_æˆåŠŸã™ã‚‹()
+            {
+                var appender = Substitute.For<Appender>();
+                appender.MinLevel = Level.Debug;
+                appender.MaxLevel = Level.Debug;
+
+                appender.Log(Level.Debug, "A");
+
+                SubstituteExtensions.Received<Appender>(appender).Log("A");
+            }
+
+            [Fact]
+            public void level_Info_æˆåŠŸã™ã‚‹()
+            {
+                var appender = Substitute.For<Appender>();
+                appender.MinLevel = Level.Info;
+                appender.MaxLevel = Level.Info;
+
+                appender.Log(Level.Info, "A");
+
+                SubstituteExtensions.Received<Appender>(appender).Log("A");
+            }
+
+            [Fact]
+            public void level_Warning_æˆåŠŸã™ã‚‹()
+            {
+                var appender = Substitute.For<Appender>();
+                appender.MinLevel = Level.Warning;
+                appender.MaxLevel = Level.Warning;
+
+                appender.Log(Level.Warning, "A");
+
+                SubstituteExtensions.Received<Appender>(appender).Log("A");
+            }
+
+            [Fact]
+            public void level_Error_æˆåŠŸã™ã‚‹()
+            {
+                var appender = Substitute.For<Appender>();
+                appender.MinLevel = Level.Error;
+                appender.MaxLevel = Level.Error;
+
+                appender.Log(Level.Error, "A");
+
+                SubstituteExtensions.Received<Appender>(appender).Log("A");
+            }
+
+            [Fact]
+            public void level_Fatal_æˆåŠŸã™ã‚‹()
+            {
+                var appender = Substitute.For<Appender>();
+                appender.MinLevel = Level.Fatal;
+                appender.MaxLevel = Level.Fatal;
+
+                appender.Log(Level.Fatal, "A");
+
+                SubstituteExtensions.Received<Appender>(appender).Log("A");
+            }
+
+            [Fact]
+            public void message_null_ArgumentNullExceptionãŒæŠ•ã’ã‚‰ã‚Œã‚‹()
+            {
+                var appender = Substitute.For<Appender>();
+
+                var ex = Record.Exception(() => appender.Log(Level.Trace, null));
+
+                Assert.IsType<ArgumentNullException>(ex);
+            }
+
+            [Fact]
+            public void message_ç©ºç™½_è¨±å®¹ã™ã‚‹()
+            {
+                var appender = Substitute.For<Appender>();
+                appender.MinLevel = Level.Trace;
+                appender.MaxLevel = Level.Trace;
+
+                appender.Log(Level.Trace, "");
+
+                appender.Received().Log("");
+            }
+
+            [Fact]
+            public void message_A_æˆåŠŸã™ã‚‹()
+            {
+                var appender = Substitute.For<Appender>();
+                appender.MinLevel = Level.Trace;
+                appender.MaxLevel = Level.Trace;
+
+                appender.Log(Level.Trace, "A");
+
+                appender.Received().Log("A");
             }
         }
     }

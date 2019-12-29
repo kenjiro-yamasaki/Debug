@@ -238,6 +238,11 @@ namespace SoftCube.Log
         /// <param name="message">ログメッセージ。</param>
         public void Log(Level level, string message)
         {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
             if (MinLevel <= level && level <= MaxLevel)
             {
                 Log(logFormat.Convert(SystemClock.Now, level, message, new StackFrame(1, true)));
