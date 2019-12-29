@@ -5,7 +5,7 @@
     /// </summary>
     public static partial class Assert
     {
-        #region 静的メソッド
+        #region メソッド
 
         /// <summary>
         /// オブジェクト参照が <c>null</c> ではないことを検証します。

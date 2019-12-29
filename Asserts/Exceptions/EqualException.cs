@@ -13,7 +13,7 @@ namespace SoftCube.Asserts
     /// </remarks>
     public class EqualException : AssertExpectedActualException
     {
-        #region 静的フィールド
+        #region フィールド
 
         /// <summary>
         /// エスケープ文字→エンコードエスケープ文字の変換。
@@ -97,7 +97,7 @@ namespace SoftCube.Asserts
 
         #endregion
 
-        #region 静的メソッド
+        #region メソッド
 
         /// <summary>
         /// 値とポインターの表記文字列を取得します。

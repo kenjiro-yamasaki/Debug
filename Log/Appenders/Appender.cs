@@ -16,6 +16,7 @@ namespace SoftCube.Log
         /// <summary>
         /// ログの書式。
         /// </summary>
+        /// <seealso cref="Log.LogFormat.Format"/>
         public string LogFormat
         {
             get => logFormat.Format;

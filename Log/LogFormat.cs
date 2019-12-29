@@ -52,15 +52,15 @@ namespace SoftCube.Log
             // 変換パターンを文字列フォーマットに置換します。
             // このとき部分置換を避けるために、文字数の多い変数から置換します。
             // 例えば、line を newline より先に置換してしまうと正しい文字列フォーマットに置換できません。
-            format = format.Replace("DateTime", "5");
-            format = format.Replace("Message", "0");
-            format = format.Replace("NewLine", "1");
-            format = format.Replace("Method",  "2");
-            format = format.Replace("Thread",  "3");
-            format = format.Replace("Level",   "4");
-            format = format.Replace("File",    "6");
-            format = format.Replace("Line",    "7");
-            format = format.Replace("Type",    "8");
+            format = format.Replace("DateTime", "0");
+            format = format.Replace("Message",  "4");
+            format = format.Replace("NewLine",  "6");
+            format = format.Replace("Method",   "5");
+            format = format.Replace("Thread",   "7");
+            format = format.Replace("Level",    "2");
+            format = format.Replace("File",     "1");
+            format = format.Replace("Line",     "3");
+            format = format.Replace("Type",     "8");
             StringFormat = format;
         }
 
@@ -71,12 +71,12 @@ namespace SoftCube.Log
         /// <summary>
         /// 日付、レベル、ログメッセージ、スタックフレームをログに変換します。
         /// </summary>
-        /// <param name="date">日付。</param>
+        /// <param name="dateTime">日付。</param>
         /// <param name="level">レベル。</param>
         /// <param name="message">ログメッセージ。</param>
         /// <param name="stackFrame">スタックフレーム。</param>
         /// <returns>ログ。</returns>
-        internal string Convert(DateTime date, Level level, string message, StackFrame stackFrame)
+        internal string Convert(DateTime dateTime, Level level, string message, StackFrame stackFrame)
         {
             try
             {
@@ -89,14 +89,14 @@ namespace SoftCube.Log
 
                 return string.Format(
                     StringFormat,
-                    message,
-                    newline,
-                    method,
-                    thread,
-                    level.ToDisplayName(),
-                    date,
+                    dateTime,
                     file,
+                    level.ToDisplayName(),
                     line,
+                    message,
+                    method,
+                    newline,
+                    thread,
                     type);
             }
             catch (FormatException)

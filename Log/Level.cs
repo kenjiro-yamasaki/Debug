@@ -63,7 +63,7 @@ namespace SoftCube.Log
     /// </summary>
     public static class LevelExtensions
     {
-        #region 静的メソッド
+        #region メソッド
 
         /// <summary>
         /// ログレベルを表示名に変換します。

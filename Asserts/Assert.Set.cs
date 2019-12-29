@@ -7,7 +7,7 @@ namespace SoftCube.Asserts
     /// </summary>
     public static partial class Assert
     {
-        #region 静的メソッド
+        #region メソッド
 
         /// <summary>
         /// 集合がほかの集合の真部分集合であることを検証します。

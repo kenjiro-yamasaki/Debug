@@ -25,7 +25,7 @@ namespace SoftCube.Asserts
 
         #endregion
 
-        #region 静的メソッド
+        #region メソッド
 
         /// <summary>
         /// 期待値を省略します。

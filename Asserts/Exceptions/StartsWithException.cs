@@ -1,23 +1,23 @@
-using System;
+ï»¿using System;
 using System.Globalization;
 
 namespace SoftCube.Asserts
 {
     /// <summary>
-    /// <see cref="Assert.StartsWith"/> ƒAƒT[ƒg—áŠOB
+    /// <see cref="Assert.StartsWith"/> ã‚¢ã‚µãƒ¼ãƒˆä¾‹å¤–ã€‚
     /// </summary>
     /// <remarks>
-    /// –{—áŠO‚ÍA<see cref="Assert.StartsWith"/> ‚Ì¸”s‚É“Š‚°‚ç‚ê‚Ü‚·B
+    /// æœ¬ä¾‹å¤–ã¯ã€<see cref="Assert.StartsWith"/> ã®å¤±æ•—æ™‚ã«æŠ•ã’ã‚‰ã‚Œã¾ã™ã€‚
     /// </remarks>
     public class StartsWithException : AssertException
     {
-        #region ƒRƒ“ƒXƒgƒ‰ƒNƒ^[
+        #region ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ãƒ¼
 
         /// <summary>
-        /// ƒRƒ“ƒXƒgƒ‰ƒNƒ^[B
+        /// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ãƒ¼ã€‚
         /// </summary>
-        /// <param name="expected">Šú‘Ò’lB</param>
-        /// <param name="actual">À‘ª’lB</param>
+        /// <param name="expected">æœŸå¾…å€¤ã€‚</param>
+        /// <param name="actual">å®Ÿæ¸¬å€¤ã€‚</param>
         public StartsWithException(string expected, string actual)
             : base(string.Format(CultureInfo.CurrentCulture, "Assert.StartsWith() Failure:{2}Expected: {0}{2}Actual:   {1}", expected ?? "(null)", ShortenActual(expected, actual) ?? "(null)", Environment.NewLine))
         {
@@ -25,14 +25,14 @@ namespace SoftCube.Asserts
 
         #endregion
 
-        #region Ã“Iƒƒ\ƒbƒh
+        #region ãƒ¡ã‚½ãƒƒãƒ‰
 
         /// <summary>
-        /// À‘ª’l‚ğÈ—ª‚µ‚Ü‚·B
+        /// å®Ÿæ¸¬å€¤ã‚’çœç•¥ã—ã¾ã™ã€‚
         /// </summary>
-        /// <param name="expected">Šú‘Ò’lB</param>
-        /// <param name="actual">À‘ª’lB</param>
-        /// <returns>È—ª‚³‚ê‚½À‘ª’lB</returns>
+        /// <param name="expected">æœŸå¾…å€¤ã€‚</param>
+        /// <param name="actual">å®Ÿæ¸¬å€¤ã€‚</param>
+        /// <returns>çœç•¥ã•ã‚ŒãŸå®Ÿæ¸¬å€¤ã€‚</returns>
         private static string ShortenActual(string expected, string actual)
         {
             if (expected == null || actual == null || actual.Length <= expected.Length)

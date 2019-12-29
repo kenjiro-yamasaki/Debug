@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -10,44 +10,44 @@ using System.Threading.Tasks;
 namespace SoftCube.Asserts
 {
     /// <summary>
-    /// ˆø”ƒtƒH[ƒ}ƒbƒ^[B
+    /// å¼•æ•°ãƒ•ã‚©ãƒ¼ãƒãƒƒã‚¿ãƒ¼ã€‚
     /// </summary>
     public static class ArgumentFormatter
     {
-        #region ’è”
+        #region å®šæ•°
 
         /// <summary>
-        /// Å‘å[‚³B
+        /// æœ€å¤§æ·±ã•ã€‚
         /// </summary>
         private const int MaxDepth = 3;
 
         /// <summary>
-        /// Å‘å—ñ‹“’·‚³B
+        /// æœ€å¤§åˆ—æŒ™é•·ã•ã€‚
         /// </summary>
         private const int MaxEnumerableLength = 5;
 
         /// <summary>
-        /// Å‘åƒvƒƒpƒeƒBEƒtƒB[ƒ‹ƒh”B
+        /// æœ€å¤§ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ãƒ»ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰æ•°ã€‚
         /// </summary>
         private const int MaxPropertyFieldCount = 5;
 
         /// <summary>
-        /// Å‘å•¶š—ñ’·‚³B
+        /// æœ€å¤§æ–‡å­—åˆ—é•·ã•ã€‚
         /// </summary>
         private const int MaxStringLength = 50;
 
         /// <summary>
-        /// ‹ó‚Ì <see cref="object"/> ”z—ñB
+        /// ç©ºã® <see cref="object"/> é…åˆ—ã€‚
         /// </summary>
         private static readonly object[] EmptyObjects = new object[0];
 
         /// <summary>
-        /// ‹ó‚Ì <see cref="Type"/> ”z—ñB
+        /// ç©ºã® <see cref="Type"/> é…åˆ—ã€‚
         /// </summary>
         private static readonly Type[] EmptyTypes = new Type[0];
 
         /// <summary>
-        /// Œ^î•ñ¨•¶š—ñ•ÏŠ·B
+        /// å‹æƒ…å ±â†’æ–‡å­—åˆ—å¤‰æ›ã€‚
         /// </summary>
         private static readonly Dictionary<TypeInfo, string> TypeInfoToString = new Dictionary<TypeInfo, string>
         {
@@ -70,24 +70,24 @@ namespace SoftCube.Asserts
 
         #endregion
 
-        #region Ã“Iƒƒ\ƒbƒh
+        #region ãƒ¡ã‚½ãƒƒãƒ‰
 
         /// <summary>
-        /// ’l‚ğƒtƒH[ƒ}ƒbƒg‚µ‚Ü‚·B
+        /// å€¤ã‚’ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã—ã¾ã™ã€‚
         /// </summary>
-        /// <param name="value">’lB</param>
-        /// <returns>ƒtƒH[ƒ}ƒbƒg‚³‚ê‚½’lB</returns>
+        /// <param name="value">å€¤ã€‚</param>
+        /// <returns>ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã•ã‚ŒãŸå€¤ã€‚</returns>
         public static string Format(object value)
         {
             return Format(value, 1);
         }
 
         /// <summary>
-        /// ’l‚ğƒtƒH[ƒ}ƒbƒg‚µ‚Ü‚·B
+        /// å€¤ã‚’ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã—ã¾ã™ã€‚
         /// </summary>
-        /// <param name="value">’lB</param>
-        /// <param name="depth">ƒlƒXƒg‚Ì[‚³B</param>
-        /// <returns>ƒtƒH[ƒ}ƒbƒg‚³‚ê‚½’lB</returns>
+        /// <param name="value">å€¤ã€‚</param>
+        /// <param name="depth">ãƒã‚¹ãƒˆã®æ·±ã•ã€‚</param>
+        /// <returns>ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã•ã‚ŒãŸå€¤ã€‚</returns>
         private static string Format(object value, int depth)
         {
             if (value == null)
@@ -143,7 +143,7 @@ namespace SoftCube.Asserts
                             return value.ToString().Replace(", ", " | ");
                         }
 
-                        // ToString‚ğƒI[ƒo[ƒ‰ƒCƒh‚µ‚Ä‚¢‚éê‡AToString‚ğ–ß‚·B
+                        // ToStringã‚’ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ã—ã¦ã„ã‚‹å ´åˆã€ToStringã‚’æˆ»ã™ã€‚
                         var toString = type.GetRuntimeMethod("ToString", EmptyTypes);
                         if (toString != null && toString.DeclaringType != typeof(object))
                         {
@@ -162,17 +162,17 @@ namespace SoftCube.Asserts
             }
             catch (Exception ex)
             {
-                // ’l‚ÌƒtƒH[ƒ}ƒbƒgˆ—‚ª—áŠO‚ğ”­¶‚³‚¹‚éê‡‚ª‚ ‚é(—á‚¦‚ÎAToString‚ª—áŠO‚ğ”­¶‚³‚¹‚éê‡‚È‚Ç)B
-                // ‚±‚Ì‚æ‚¤‚Èê‡AƒvƒƒOƒ‰ƒ€‚ğ’â~‚³‚¹‚È‚¢‚½‚ß‚É—áŠO‚ğƒLƒƒƒbƒ`‚µ‚Ü‚·B
+                // å€¤ã®ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆå‡¦ç†ãŒä¾‹å¤–ã‚’ç™ºç”Ÿã•ã›ã‚‹å ´åˆãŒã‚ã‚‹(ä¾‹ãˆã°ã€ToStringãŒä¾‹å¤–ã‚’ç™ºç”Ÿã•ã›ã‚‹å ´åˆãªã©)ã€‚
+                // ã“ã®ã‚ˆã†ãªå ´åˆã€ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚’åœæ­¢ã•ã›ãªã„ãŸã‚ã«ä¾‹å¤–ã‚’ã‚­ãƒ£ãƒƒãƒã—ã¾ã™ã€‚
                 return $"{ex.GetType().Name} was thrown formatting an object of type \"{type}\"";
             }
         }
 
         /// <summary>
-        /// •¶š—ñ‚Ì’l‚ğƒtƒH[ƒ}ƒbƒg‚µ‚Ü‚·B
+        /// æ–‡å­—åˆ—ã®å€¤ã‚’ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã—ã¾ã™ã€‚
         /// </summary>
-        /// <param name="string">•¶š—ñ‚Ì’lB</param>
-        /// <returns>ƒtƒH[ƒ}ƒbƒg‚³‚ê‚½•¶š—ñ‚Ì’lB</returns>
+        /// <param name="string">æ–‡å­—åˆ—ã®å€¤ã€‚</param>
+        /// <returns>ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã•ã‚ŒãŸæ–‡å­—åˆ—ã®å€¤ã€‚</returns>
         private static string FormatString(string @string)
         {
             var builder = new StringBuilder(@string.Length);
@@ -214,11 +214,11 @@ namespace SoftCube.Asserts
         }
 
         /// <summary>
-        /// ƒtƒH[ƒ}ƒbƒg‚³‚ê‚½’l‚ğƒ‰ƒbƒv‚µAæ“¾‚µ‚Ü‚·B
+        /// ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã•ã‚ŒãŸå€¤ã‚’ãƒ©ãƒƒãƒ—ã—ã€å–å¾—ã—ã¾ã™ã€‚
         /// </summary>
-        /// <param name="getter">’l‚ğæ“¾‚·‚éƒfƒŠƒQ[ƒgB</param>
-        /// <param name="depth">ƒlƒXƒg[‚³B</param>
-        /// <returns>ƒ‰ƒbƒv‚µAƒtƒH[ƒ}ƒbƒg‚³‚ê‚½’lB</returns>
+        /// <param name="getter">å€¤ã‚’å–å¾—ã™ã‚‹ãƒ‡ãƒªã‚²ãƒ¼ãƒˆã€‚</param>
+        /// <param name="depth">ãƒã‚¹ãƒˆæ·±ã•ã€‚</param>
+        /// <returns>ãƒ©ãƒƒãƒ—ã—ã€ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã•ã‚ŒãŸå€¤ã€‚</returns>
         private static string WrapAndGetFormattedValue(Func<object> getter, int depth)
         {
             try
@@ -243,12 +243,12 @@ namespace SoftCube.Asserts
         }
 
         /// <summary>
-        /// QÆŒ^‚Ì’l‚ğƒtƒH[ƒ}ƒbƒg‚µ‚Ü‚·B
+        /// å‚ç…§å‹ã®å€¤ã‚’ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã—ã¾ã™ã€‚
         /// </summary>
-        /// <param name="value">QÆŒ^‚Ì’lB</param>
-        /// <param name="depth">ƒlƒXƒg‚Ì[‚³B</param>
-        /// <param name="type">QÆŒ^B</param>
-        /// <returns>ƒtƒH[ƒ}ƒbƒg‚³‚ê‚½QÆŒ^‚Ì’lB</returns>
+        /// <param name="value">å‚ç…§å‹ã®å€¤ã€‚</param>
+        /// <param name="depth">ãƒã‚¹ãƒˆã®æ·±ã•ã€‚</param>
+        /// <param name="type">å‚ç…§å‹ã€‚</param>
+        /// <returns>ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã•ã‚ŒãŸå‚ç…§å‹ã®å€¤ã€‚</returns>
         private static string FormatReferenceValue(object value, int depth, Type type)
         {
             if (depth == MaxDepth)
@@ -276,11 +276,11 @@ namespace SoftCube.Asserts
         }
 
         /// <summary>
-        /// ”½•œq‚Ì’l (ƒRƒŒƒNƒVƒ‡ƒ“) ‚ğƒtƒH[ƒ}ƒbƒg‚µ‚Ü‚·B
+        /// åå¾©å­ã®å€¤ (ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³) ã‚’ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã—ã¾ã™ã€‚
         /// </summary>
-        /// <param name="values">”½•œq‚Ì’l (ƒRƒŒƒNƒVƒ‡ƒ“)B</param>
-        /// <param name="depth">ƒlƒXƒg‚Ì[‚³B</param>
-        /// <returns>ƒtƒH[ƒ}ƒbƒg‚³‚ê‚½”½•œq‚Ì’l (ƒRƒŒƒNƒVƒ‡ƒ“)B</returns>
+        /// <param name="values">åå¾©å­ã®å€¤ (ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³)ã€‚</param>
+        /// <param name="depth">ãƒã‚¹ãƒˆã®æ·±ã•ã€‚</param>
+        /// <returns>ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã•ã‚ŒãŸåå¾©å­ã®å€¤ (ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³)ã€‚</returns>
         private static string FormatEnumerable(IEnumerable<object> values, int depth)
         {
             if (depth == MaxDepth)
@@ -303,10 +303,10 @@ namespace SoftCube.Asserts
         }
 
         /// <summary>
-        /// Œ^–¼‚ğƒtƒH[ƒ}ƒbƒg‚µ‚Ü‚·B
+        /// å‹åã‚’ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã—ã¾ã™ã€‚
         /// </summary>
-        /// <param name="type">Œ^B</param>
-        /// <returns>ƒtƒH[ƒ}ƒbƒg‚³‚ê‚½Œ^B</returns>
+        /// <param name="type">å‹ã€‚</param>
+        /// <returns>ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã•ã‚ŒãŸå‹ã€‚</returns>
         private static string FormatTypeName(Type type)
         {
             var typeInfo = type.GetTypeInfo();
@@ -359,10 +359,10 @@ namespace SoftCube.Asserts
         }
 
         /// <summary>
-        /// ƒGƒXƒP[ƒv•¶š‚Ì•ÏŠ·‚ğ‚İ‚Ü‚·B
+        /// ã‚¨ã‚¹ã‚±ãƒ¼ãƒ—æ–‡å­—ã®å¤‰æ›ã‚’è©¦ã¿ã¾ã™ã€‚
         /// </summary>
-        /// <param name="char">•¶šB</param>
-        /// <returns>ƒGƒXƒP[ƒv•¶š‚©‚ğ¦‚·’l, ƒGƒXƒP[ƒv•¶š‚Ì•ÏŠ·•¶š—ñB</returns>
+        /// <param name="char">æ–‡å­—ã€‚</param>
+        /// <returns>ã‚¨ã‚¹ã‚±ãƒ¼ãƒ—æ–‡å­—ã‹ã‚’ç¤ºã™å€¤, ã‚¨ã‚¹ã‚±ãƒ¼ãƒ—æ–‡å­—ã®å¤‰æ›æ–‡å­—åˆ—ã€‚</returns>
         private static (bool Success, string Value) TryGetEscapeSequence(char @char)
         {
             switch (@char)

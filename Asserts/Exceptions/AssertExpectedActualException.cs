@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Globalization;
 using System.Linq;
@@ -7,34 +7,34 @@ using System.Reflection;
 namespace SoftCube.Asserts
 {
     /// <summary>
-    /// Šú‘Ò’l‚ÆÀ‘ª’l‚ÌƒAƒT[ƒg—áŠOB
+    /// æœŸå¾…å€¤ã¨å®Ÿæ¸¬å€¤ã®ã‚¢ã‚µãƒ¼ãƒˆä¾‹å¤–ã€‚
     /// </summary>
     public class AssertExpectedActualException : AssertException
     {
-        #region ƒvƒƒpƒeƒB
+        #region ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£
 
         /// <summary>
-        /// Šú‘Ò’lB
+        /// æœŸå¾…å€¤ã€‚
         /// </summary>
         public string Expected { get; }
 
         /// <summary>
-        /// Šú‘Ò’l‚Ìƒ^ƒCƒgƒ‹B
+        /// æœŸå¾…å€¤ã®ã‚¿ã‚¤ãƒˆãƒ«ã€‚
         /// </summary>
         public string ExpectedTitle { get; }
 
         /// <summary>
-        /// À‘ª’lB
+        /// å®Ÿæ¸¬å€¤ã€‚
         /// </summary>
         public string Actual { get; }
 
         /// <summary>
-        /// À‘ª’l‚Ìƒ^ƒCƒgƒ‹B
+        /// å®Ÿæ¸¬å€¤ã®ã‚¿ã‚¤ãƒˆãƒ«ã€‚
         /// </summary>
         public string ActualTitle { get; }
 
         /// <summary>
-        /// —áŠOƒƒbƒZ[ƒW (Šú‘Ò’l‚ÆÀ‘ª’l‚ğŠÜ‚Ş)B
+        /// ä¾‹å¤–ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ (æœŸå¾…å€¤ã¨å®Ÿæ¸¬å€¤ã‚’å«ã‚€)ã€‚
         /// </summary>
         public override string Message
         {
@@ -50,30 +50,30 @@ namespace SoftCube.Asserts
 
         #endregion
 
-        #region ƒRƒ“ƒXƒgƒ‰ƒNƒ^[
+        #region ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ãƒ¼
 
         /// <summary>
-        /// ƒRƒ“ƒXƒgƒ‰ƒNƒ^[B
+        /// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ãƒ¼ã€‚
         /// </summary>
-        /// <param name="expected">Šú‘Ò’lB</param>
-        /// <param name="actual">À‘ª’lB</param>
-        /// <param name="userMessage">ƒ†[ƒU[ƒƒbƒZ[ƒWB</param>
-        /// <param name="expectedTitle">Šú‘Ò’l‚Ìƒ^ƒCƒgƒ‹B</param>
-        /// <param name="actualTitle">À‘ª’l‚Ìƒ^ƒCƒgƒ‹B</param>
+        /// <param name="expected">æœŸå¾…å€¤ã€‚</param>
+        /// <param name="actual">å®Ÿæ¸¬å€¤ã€‚</param>
+        /// <param name="userMessage">ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã€‚</param>
+        /// <param name="expectedTitle">æœŸå¾…å€¤ã®ã‚¿ã‚¤ãƒˆãƒ«ã€‚</param>
+        /// <param name="actualTitle">å®Ÿæ¸¬å€¤ã®ã‚¿ã‚¤ãƒˆãƒ«ã€‚</param>
         public AssertExpectedActualException(object expected, object actual, string userMessage, string expectedTitle = null, string actualTitle = null)
             : this(expected, actual, userMessage, expectedTitle, actualTitle, null)
         {
         }
 
         /// <summary>
-        /// ƒRƒ“ƒXƒgƒ‰ƒNƒ^[B
+        /// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ãƒ¼ã€‚
         /// </summary>
-        /// <param name="expected">Šú‘Ò’lB</param>
-        /// <param name="actual">À‘ª’lB</param>
-        /// <param name="message">ƒƒbƒZ[ƒWB</param>
-        /// <param name="expectedTitle">Šú‘Ò’l‚Ìƒ^ƒCƒgƒ‹B</param>
-        /// <param name="actualTitle">À‘ª’l‚Ìƒ^ƒCƒgƒ‹B</param>
-        /// <param name="innerException">“à•”—áŠOB</param>
+        /// <param name="expected">æœŸå¾…å€¤ã€‚</param>
+        /// <param name="actual">å®Ÿæ¸¬å€¤ã€‚</param>
+        /// <param name="message">ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã€‚</param>
+        /// <param name="expectedTitle">æœŸå¾…å€¤ã®ã‚¿ã‚¤ãƒˆãƒ«ã€‚</param>
+        /// <param name="actualTitle">å®Ÿæ¸¬å€¤ã®ã‚¿ã‚¤ãƒˆãƒ«ã€‚</param>
+        /// <param name="innerException">å†…éƒ¨ä¾‹å¤–ã€‚</param>
         public AssertExpectedActualException(object expected, object actual, string message, string expectedTitle, string actualTitle, Exception innerException)
             : base(message, innerException)
         {
@@ -91,13 +91,13 @@ namespace SoftCube.Asserts
 
         #endregion
 
-        #region Ã“Iƒƒ\ƒbƒh
+        #region ãƒ¡ã‚½ãƒƒãƒ‰
 
         /// <summary>
-        /// ƒIƒuƒWƒFƒNƒg‚ğ•¶š—ñ‚É•ÏŠ·‚·‚éB
+        /// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’æ–‡å­—åˆ—ã«å¤‰æ›ã™ã‚‹ã€‚
         /// </summary>
-        /// <param name="object">ƒIƒuƒWƒFƒNƒgB</param>
-        /// <returns>•¶š—ñB</returns>
+        /// <param name="object">ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã€‚</param>
+        /// <returns>æ–‡å­—åˆ—ã€‚</returns>
         private static string ConvertToString(object @object)
         {
             if (@object is string stringValue)
@@ -115,10 +115,10 @@ namespace SoftCube.Asserts
         }
 
         /// <summary>
-        /// Œ^î•ñ‚ğƒVƒ“ƒvƒ‹‚ÈŒ^–¼‚É•ÏŠ·‚·‚éB
+        /// å‹æƒ…å ±ã‚’ã‚·ãƒ³ãƒ—ãƒ«ãªå‹åã«å¤‰æ›ã™ã‚‹ã€‚
         /// </summary>
-        /// <param name="typeInfo">Œ^î•ñB</param>
-        /// <returns>ƒVƒ“ƒvƒ‹‚ÈŒ^–¼B</returns>
+        /// <param name="typeInfo">å‹æƒ…å ±ã€‚</param>
+        /// <returns>ã‚·ãƒ³ãƒ—ãƒ«ãªå‹åã€‚</returns>
         private static string ConvertToSimpleTypeName(TypeInfo typeInfo)
         {
             if (!typeInfo.IsGenericType)

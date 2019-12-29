@@ -22,9 +22,9 @@ namespace SoftCube.Log
         /// </summary>
         /// <remarks>
         /// ファイルオープン時の既存ログファイルの取り扱い方針を指定します。
-        ///・Append    : 既存ログファイルの末尾に追加。
-        ///・Backup    : 既存ログファイルをバックアップ。
-        ///・Overwrite : 既存ログファイルを上書き。
+        ///・<see cref="FileOpenPolicy.Append"/> : 既存ログファイルの末尾に追加します。
+        ///・<see cref="FileOpenPolicy.Backup"/> : 既存ログファイルをバックアップします。
+        ///・<see cref="FileOpenPolicy.Overwrite"/> : 既存ログファイルを上書きします (既存のログは消失するので注意してください)。
         /// </remarks>
         public FileOpenPolicy FileOpenPolicy { get; set; } = FileOpenPolicy.Append;
 
@@ -66,7 +66,8 @@ namespace SoftCube.Log
         /// 最大ファイルサイズ (単位：byte)。
         /// </summary>
         /// <remarks>
-        /// ローテンションするログファイルサイズを指定します。
+        /// 現在のログファイルの容量が最大ファイルサイズを超過した場合、
+        /// 現在のログファイルをバックアップします。
         /// </remarks>
         public long MaxFileSize { get; set; } = 10 * 1024 * 1024;
 
@@ -74,7 +75,7 @@ namespace SoftCube.Log
         /// バックアップファイルの日付の書式。
         /// </summary>
         /// <remarks>
-        /// 既存のログファイルをバックアップファイルとする場合、
+        /// 既存のログファイルをバックアップする場合、
         /// ログファイルの作成日付を指定の書式でフォーマットした文字列をログファイル名の後ろに添えて、バックアップファイル名とします。
         /// 日付の書式に指定する文字列は、<see cref="DateTime.ToString(string)"/> で決められたものを使用します。
         /// 使用できる文字列のうち、主なものを紹介します。
@@ -124,7 +125,7 @@ namespace SoftCube.Log
         /// インデックスの書式に指定する文字列は、<see cref="int.ToString(string)"/> で決められたものを使用します。
         /// </remarks>
         /// <example>
-        /// ・"000" → "008"
+        /// ・"000" → "007"
         /// </example>
         public string IndexFormat { get; set; } = "000";
 
@@ -306,11 +307,12 @@ namespace SoftCube.Log
         public void Backup()
         {
             Assert.NotNull(FileStream);
-
             var filePath = FilePath;
 
+            // 現在のログファイルを閉じます。
             Close();
 
+            // 現在のログファイルをバックアップファイルに名前変更します。
             Assert.True(File.Exists(filePath));
             var directoryName  = Path.GetDirectoryName(filePath);
             var fileName       = Path.GetFileName(filePath);
@@ -330,7 +332,6 @@ namespace SoftCube.Log
 
                     if (!File.Exists(backupFilePath0) && !File.Exists(backupFilePath1))
                     {
-                        // ログファイルをログバックアップファイルに名前変更します。
                         Assert.True(File.Exists(filePath));
                         Assert.False(File.Exists(backupFilePath0));
                         File.Move(filePath, backupFilePath0);
@@ -344,18 +345,14 @@ namespace SoftCube.Log
 
                     if (!File.Exists(backupFilePath))
                     {
-                        // バックアップファイル 0 を名前変更します。
-                        var srcBackupFileName0 = $"{baseName}.{backupDateTime.ToString(DateTimeFormat)}{extension}";
-                        var srcBackupFilePath0 = Path.Combine(directoryName, srcBackupFileName0);
-
+                        var srcBackupFileName0  = $"{baseName}.{backupDateTime.ToString(DateTimeFormat)}{extension}";
+                        var srcBackupFilePath0  = Path.Combine(directoryName, srcBackupFileName0);
                         var destBackupFileName0 = $"{baseName}.{backupDateTime.ToString(DateTimeFormat)}.{0.ToString(IndexFormat)}{extension}";
                         var destBackupFilePath0 = Path.Combine(directoryName, destBackupFileName0);
-
                         Assert.True(File.Exists(srcBackupFilePath0));
                         Assert.False(File.Exists(destBackupFilePath0));
                         File.Move(srcBackupFilePath0, destBackupFilePath0);
 
-                        // ログファイルをログバックアップファイルに名前変更します。
                         Assert.True(File.Exists(filePath));
                         Assert.False(File.Exists(backupFilePath));
                         File.Move(filePath, backupFilePath);
@@ -369,7 +366,6 @@ namespace SoftCube.Log
 
                     if (!File.Exists(backupFilePath))
                     {
-                        // ログファイルをログバックアップファイルに名前変更します。
                         Assert.True(File.Exists(filePath));
                         Assert.False(File.Exists(backupFilePath));
                         File.Move(filePath, backupFilePath);

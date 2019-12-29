@@ -110,7 +110,7 @@ namespace SoftCube.Asserts
 
         #endregion
 
-        #region 静的メソッド
+        #region メソッド
 
         /// <summary>
         /// 内部例外をフォーマットします。

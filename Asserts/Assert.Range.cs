@@ -8,7 +8,7 @@ namespace SoftCube.Asserts
     /// </summary>
     public static partial class Assert
     {
-        #region 静的メソッド
+        #region メソッド
 
         #region InRange
 

@@ -8,7 +8,7 @@ namespace SoftCube.Runtime
     /// </summary>
     public static class SystemConstants
     {
-        #region 静的プロパティ
+        #region プロパティ
 
         /// <summary>
         /// 実行ファイルパス。

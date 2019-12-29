@@ -8,7 +8,7 @@ namespace SoftCube.Asserts
     /// </summary>
     public partial class Assert
     {
-        #region 静的メソッド
+        #region メソッド
 
         /// <summary>
         /// 指定オブジェクトが指定型に代入可能かを検証します。

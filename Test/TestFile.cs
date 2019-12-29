@@ -10,7 +10,7 @@ namespace SoftCube.Test
     /// </summary>
     public static class TestFile
     {
-        #region 静的メソッド
+        #region メソッド
 
         /// <summary>
         /// ファイルパスを取得します。

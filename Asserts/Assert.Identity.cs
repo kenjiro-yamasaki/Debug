@@ -5,7 +5,7 @@
     /// </summary>
     public static partial class Assert
     {
-        #region 静的メソッド
+        #region メソッド
 
         /// <summary>
         /// オブジェクトが同じインスタンスではないことを検証します。

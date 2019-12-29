@@ -7,7 +7,7 @@ namespace SoftCube.Asserts
     /// </summary>
     public static partial class Assert
     {
-        #region 静的メソッド
+        #region メソッド
 
         /// <summary>
         /// 引数が null ではないことを保証します。
