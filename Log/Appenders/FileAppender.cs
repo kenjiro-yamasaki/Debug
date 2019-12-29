@@ -15,6 +15,24 @@ namespace SoftCube.Log
     {
         #region プロパティ
 
+        #region ファイル
+
+        /// <summary>
+        /// ファイルオープン方針。
+        /// </summary>
+        /// <remarks>
+        /// ファイルオープン時の既存ログファイルの取り扱い方針を指定します。
+        ///・Append    : 既存ログファイルの末尾に追加。
+        ///・Backup    : 既存ログファイルをバックアップ。
+        ///・Overwrite : 既存ログファイルを上書き。
+        /// </remarks>
+        public FileOpenPolicy FileOpenPolicy { get; set; } = FileOpenPolicy.Append;
+
+        /// <summary>
+        /// エンコーディング。
+        /// </summary>
+        public Encoding Encoding { get; set; } = Encoding.UTF8;
+
         /// <summary>
         /// ファイルパス。
         /// </summary>
@@ -31,11 +49,6 @@ namespace SoftCube.Log
         public DateTime CreationTime => File.GetCreationTime(FilePath);
 
         /// <summary>
-        /// エンコーディング。
-        /// </summary>
-        public Encoding Encoding => Writer.Encoding;
-
-        /// <summary>
         /// ファイルストリーム。
         /// </summary>
         private FileStream FileStream { get; set; }
@@ -44,6 +57,78 @@ namespace SoftCube.Log
         /// ストリームライター。
         /// </summary>
         private StreamWriter Writer { get; set; }
+
+        #endregion
+
+        #region バックアップ
+
+        /// <summary>
+        /// 最大ファイルサイズ (単位：byte)。
+        /// </summary>
+        /// <remarks>
+        /// ローテンションするログファイルサイズを指定します。
+        /// </remarks>
+        public long MaxFileSize { get; set; } = 10 * 1024 * 1024;
+
+        /// <summary>
+        /// バックアップファイルの日付の書式。
+        /// </summary>
+        /// <remarks>
+        /// 既存のログファイルをバックアップファイルとする場合、
+        /// ログファイルの作成日付を指定の書式でフォーマットした文字列をログファイル名の後ろに添えて、バックアップファイル名とします。
+        /// 日付の書式に指定する文字列は、<see cref="DateTime.ToString(string)"/> で決められたものを使用します。
+        /// 使用できる文字列のうち、主なものを紹介します。
+        /// ・yyyyy : 年の下 5 桁。
+        /// ・M     : 月 (1～12)。
+        /// ・MM    : 月 (01～12)。
+        /// ・d     : 日にち (1～31)。
+        /// ・dd    : 日にち (01～31)。
+        /// ・H     : 時間 (0～23)。
+        /// ・HH    : 時間 (00～23)。
+        /// ・h     : 時間 (1～12)。
+        /// ・hh    : 時間 (01～12)。
+        /// ・m     : 分 (0～59)。
+        /// ・mm    : 分 (00～59)。
+        /// ・s     : 秒 (0～59)。
+        /// ・ss    : 秒 (00～59)。
+        /// ・fff   : 1/1000秒。
+        /// </remarks>
+        /// <example>
+        /// ・"yyyy-MM-dd" → "2019-12-17"
+        /// </example>
+        public string DateTimeFormat
+        {
+            get => dateTimeFormat;
+            set
+            {
+                if (dateTimeFormat != value)
+                {
+                    int index = value.IndexOfAny(Path.GetInvalidFileNameChars());
+                    if (0 <= index)
+                    {
+                        throw new ArgumentException(string.Format($"ファイル名に使用できない文字[{value[index]}]が使われています。"), nameof(value));
+                    }
+
+                    dateTimeFormat = value;
+                }
+            }
+        }
+        private string dateTimeFormat = "yyyy-MM-dd";
+
+        /// <summary>
+        /// バックアップファイルのインデックスの書式。
+        /// </summary>
+        /// <remarks>
+        /// 同じ日付のバックアップファイルが 2 つ以上できあがる場合、
+        /// バックアップインデックスを指定の書式でフォーマットした文字列を日付つきバックアップファイル名の後ろに添えて、バックアップファイル名とします。
+        /// インデックスの書式に指定する文字列は、<see cref="int.ToString(string)"/> で決められたものを使用します。
+        /// </remarks>
+        /// <example>
+        /// ・"000" → "008"
+        /// </example>
+        public string IndexFormat { get; set; } = "000";
+
+        #endregion
 
         #endregion
 
@@ -77,11 +162,14 @@ namespace SoftCube.Log
                 throw new ArgumentNullException(nameof(xappender));
             }
 
-            var filePath = ParseFilePath(xappender.Property("FilePath"));
-            var append   = bool.Parse(xappender.Property("Append"));
-            var encoding = Encoding.GetEncoding(xappender.Property("Encoding"));
+            FileOpenPolicy = xappender.Property(nameof(FileOpenPolicy)).ToFileOpenPolicy();
+            Encoding       = Encoding.GetEncoding(xappender.Property("Encoding"));
+            DateTimeFormat = xappender.Property(nameof(DateTimeFormat));
+            IndexFormat    = xappender.Property(nameof(IndexFormat));
+            MaxFileSize    = ParseMaxFileSize(xappender.Property("MaxFileSize"));
 
-            Open(filePath, append, encoding);
+            var filePath = ParseFilePath(xappender.Property("FilePath"));
+            Open(filePath);
         }
 
         #endregion
@@ -108,68 +196,45 @@ namespace SoftCube.Log
 
         #endregion
 
-        #region ログ出力
-
-        /// <summary>
-        /// ログを出力します。
-        /// </summary>
-        /// <param name="log">ログ。</param>
-        public override void Log(string log)
-        {
-            if (Writer == null)
-            {
-                return;
-            }
-
-            lock (Writer)
-            {
-                Writer.Write(log);
-                Writer.Flush();
-            }
-        }
-
-        #endregion
-
         #region ログファイルを開く
 
         /// <summary>
         /// ログファイルを開きます。
         /// </summary>
         /// <param name="filePath">ファイルパス。</param>
-        /// <param name="append">
-        /// ファイルにログを追加するか。
-        /// <c>true</c> の場合、ファイルにログを追加します。
-        /// <c>false</c> の場合、ファイルのログを上書きします。
-        /// </param>
-        /// <param name="encoding">エンコーディング。</param>
-        public void Open(string filePath, bool append, Encoding encoding)
+        public void Open(string filePath)
         {
             if (filePath == null)
             {
                 throw new ArgumentNullException(nameof(filePath));
             }
-            if (encoding == null)
-            {
-                throw new ArgumentNullException(nameof(encoding));
-            }
 
+            // 出力先ディレクトリが存在しない場合、新規作成します。
             var directory = Path.GetDirectoryName(filePath);
             if (!Directory.Exists(directory))
             {
                 Directory.CreateDirectory(directory);
             }
 
+            // ログファイルを閉じます。
             Close();
 
-            if (!File.Exists(filePath) || !append)
+            // バックアップ条件に適合している場合、現在のログファイルをバックアップとします。
+            if (FileOpenPolicy == FileOpenPolicy.Backup && File.Exists(filePath))
+            {
+                Backup(filePath);
+            }
+
+            // ログファイルを開きます。
+            if (FileOpenPolicy != FileOpenPolicy.Append || !File.Exists(filePath))
             {
                 File.Create(filePath).Dispose();
                 File.SetCreationTime(filePath, SystemClock.Now);
             }
+
             FileStream = File.Open(filePath, FileMode.Open, FileAccess.Write);
             FileStream.Seek(0, SeekOrigin.End);
-
-            Writer = new StreamWriter(FileStream, encoding);
+            Writer = new StreamWriter(FileStream, Encoding);
         }
 
         #endregion
@@ -200,6 +265,120 @@ namespace SoftCube.Log
         }
 
         #endregion
+
+        #region ログ出力
+
+        /// <summary>
+        /// ログを出力します。
+        /// </summary>
+        /// <param name="log">ログ。</param>
+        public override void Log(string log)
+        {
+            if (Writer == null)
+            {
+                return;
+            }
+
+            lock (Writer)
+            {
+                // バックアップ条件に適合している場合、現在のログファイルをバックアップとします。
+                // その後、新たにログファイルを開きます。
+                var isDateTimeChanged = CreationTime.ToString(DateTimeFormat) != SystemClock.Now.ToString(DateTimeFormat);
+                var isOverCapacity    = MaxFileSize <= FileSize;
+                if (isDateTimeChanged || isOverCapacity)
+                {
+                    var filePath = FilePath;
+
+                    Close();
+                    Backup(filePath);
+                    Open(filePath);
+                }
+
+                //
+                Writer.Write(log);
+                Writer.Flush();
+            }
+        }
+
+        #endregion
+
+        #region バックアップ
+
+        /// <summary>
+        /// バックアップします。
+        /// </summary>
+        /// <param name="filePath">ファイルパス。</param>
+        private void Backup(string filePath)
+        {
+            Assert.True(File.Exists(filePath));
+            var directoryName  = Path.GetDirectoryName(filePath);
+            var fileName       = Path.GetFileName(filePath);
+            var baseName       = Path.GetFileNameWithoutExtension(fileName);
+            var extension      = Path.GetExtension(filePath);
+            var backupDateTime = File.GetCreationTime(filePath);
+
+            for (int backupIndex = 0; true; backupIndex++)
+            {
+                if (backupIndex == 0)
+                {
+                    var backupFileName0 = string.Format("{0}.{1}{2}", baseName, backupDateTime.ToString(DateTimeFormat), extension);
+                    var backupFilePath0 = Path.Combine(directoryName, backupFileName0);
+
+                    var backupFileName1 = string.Format("{0}.{1}.{2}{3}", baseName, backupDateTime.ToString(DateTimeFormat), backupIndex.ToString(IndexFormat), extension);
+                    var backupFilePath1 = Path.Combine(directoryName, backupFileName1);
+
+                    if (!File.Exists(backupFilePath0) && !File.Exists(backupFilePath1))
+                    {
+                        Assert.True(File.Exists(filePath));
+                        Assert.False(File.Exists(backupFilePath0));
+                        File.Move(filePath, backupFilePath0);
+                        return;
+                    }
+                }
+                else if (backupIndex == 1)
+                {
+                    var backupFileName = string.Format("{0}.{1}.{2}{3}", baseName, backupDateTime.ToString(DateTimeFormat), backupIndex.ToString(IndexFormat), extension);
+                    var backupFilePath = Path.Combine(directoryName, backupFileName);
+
+                    if (!File.Exists(backupFilePath))
+                    {
+                        //
+                        var srcBackupFileName0 = string.Format("{0}.{1}{2}", baseName, backupDateTime.ToString(DateTimeFormat), extension);
+                        var srcBackupFilePath0 = Path.Combine(directoryName, srcBackupFileName0);
+
+                        var destBackupFileName0 = string.Format("{0}.{1}.{2}{3}", baseName, backupDateTime.ToString(DateTimeFormat), 0.ToString(IndexFormat), extension);
+                        var destBackupFilePath0 = Path.Combine(directoryName, destBackupFileName0);
+
+                        Assert.True(File.Exists(srcBackupFilePath0));
+                        Assert.False(File.Exists(destBackupFilePath0));
+                        File.Move(srcBackupFilePath0, destBackupFilePath0);
+
+                        //
+                        Assert.True(File.Exists(filePath));
+                        Assert.False(File.Exists(backupFilePath));
+                        File.Move(filePath, backupFilePath);
+                        return;
+                    }
+                }
+                else
+                {
+                    var backupFileName = string.Format("{0}.{1}.{2}{3}", baseName, backupDateTime.ToString(DateTimeFormat), backupIndex.ToString(IndexFormat), extension);
+                    var backupFilePath = Path.Combine(directoryName, backupFileName);
+
+                    if (!File.Exists(backupFilePath))
+                    {
+                        Assert.True(File.Exists(filePath));
+                        Assert.False(File.Exists(backupFilePath));
+                        File.Move(filePath, backupFilePath);
+                        return;
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+        #region 解析
 
         /// <summary>
         /// ファイルパスを解析します。
@@ -264,6 +443,41 @@ namespace SoftCube.Log
 
             return filePath;
         }
+
+        /// <summary>
+        /// 最大ファイルサイズを解析します。
+        /// </summary>
+        /// <param name="maxFileSize">最大ファイルサイズを示す文字列。</param>
+        /// <returns>最大ファイルサイズ。</returns>
+        /// <remarks>
+        /// 単位を示す以下のプレースフォルダは、このメソッド内で単位変換されます。
+        /// ・KB : キロバイト。
+        /// ・MB : メガバイト。
+        /// ・GB : ギガバイト。
+        /// </remarks>
+        private long ParseMaxFileSize(string maxFileSize)
+        {
+            const long Byte = 1;
+            const long KB = Byte * 1024;
+            const long MB = KB * 1024;
+            const long GB = MB * 1024;
+
+            if (maxFileSize.EndsWith("KB"))
+            {
+                return long.Parse(maxFileSize.Replace("KB", string.Empty)) * KB;
+            }
+            if (maxFileSize.EndsWith("MB"))
+            {
+                return long.Parse(maxFileSize.Replace("MB", string.Empty)) * MB;
+            }
+            if (maxFileSize.EndsWith("GB"))
+            {
+                return long.Parse(maxFileSize.Replace("GB", string.Empty)) * GB;
+            }
+            return long.Parse(maxFileSize) * Byte;
+        }
+
+        #endregion
 
         #endregion
     }
