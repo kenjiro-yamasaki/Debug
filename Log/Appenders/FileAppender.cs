@@ -1,4 +1,5 @@
-﻿using SoftCube.Configuration;
+﻿using SoftCube.Asserts;
+using SoftCube.Configuration;
 using SoftCube.Runtime;
 using System;
 using System.IO;
@@ -47,19 +48,85 @@ namespace SoftCube.Log
         public long MaxFileSize { get; set; } = 10 * 1024 * 1024;
 
         /// <summary>
-        /// ログファイルパス。
+        /// ファイルパス。
         /// </summary>
-        public string LogFilePath { get; set; }
+        public string FilePath => FileStream.Name;
+
+        /// <summary>
+        /// ファイルサイズ（単位：byte）。
+        /// </summary>
+        public long FileSize => FileStream.Position;
+
+        /// <summary>
+        /// ファイル作成日時。
+        /// </summary>
+        public DateTime CreationTime => File.GetCreationTime(FilePath);
 
         /// <summary>
         /// バックアップファイルパス。
         /// </summary>
-        public string BackupFilePath { get; set; }
+        public string BackupFilePath
+        {
+            get => backupFilePath;
+            set
+            {
+                if (value != backupFilePath)
+                {
+                    backupFilePath = value;
+
+                    value = value.Replace("{ApplicationData}",        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
+                    value = value.Replace("{CommonApplicationData}",  Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData));
+                    value = value.Replace("{CommonDesktopDirectory}", Environment.GetFolderPath(Environment.SpecialFolder.CommonDesktopDirectory));
+                    value = value.Replace("{CommonDocuments}",        Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments));
+                    value = value.Replace("{Desktop}",                Environment.GetFolderPath(Environment.SpecialFolder.Desktop));
+                    value = value.Replace("{DesktopDirectory}",       Environment.GetFolderPath(Environment.SpecialFolder.Desktop));
+                    value = value.Replace("{LocalApplicationData}",   Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
+                    value = value.Replace("{MyDocuments}",            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+                    value = value.Replace("{Personal}",               Environment.GetFolderPath(Environment.SpecialFolder.Personal));
+                    value = value.Replace("{UserProfile}",            Environment.GetFolderPath(Environment.SpecialFolder.UserProfile));
+
+                    value = value.Replace("{FilePath}",  "{0}");
+                    value = value.Replace("{Directory}", "{1}");
+                    value = value.Replace("{FileName}",  "{2}");
+                    value = value.Replace("{FileBody}",  "{3}");
+                    value = value.Replace("{Extension}", "{4}");
+
+                    var dateTimeFormat = ParseDateTimeFormat(value);
+                    var indexFormat = ParseIndexFormat(value);
+                    if (indexFormat == null)
+                    {
+                        throw new ArgumentException("バックアップの書式には {BackupIndex} を含めてください。", nameof(backupFilePath));
+                    }
+
+                    value = value.Replace(dateTimeFormat, dateTimeFormat.Replace("DateTime", "5"));
+                    value = value.Replace(indexFormat, indexFormat.Replace("Index", "6"));
+
+                    BackupFilePathFormat0 = value.Replace(indexFormat.Replace("Index", "6"), "");
+                    BackupFilePathFormat1 = value;
+                }
+            }
+        }
+        private string backupFilePath;
 
         /// <summary>
-        /// ログファイル。
+        /// バックアップファイルパスの文字列フォーマット。
         /// </summary>
-        private LogFile LogFile { get; set; }
+        private string BackupFilePathFormat0 { get; set; }
+
+        /// <summary>
+        /// バックアップファイルパスの文字列フォーマット。
+        /// </summary>
+        private string BackupFilePathFormat1 { get; set; }
+
+        /// <summary>
+        /// ファイルストリーム。
+        /// </summary>
+        private FileStream FileStream { get; set; }
+
+        /// <summary>
+        /// ストリームライター。
+        /// </summary>
+        private StreamWriter Writer { get; set; }
 
         #endregion
 
@@ -89,10 +156,10 @@ namespace SoftCube.Log
             FileOpenPolicy = xappender.Property(nameof(FileOpenPolicy)).ToFileOpenPolicy();
             Encoding       = Encoding.GetEncoding(xappender.Property("Encoding"));
             MaxFileSize    = ParseMaxFileSize(xappender.Property("MaxFileSize"));
-            LogFilePath    = ParseFilePath(xappender.Property(nameof(LogFilePath)));
             BackupFilePath = xappender.Property(nameof(BackupFilePath));
 
-            Open();
+            var filePath   = ParseFilePath(xappender.Property(nameof(FilePath)));
+            Open(filePath);
         }
 
         /// <summary>
@@ -134,17 +201,15 @@ namespace SoftCube.Log
         /// ログファイルを開きます。
         /// </summary>
         /// <param name="filePath">ファイルパス。</param>
-        public void Open()
+        public void Open(string filePath)
         {
-            //if (filePath == null)
-            //{
-            //    throw new ArgumentNullException(nameof(filePath));
-            //}
-
-            //LogFilePath = filePath;
+            if (filePath == null)
+            {
+                throw new ArgumentNullException(nameof(filePath));
+            }
 
             // 出力先ディレクトリが存在しない場合、新規作成します。
-            var directory = Path.GetDirectoryName(LogFilePath);
+            var directory = Path.GetDirectoryName(filePath);
             if (!Directory.Exists(directory))
             {
                 Directory.CreateDirectory(directory);
@@ -154,18 +219,20 @@ namespace SoftCube.Log
             Close();
 
             // ログファイルを開きます。
-            if (FileOpenPolicy == FileOpenPolicy.Overwrite || !File.Exists(LogFilePath))
+            if (FileOpenPolicy == FileOpenPolicy.Overwrite || !File.Exists(filePath))
             {
-                File.Create(LogFilePath).Dispose();
-                File.SetCreationTime(LogFilePath, SystemClock.Now);
+                File.Create(filePath).Dispose();
+                File.SetCreationTime(filePath, SystemClock.Now);
             }
 
-            LogFile = new LogFile(LogFilePath, BackupFilePath, Encoding, SystemClock);
+            FileStream = File.Open(filePath, FileMode.Open, FileAccess.Write);
+            FileStream.Seek(0, SeekOrigin.End);
+            Writer = new StreamWriter(FileStream, Encoding);
 
             // バックアップ条件に適合している場合、現在のログファイルをバックアップします。
-            if (FileOpenPolicy == FileOpenPolicy.Backup && LogFile.FileSize != 0)
+            if (FileOpenPolicy == FileOpenPolicy.Backup && FileSize != 0)
             {
-                LogFile.Backup();
+                Backup();
             }
         }
 
@@ -178,10 +245,21 @@ namespace SoftCube.Log
         /// </summary>
         public void Close()
         {
-            if (LogFile != null)
+            if (FileStream != null && Writer != null)
             {
-                LogFile.Close();
-                LogFile = null;
+                lock (Writer)
+                {
+                    Writer.Dispose();
+                    Writer = null;
+
+                    FileStream.Dispose();
+                    FileStream = null;
+                }
+            }
+            else
+            {
+                Assert.Null(FileStream);
+                Assert.Null(Writer);
             }
         }
 
@@ -195,12 +273,12 @@ namespace SoftCube.Log
         /// <param name="log">ログ。</param>
         public override void Log(string log)
         {
-            if (LogFile == null)
+            if (Writer == null)
             {
                 return;
             }
 
-            lock (LogFile)
+            lock (Writer)
             {
                 //// バックアップ条件に適合している場合、現在のログファイルをバックアップします。
                 //// その後、新たにログファイルを開きます。
@@ -212,8 +290,123 @@ namespace SoftCube.Log
                 //}
 
                 //
-                LogFile.Write(log);
+                Writer.Write(log);
+                Writer.Flush();
             }
+        }
+
+        #endregion
+
+        #region バックアップ
+
+        /// <summary>
+        /// ログファイルをバックアップします。
+        /// </summary>
+        public void Backup()
+        {
+            Assert.NotNull(FileStream);
+            var filePath = FilePath;
+
+            // 現在のログファイルを閉じます。
+            Close();
+
+            // 現在のログファイルをバックアップファイルに名前変更します。
+            Assert.True(File.Exists(filePath));
+            var creationTime = File.GetCreationTime(filePath);
+
+            for (int index = 0; true; index++)
+            {
+                var backupFilePath = GetBackupFilePath(filePath, creationTime, index);
+
+                if (index == 0)
+                {
+                    var backupFilePath0 = GetBackupFilePath(filePath, creationTime);
+
+                    if (!File.Exists(backupFilePath0) && !File.Exists(backupFilePath))
+                    {
+                        Assert.True(File.Exists(filePath));
+                        Assert.False(File.Exists(backupFilePath0));
+                        File.Move(filePath, backupFilePath0);
+                        break;
+                    }
+                }
+                else if (index == 1)
+                {
+                    if (!File.Exists(backupFilePath))
+                    {
+                        File.Move(GetBackupFilePath(filePath, creationTime), GetBackupFilePath(filePath, creationTime, 0));
+
+                        Assert.True(File.Exists(filePath));
+                        Assert.False(File.Exists(backupFilePath));
+                        File.Move(filePath, backupFilePath);
+                        break;
+                    }
+                }
+                else
+                {
+                    if (!File.Exists(backupFilePath))
+                    {
+                        Assert.True(File.Exists(filePath));
+                        Assert.False(File.Exists(backupFilePath));
+                        File.Move(filePath, backupFilePath);
+                        break;
+                    }
+                }
+            }
+
+            // 新たにログファイルを開きます。
+            File.Create(filePath).Dispose();
+            File.SetCreationTime(filePath, SystemClock.Now);
+
+            FileStream = File.Open(filePath, FileMode.Open, FileAccess.Write);
+            FileStream.Seek(0, SeekOrigin.End);
+            Writer = new StreamWriter(FileStream, Encoding);
+        }
+
+        /// <summary>
+        /// バックアップファイルパスを取得します。
+        /// </summary>
+        /// <param name="dateTime">日時。</param>
+        /// <returns>バックアップファイルパス。</returns>
+        private string GetBackupFilePath(string filePath, DateTime dateTime)
+        {
+            var directory = Path.GetDirectoryName(filePath);
+            var fileName  = Path.GetFileName(filePath);
+            var fileBody  = Path.GetFileNameWithoutExtension(filePath);
+            var extension = Path.GetExtension(filePath);
+
+            return string.Format(
+                BackupFilePathFormat0,
+                filePath,
+                directory,
+                fileName,
+                fileBody,
+                extension,
+                dateTime);
+        }
+
+        /// <summary>
+        /// バックアップファイルパスを取得します。
+        /// </summary>
+        /// <param name="dateTime">日時。</param>
+        /// <param name="index">インデックス。</param>
+        /// <returns>バックアップファイルパス。</returns>
+        private string GetBackupFilePath(string filePath, DateTime dateTime, int index)
+        {
+            var directory = Path.GetDirectoryName(filePath);
+            var fileName  = Path.GetFileName(filePath);
+            var fileBody  = Path.GetFileNameWithoutExtension(filePath);
+            var extension = Path.GetExtension(filePath);
+
+            return string.Format(
+                BackupFilePathFormat1,
+                filePath,
+                directory,
+                fileName,
+                fileBody,
+                extension,
+                dateTime,
+                index);
         }
 
         #endregion
@@ -238,51 +431,68 @@ namespace SoftCube.Log
         /// ・{Personal}               : マイドキュメント (例、C:\Users\UserName\Documents)。
         /// ・{UserProfile}            : ユーザーのプロファイルフォルダ (例、C:\Users\UserName)。
         /// </remarks>
-        private string ParseFilePath(string filePath)
+        private static string ParseFilePath(string filePath)
         {
-            if (filePath.StartsWith("{ApplicationData}"))
-            {
-                return filePath.Replace("{ApplicationData}", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create));
-            }
-            if (filePath.StartsWith("{CommonApplicationData}"))
-            {
-                return filePath.Replace("{CommonApplicationData}", Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData, Environment.SpecialFolderOption.Create));
-            }
-            if (filePath.StartsWith("{CommonDesktopDirectory}"))
-            {
-                return filePath.Replace("{CommonDesktopDirectory}", Environment.GetFolderPath(Environment.SpecialFolder.CommonDesktopDirectory, Environment.SpecialFolderOption.Create));
-            }
-            if (filePath.StartsWith("{CommonDocuments}"))
-            {
-                return filePath.Replace("{CommonDocuments}", Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments, Environment.SpecialFolderOption.Create));
-            }
-            if (filePath.StartsWith("{Desktop}"))
-            {
-                return filePath.Replace("{Desktop}", Environment.GetFolderPath(Environment.SpecialFolder.Desktop, Environment.SpecialFolderOption.Create));
-            }
-            if (filePath.StartsWith("{DesktopDirectory}"))
-            {
-                return filePath.Replace("{DesktopDirectory}", Environment.GetFolderPath(Environment.SpecialFolder.Desktop, Environment.SpecialFolderOption.Create));
-            }
-            if (filePath.StartsWith("{LocalApplicationData}"))
-            {
-                return filePath.Replace("{LocalApplicationData}", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData, Environment.SpecialFolderOption.Create));
-            }
-            if (filePath.StartsWith("{MyDocuments}"))
-            {
-                return filePath.Replace("{MyDocuments}", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments, Environment.SpecialFolderOption.Create));
-            }
-            if (filePath.StartsWith("{Personal}"))
-            {
-                return filePath.Replace("{Personal}", Environment.GetFolderPath(Environment.SpecialFolder.Personal, Environment.SpecialFolderOption.Create));
-            }
-            if (filePath.StartsWith("{UserProfile}"))
-            {
-                return filePath.Replace("{UserProfile}", Environment.GetFolderPath(Environment.SpecialFolder.UserProfile, Environment.SpecialFolderOption.Create));
-            }
+            filePath = filePath.Replace("{ApplicationData}",        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
+            filePath = filePath.Replace("{CommonApplicationData}",  Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData));
+            filePath = filePath.Replace("{CommonDesktopDirectory}", Environment.GetFolderPath(Environment.SpecialFolder.CommonDesktopDirectory));
+            filePath = filePath.Replace("{CommonDocuments}",        Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments));
+            filePath = filePath.Replace("{Desktop}",                Environment.GetFolderPath(Environment.SpecialFolder.Desktop));
+            filePath = filePath.Replace("{DesktopDirectory}",       Environment.GetFolderPath(Environment.SpecialFolder.Desktop));
+            filePath = filePath.Replace("{LocalApplicationData}",   Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
+            filePath = filePath.Replace("{MyDocuments}",            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+            filePath = filePath.Replace("{Personal}",               Environment.GetFolderPath(Environment.SpecialFolder.Personal));
+            filePath = filePath.Replace("{UserProfile}",            Environment.GetFolderPath(Environment.SpecialFolder.UserProfile));
 
             return filePath;
         }
+
+        /// <summary>
+        /// 日時の書式を解析します。
+        /// </summary>
+        /// <param name="format">書式。</param>
+        /// <returns>日時の書式。</returns>
+        private static string ParseDateTimeFormat(string format)
+        {
+            var startIndex = format.IndexOf("{DateTime");
+            if (startIndex == -1)
+            {
+                return null;
+            }
+
+            var endIndex = format.IndexOf("}", startIndex);
+            if (endIndex == -1)
+            {
+                return null;
+            }
+
+            var length = endIndex - startIndex + 1;
+            return format.Substring(startIndex, length);
+        }
+
+        /// <summary>
+        /// インデックスの書式を解析します。
+        /// </summary>
+        /// <param name="format">書式。</param>
+        /// <returns>インデックスの書式。</returns>
+        private static string ParseIndexFormat(string format)
+        {
+            var startIndex = format.IndexOf("{Index");
+            if (startIndex == -1)
+            {
+                return null;
+            }
+
+            var endIndex = format.IndexOf("}", startIndex);
+            if (endIndex == -1)
+            {
+                return null;
+            }
+
+            var length = endIndex - startIndex + 1;
+            return format.Substring(startIndex, length);
+        }
+
 
         /// <summary>
         /// 最大ファイルサイズを解析します。
@@ -295,7 +505,7 @@ namespace SoftCube.Log
         /// ・MB : メガバイト。
         /// ・GB : ギガバイト。
         /// </remarks>
-        private long ParseMaxFileSize(string maxFileSize)
+        private static long ParseMaxFileSize(string maxFileSize)
         {
             const long Byte = 1;
             const long KB = Byte * 1024;
