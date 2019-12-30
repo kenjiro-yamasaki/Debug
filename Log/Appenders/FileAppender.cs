@@ -39,9 +39,28 @@ namespace SoftCube.Log
         private Encoding encoding = Encoding.UTF8;
 
         /// <summary>
+        /// 最大ファイルサイズ (単位：byte)。
+        /// </summary>
+        /// <remarks>
+        /// 現在のログファイルの容量が最大ファイルサイズを超過した場合、
+        /// 現在のログファイルをバックアップします。
+        /// </remarks>
+        public long MaxFileSize { get; set; } = 10 * 1024 * 1024;
+
+        /// <summary>
         /// ファイルパス。
         /// </summary>
         public string FilePath => FileStream.Name;
+
+        /// <summary>
+        /// バックアップファイルパス。
+        /// </summary>
+        public string BackupFilePath
+        {
+            get => backupFilePath.Format;
+            set => backupFilePath = new BackupFilePath(value);
+        }
+        private BackupFilePath backupFilePath = new BackupFilePath(@"{DateTime:yyyy-DD-mm}{Index:\.000}.log");
 
         /// <summary>
         /// ファイルサイズ（単位：byte）。
@@ -62,104 +81,6 @@ namespace SoftCube.Log
         /// ストリームライター。
         /// </summary>
         private StreamWriter Writer { get; set; }
-
-        #endregion
-
-        #region バックアップ
-
-        /// <summary>
-        /// 最大ファイルサイズ (単位：byte)。
-        /// </summary>
-        /// <remarks>
-        /// 現在のログファイルの容量が最大ファイルサイズを超過した場合、
-        /// 現在のログファイルをバックアップします。
-        /// </remarks>
-        public long MaxFileSize { get; set; } = 10 * 1024 * 1024;
-
-        /// <summary>
-        /// バックアップファイルの日付の書式。
-        /// </summary>
-        /// <remarks>
-        /// 既存のログファイルをバックアップする場合、
-        /// ログファイルの作成日付を指定の書式でフォーマットした文字列をログファイル名の後ろに添えて、バックアップファイル名とします。
-        /// 日付の書式に指定する文字列は、<see cref="DateTime.ToString(string)"/> で決められたものを使用します。
-        /// 使用できる文字列のうち、主なものを紹介します。
-        /// ・yyyyy : 年の下 5 桁。
-        /// ・M     : 月 (1～12)。
-        /// ・MM    : 月 (01～12)。
-        /// ・d     : 日にち (1～31)。
-        /// ・dd    : 日にち (01～31)。
-        /// ・H     : 時間 (0～23)。
-        /// ・HH    : 時間 (00～23)。
-        /// ・h     : 時間 (1～12)。
-        /// ・hh    : 時間 (01～12)。
-        /// ・m     : 分 (0～59)。
-        /// ・mm    : 分 (00～59)。
-        /// ・s     : 秒 (0～59)。
-        /// ・ss    : 秒 (00～59)。
-        /// ・fff   : 1/1000秒。
-        /// </remarks>
-        /// <example>
-        /// ・"yyyy-MM-dd" → "2019-12-17"
-        /// </example>
-        public string DateTimeFormat
-        {
-            get => dateTimeFormat;
-            set
-            {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
-
-                if (dateTimeFormat != value)
-                {
-                    int index = value.IndexOfAny(Path.GetInvalidFileNameChars());
-                    if (0 <= index)
-                    {
-                        throw new ArgumentException(string.Format($"ファイル名に使用できない文字[{value[index]}]が使われています。"), nameof(value));
-                    }
-
-                    dateTimeFormat = value;
-                }
-            }
-        }
-        private string dateTimeFormat = "yyyy-MM-dd";
-
-        /// <summary>
-        /// バックアップファイルのインデックスの書式。
-        /// </summary>
-        /// <remarks>
-        /// 同じ日付のバックアップファイルが 2 つ以上できあがる場合、
-        /// バックアップインデックスを指定の書式でフォーマットした文字列を日付つきバックアップファイル名の後ろに添えて、バックアップファイル名とします。
-        /// インデックスの書式に指定する文字列は、<see cref="int.ToString(string)"/> で決められたものを使用します。
-        /// </remarks>
-        /// <example>
-        /// ・"D3" → "007"
-        /// </example>
-        public string IndexFormat
-        {
-            get => indexFormat;
-            set
-            {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
-
-                if (indexFormat != value)
-                {
-                    int index = value.IndexOfAny(Path.GetInvalidFileNameChars());
-                    if (0 <= index)
-                    {
-                        throw new ArgumentException(string.Format($"ファイル名に使用できない文字[{value[index]}]が使われています。"), nameof(value));
-                    }
-
-                    indexFormat = value;
-                }
-            }
-        }
-        private string indexFormat = "D3";
 
         #endregion
 
@@ -188,9 +109,8 @@ namespace SoftCube.Log
 
             FileOpenPolicy = xappender.Property(nameof(FileOpenPolicy)).ToFileOpenPolicy();
             Encoding       = Encoding.GetEncoding(xappender.Property("Encoding"));
-            DateTimeFormat = xappender.Property(nameof(DateTimeFormat));
-            IndexFormat    = xappender.Property(nameof(IndexFormat));
             MaxFileSize    = ParseMaxFileSize(xappender.Property("MaxFileSize"));
+            BackupFilePath = xappender.Property(nameof(BackupFilePath));
 
             var filePath = ParseFilePath(xappender.Property("FilePath"));
             Open(filePath);
@@ -316,7 +236,7 @@ namespace SoftCube.Log
             {
                 // バックアップ条件に適合している場合、現在のログファイルをバックアップします。
                 // その後、新たにログファイルを開きます。
-                var isDateTimeChanged = CreationTime.ToString(DateTimeFormat) != SystemClock.Now.ToString(DateTimeFormat);
+                var isDateTimeChanged = backupFilePath.Convert(FilePath, CreationTime) != backupFilePath.Convert(FilePath, SystemClock.Now);
                 var isOverCapacity    = MaxFileSize <= FileSize;
                 if (isDateTimeChanged || isOverCapacity)
                 {
@@ -346,21 +266,15 @@ namespace SoftCube.Log
 
             // 現在のログファイルをバックアップファイルに名前変更します。
             Assert.True(File.Exists(filePath));
-            var directoryName  = Path.GetDirectoryName(filePath);
             var fileName       = Path.GetFileName(filePath);
-            var baseName       = Path.GetFileNameWithoutExtension(fileName);
-            var extension      = Path.GetExtension(filePath);
             var backupDateTime = File.GetCreationTime(filePath);
 
             for (int backupIndex = 0; true; backupIndex++)
             {
                 if (backupIndex == 0)
                 {
-                    var backupFileName0 = $"{baseName}.{backupDateTime.ToString(DateTimeFormat)}{extension}";
-                    var backupFilePath0 = Path.Combine(directoryName, backupFileName0);
-
-                    var backupFileName1 = $"{baseName}.{backupDateTime.ToString(DateTimeFormat)}.{backupIndex.ToString(IndexFormat)}{extension}";
-                    var backupFilePath1 = Path.Combine(directoryName, backupFileName1);
+                    var backupFilePath0 = backupFilePath.Convert(filePath, backupDateTime);
+                    var backupFilePath1 = backupFilePath.Convert(filePath, backupDateTime, backupIndex);
 
                     if (!File.Exists(backupFilePath0) && !File.Exists(backupFilePath1))
                     {
@@ -372,15 +286,12 @@ namespace SoftCube.Log
                 }
                 else if (backupIndex == 1)
                 {
-                    var backupFileName = $"{baseName}.{backupDateTime.ToString(DateTimeFormat)}.{backupIndex.ToString(IndexFormat)}{extension}";
-                    var backupFilePath = Path.Combine(directoryName, backupFileName);
+                    var backupFilePath = this.backupFilePath.Convert(filePath, backupDateTime, backupIndex);
 
                     if (!File.Exists(backupFilePath))
                     {
-                        var srcBackupFileName0  = $"{baseName}.{backupDateTime.ToString(DateTimeFormat)}{extension}";
-                        var srcBackupFilePath0  = Path.Combine(directoryName, srcBackupFileName0);
-                        var destBackupFileName0 = $"{baseName}.{backupDateTime.ToString(DateTimeFormat)}.{0.ToString(IndexFormat)}{extension}";
-                        var destBackupFilePath0 = Path.Combine(directoryName, destBackupFileName0);
+                        var srcBackupFilePath0  = this.backupFilePath.Convert(filePath, backupDateTime);
+                        var destBackupFilePath0 = this.backupFilePath.Convert(filePath, backupDateTime, 0);
                         Assert.True(File.Exists(srcBackupFilePath0));
                         Assert.False(File.Exists(destBackupFilePath0));
                         File.Move(srcBackupFilePath0, destBackupFilePath0);
@@ -393,8 +304,7 @@ namespace SoftCube.Log
                 }
                 else
                 {
-                    var backupFileName = $"{baseName}.{backupDateTime.ToString(DateTimeFormat)}.{backupIndex.ToString(IndexFormat)}{extension}";
-                    var backupFilePath = Path.Combine(directoryName, backupFileName);
+                    var backupFilePath = this.backupFilePath.Convert(filePath, backupDateTime, backupIndex);
 
                     if (!File.Exists(backupFilePath))
                     {

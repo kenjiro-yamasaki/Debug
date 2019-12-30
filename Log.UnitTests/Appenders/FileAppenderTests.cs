@@ -90,7 +90,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             var fileName = Path.GetFileName(filePath);
             var baseName = Path.GetFileNameWithoutExtension(fileName);
             var extension = Path.GetExtension(filePath);
-            var backupFileName = string.Format("{0}.{1}{2}", baseName, backupDateTime.ToString(appender.DateTimeFormat), extension);
+            var backupFileName = string.Format("{0}.{1}{2}", baseName, backupDateTime.ToString("yyyy-MM-dd"), extension);
 
             return Path.Combine(directoryName, backupFileName);
         }
@@ -106,11 +106,11 @@ namespace SoftCube.Log.Appenders.UnitTests
         {
             var filePath = appender.FilePath;
             Assert.True(File.Exists(filePath));
-            var directoryName = Path.GetDirectoryName(filePath);
-            var fileName = Path.GetFileName(filePath);
-            var baseName = Path.GetFileNameWithoutExtension(fileName);
-            var extension = Path.GetExtension(filePath);
-            var backupFileName = string.Format("{0}.{1}.{2}{3}", baseName, backupDateTime.ToString(appender.DateTimeFormat), backupIndex.ToString(appender.IndexFormat), extension);
+            var directoryName  = Path.GetDirectoryName(filePath);
+            var fileName       = Path.GetFileName(filePath);
+            var baseName       = Path.GetFileNameWithoutExtension(fileName);
+            var extension      = Path.GetExtension(filePath);
+            var backupFileName = string.Format("{0}.{1}.{2}{3}", baseName, backupDateTime.ToString("yyyy-MM-dd"), backupIndex.ToString("000"), extension);
 
             return Path.Combine(directoryName, backupFileName);
         }
@@ -137,7 +137,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             }
 
             [Fact]
-            public void Backup_既存ログファイルを上書きする()
+            public void Backup_既存ログファイルをバックアップする()
             {
                 var logFilePath = GetLogFilePath();
                 CreateLogFile(logFilePath, "A", new DateTime(2020, 1, 1));
@@ -147,6 +147,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 {
                     clock.Now.Returns(new DateTime(2020, 1, 1));
                     appender.FileOpenPolicy = SoftCube.Log.FileOpenPolicy.Backup;
+                    appender.BackupFilePath = @"{Directory}/{FileBody}.{DateTime:yyyy-MM-dd}{Index:\.000}.log";
                     appender.Open(logFilePath);
 
                     Assert.Equal("A", File.ReadAllText(GetBackupFilePath(appender, new DateTime(2020, 1, 1))));
@@ -214,7 +215,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 using (var appender = new FileAppender(clock))
                 {
                     clock.Now.Returns(new DateTime(2020, 1, 1));
-                    appender.DateTimeFormat = "yyyyMMdd";
+                    appender.BackupFilePath = @"{Directory}/{FileBody}.{DateTime:yyyy-MM-dd}{Index:\.000}.log";
                     appender.MaxFileSize = 1;
                     appender.Open(logFilePath);
                     appender.Trace("A");
@@ -258,7 +259,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 using (var appender = new FileAppender(clock))
                 {
                     clock.Now.Returns(new DateTime(2020, 1, 30, 23, 59, 58));
-                    appender.DateTimeFormat = "yyyyMMdd";
+                    appender.BackupFilePath = @"{Directory}/{FileBody}.{DateTime:yyyy-MM-dd}{Index:\.000}.log";
                     appender.Open(logFilePath);
                     appender.Trace("A");
 
@@ -274,27 +275,27 @@ namespace SoftCube.Log.Appenders.UnitTests
                 Assert.Equal("C", File.ReadAllText(logFilePath));
             }
 
-            [Fact]
-            public void null_ArgumentNullExceptionを投げる()
-            {
-                using (var appender = new FileAppender())
-                {
-                    var ex = Record.Exception(() => appender.DateTimeFormat = null);
+            //[Fact]
+            //public void null_ArgumentNullExceptionを投げる()
+            //{
+            //    using (var appender = new FileAppender())
+            //    {
+            //        var ex = Record.Exception(() => appender.DateTimeFormat = null);
 
-                    Assert.IsType<ArgumentNullException>(ex);
-                }
-            }
+            //        Assert.IsType<ArgumentNullException>(ex);
+            //    }
+            //}
 
-            [Fact]
-            public void 不正な書式_ArgumentExceptionを投げる()
-            {
-                using (var appender = new FileAppender())
-                {
-                    var ex = Record.Exception(() => appender.DateTimeFormat = "?");
+            //[Fact]
+            //public void 不正な書式_ArgumentExceptionを投げる()
+            //{
+            //    using (var appender = new FileAppender())
+            //    {
+            //        var ex = Record.Exception(() => appender.DateTimeFormat = "?");
 
-                    Assert.IsType<ArgumentException>(ex);
-                }
-            }
+            //        Assert.IsType<ArgumentException>(ex);
+            //    }
+            //}
         }
 
         public class IndexFormat
@@ -309,8 +310,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 using (var appender = new FileAppender(clock))
                 {
                     appender.MaxFileSize    = 1;
-                    appender.DateTimeFormat = "yyyyMMdd";
-                    appender.IndexFormat    = "000";
+                    appender.BackupFilePath = @"{Directory}/{FileBody}.{DateTime:yyyy-MM-dd}{Index:\.000}.log";
                     appender.FileOpenPolicy = SoftCube.Log.FileOpenPolicy.Backup;
                     appender.Open(logFilePath);
 
@@ -335,10 +335,9 @@ namespace SoftCube.Log.Appenders.UnitTests
 
                 using (var appender = new FileAppender(clock))
                 {
-                    appender.MaxFileSize    = 1;
-                    appender.DateTimeFormat = "yyyyMMdd";
-                    appender.IndexFormat    = "000";
-                    appender.FileOpenPolicy = SoftCube.Log.FileOpenPolicy.Backup;
+                    appender.MaxFileSize      = 1;
+                    appender.BackupFilePath = @"{Directory}/{FileBody}.{DateTime:yyyy-MM-dd}{Index:\.000}.log";
+                    appender.FileOpenPolicy   = SoftCube.Log.FileOpenPolicy.Backup;
 
                     appender.Open(logFilePath);
                     appender.Log("A");
@@ -356,27 +355,27 @@ namespace SoftCube.Log.Appenders.UnitTests
                 Assert.Equal("C", File.ReadAllText(logFilePath));
             }
 
-            [Fact]
-            public void null_ArgumentNullExceptionを投げる()
-            {
-                using (var appender = new FileAppender())
-                {
-                    var ex = Record.Exception(() => appender.IndexFormat = null);
+            //[Fact]
+            //public void null_ArgumentNullExceptionを投げる()
+            //{
+            //    using (var appender = new FileAppender())
+            //    {
+            //        var ex = Record.Exception(() => appender.IndexFormat = null);
 
-                    Assert.IsType<ArgumentNullException>(ex);
-                }
-            }
+            //        Assert.IsType<ArgumentNullException>(ex);
+            //    }
+            //}
 
-            [Fact]
-            public void 不正な書式_ArgumentExceptionを投げる()
-            {
-                using (var appender = new FileAppender())
-                {
-                    var ex = Record.Exception(() => appender.IndexFormat = "?");
+            //[Fact]
+            //public void 不正な書式_ArgumentExceptionを投げる()
+            //{
+            //    using (var appender = new FileAppender())
+            //    {
+            //        var ex = Record.Exception(() => appender.IndexFormat = "?");
 
-                    Assert.IsType<ArgumentException>(ex);
-                }
-            }
+            //        Assert.IsType<ArgumentException>(ex);
+            //    }
+            //}
         }
 
         public class Open
@@ -502,7 +501,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 using (var appender = new FileAppender(clock))
                 {
                     clock.Now.Returns(new DateTime(2020, 1, 1));
-                    appender.DateTimeFormat = "yyyyMMdd";
+                    appender.BackupFilePath = @"{Directory}/{FileBody}.{DateTime:yyyy-MM-dd}{Index:\.000}.log";
                     appender.MaxFileSize = 1;
                     appender.Open(logFilePath);
                     appender.Trace("A");
@@ -528,7 +527,7 @@ namespace SoftCube.Log.Appenders.UnitTests
                 using (var appender = new FileAppender(clock))
                 {
                     clock.Now.Returns(new DateTime(2020, 1, 1));
-                    appender.DateTimeFormat = "yyyyMMdd";
+                    appender.BackupFilePath = @"{Directory}/{FileBody}.{DateTime:yyyy-MM-dd}{Index:\.000}.log";
                     appender.Open(logFilePath);
                     appender.Trace("A");
 

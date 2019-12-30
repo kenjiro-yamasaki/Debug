@@ -58,10 +58,10 @@ namespace SoftCube.Log
 
             foreach (var xuseAppender in xlogger.Elements("use-appender"))
             {
-                var appenderName = (string)xuseAppender.Attribute("name");
-                if (appenders.ContainsKey(appenderName))
+                var useAppenderName = (string)xuseAppender.Attribute("name");
+                if (appenders.ContainsKey(useAppenderName))
                 {
-                    Logger.Add(appenders[appenderName]);
+                    Logger.Add(appenders[useAppenderName]);
                 }
             }
         }

@@ -43,7 +43,7 @@ namespace SoftCube.Log
         /// <summary>
         /// コンストラクター。
         /// </summary>
-        /// <param name="format">変換パターン。<seealso cref="Format"/></param>
+        /// <param name="format">書式。<seealso cref="Format"/></param>
         internal LogFormat(string format)
         {
             Format = format;
