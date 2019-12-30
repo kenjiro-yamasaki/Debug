@@ -11,17 +11,17 @@ namespace SoftCube.Log
     public enum FileOpenPolicy
     {
         /// <summary>
-        /// 既存ログファイルの末尾に追加。
+        /// 既存ログファイルの末尾に追加します。
         /// </summary>
         Append = 0,
 
         /// <summary>
-        /// 既存ログファイルをバックアップ。
+        /// 既存ログファイルをバックアップします。
         /// </summary>
         Backup = 1,
 
         /// <summary>
-        /// 既存ログファイルを上書き。
+        /// 既存ログファイルを上書きします。
         /// </summary>
         Overwrite = 2,
     }

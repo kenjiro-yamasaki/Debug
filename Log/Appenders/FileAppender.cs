@@ -1,5 +1,4 @@
-﻿using SoftCube.Asserts;
-using SoftCube.Configuration;
+﻿using SoftCube.Configuration;
 using SoftCube.Runtime;
 using System;
 using System.IO;
@@ -48,39 +47,19 @@ namespace SoftCube.Log
         public long MaxFileSize { get; set; } = 10 * 1024 * 1024;
 
         /// <summary>
-        /// ファイルパス。
+        /// ログファイルパス。
         /// </summary>
-        public string FilePath => FileStream.Name;
+        public string LogFilePath { get; set; }
 
         /// <summary>
         /// バックアップファイルパス。
         /// </summary>
-        public string BackupFilePath
-        {
-            get => backupFilePath.Format;
-            set => backupFilePath = new BackupFilePath(value);
-        }
-        private BackupFilePath backupFilePath = new BackupFilePath(@"{DateTime:yyyy-DD-mm}{Index:\.000}.log");
+        public string BackupFilePath { get; set; }
 
         /// <summary>
-        /// ファイルサイズ（単位：byte）。
+        /// ログファイル。
         /// </summary>
-        public long FileSize => FileStream.Position;
-
-        /// <summary>
-        /// ファイル作成日時。
-        /// </summary>
-        public DateTime CreationTime => File.GetCreationTime(FilePath);
-
-        /// <summary>
-        /// ファイルストリーム。
-        /// </summary>
-        private FileStream FileStream { get; set; }
-
-        /// <summary>
-        /// ストリームライター。
-        /// </summary>
-        private StreamWriter Writer { get; set; }
+        private LogFile LogFile { get; set; }
 
         #endregion
 
@@ -110,10 +89,10 @@ namespace SoftCube.Log
             FileOpenPolicy = xappender.Property(nameof(FileOpenPolicy)).ToFileOpenPolicy();
             Encoding       = Encoding.GetEncoding(xappender.Property("Encoding"));
             MaxFileSize    = ParseMaxFileSize(xappender.Property("MaxFileSize"));
+            LogFilePath    = ParseFilePath(xappender.Property(nameof(LogFilePath)));
             BackupFilePath = xappender.Property(nameof(BackupFilePath));
 
-            var filePath = ParseFilePath(xappender.Property("FilePath"));
-            Open(filePath);
+            Open();
         }
 
         /// <summary>
@@ -155,15 +134,17 @@ namespace SoftCube.Log
         /// ログファイルを開きます。
         /// </summary>
         /// <param name="filePath">ファイルパス。</param>
-        public void Open(string filePath)
+        public void Open()
         {
-            if (filePath == null)
-            {
-                throw new ArgumentNullException(nameof(filePath));
-            }
+            //if (filePath == null)
+            //{
+            //    throw new ArgumentNullException(nameof(filePath));
+            //}
+
+            //LogFilePath = filePath;
 
             // 出力先ディレクトリが存在しない場合、新規作成します。
-            var directory = Path.GetDirectoryName(filePath);
+            var directory = Path.GetDirectoryName(LogFilePath);
             if (!Directory.Exists(directory))
             {
                 Directory.CreateDirectory(directory);
@@ -173,20 +154,18 @@ namespace SoftCube.Log
             Close();
 
             // ログファイルを開きます。
-            if (FileOpenPolicy == FileOpenPolicy.Overwrite || !File.Exists(filePath))
+            if (FileOpenPolicy == FileOpenPolicy.Overwrite || !File.Exists(LogFilePath))
             {
-                File.Create(filePath).Dispose();
-                File.SetCreationTime(filePath, SystemClock.Now);
+                File.Create(LogFilePath).Dispose();
+                File.SetCreationTime(LogFilePath, SystemClock.Now);
             }
 
-            FileStream = File.Open(filePath, FileMode.Open, FileAccess.Write);
-            FileStream.Seek(0, SeekOrigin.End);
-            Writer = new StreamWriter(FileStream, Encoding);
+            LogFile = new LogFile(LogFilePath, BackupFilePath, Encoding, SystemClock);
 
             // バックアップ条件に適合している場合、現在のログファイルをバックアップします。
-            if (FileOpenPolicy == FileOpenPolicy.Backup && FileSize != 0)
+            if (FileOpenPolicy == FileOpenPolicy.Backup && LogFile.FileSize != 0)
             {
-                Backup();
+                LogFile.Backup();
             }
         }
 
@@ -199,21 +178,10 @@ namespace SoftCube.Log
         /// </summary>
         public void Close()
         {
-            if (FileStream != null && Writer != null)
+            if (LogFile != null)
             {
-                lock (Writer)
-                {
-                    Writer.Dispose();
-                    Writer = null;
-
-                    FileStream.Dispose();
-                    FileStream = null;
-                }
-            }
-            else
-            {
-                Assert.Null(FileStream);
-                Assert.Null(Writer);
+                LogFile.Close();
+                LogFile = null;
             }
         }
 
@@ -227,101 +195,25 @@ namespace SoftCube.Log
         /// <param name="log">ログ。</param>
         public override void Log(string log)
         {
-            if (Writer == null)
+            if (LogFile == null)
             {
                 return;
             }
 
-            lock (Writer)
+            lock (LogFile)
             {
-                // バックアップ条件に適合している場合、現在のログファイルをバックアップします。
-                // その後、新たにログファイルを開きます。
-                var isDateTimeChanged = backupFilePath.Convert(FilePath, CreationTime) != backupFilePath.Convert(FilePath, SystemClock.Now);
-                var isOverCapacity    = MaxFileSize <= FileSize;
-                if (isDateTimeChanged || isOverCapacity)
-                {
-                    Backup();
-                }
+                //// バックアップ条件に適合している場合、現在のログファイルをバックアップします。
+                //// その後、新たにログファイルを開きます。
+                //var isDateTimeChanged = backupFile.BackupFilePath(FilePath, CreationTime) != backupFile.BackupFilePath(FilePath, SystemClock.Now);
+                //var isOverCapacity    = MaxFileSize <= FileSize;
+                //if (isDateTimeChanged || isOverCapacity)
+                //{
+                //    Backup();
+                //}
 
                 //
-                Writer.Write(log);
-                Writer.Flush();
+                LogFile.Write(log);
             }
-        }
-
-        #endregion
-
-        #region バックアップ
-
-        /// <summary>
-        /// 現在のログファイルをバックアップします。
-        /// </summary>
-        public void Backup()
-        {
-            Assert.NotNull(FileStream);
-            var filePath = FilePath;
-
-            // 現在のログファイルを閉じます。
-            Close();
-
-            // 現在のログファイルをバックアップファイルに名前変更します。
-            Assert.True(File.Exists(filePath));
-            var fileName       = Path.GetFileName(filePath);
-            var backupDateTime = File.GetCreationTime(filePath);
-
-            for (int backupIndex = 0; true; backupIndex++)
-            {
-                if (backupIndex == 0)
-                {
-                    var backupFilePath0 = backupFilePath.Convert(filePath, backupDateTime);
-                    var backupFilePath1 = backupFilePath.Convert(filePath, backupDateTime, backupIndex);
-
-                    if (!File.Exists(backupFilePath0) && !File.Exists(backupFilePath1))
-                    {
-                        Assert.True(File.Exists(filePath));
-                        Assert.False(File.Exists(backupFilePath0));
-                        File.Move(filePath, backupFilePath0);
-                        break;
-                    }
-                }
-                else if (backupIndex == 1)
-                {
-                    var backupFilePath = this.backupFilePath.Convert(filePath, backupDateTime, backupIndex);
-
-                    if (!File.Exists(backupFilePath))
-                    {
-                        var srcBackupFilePath0  = this.backupFilePath.Convert(filePath, backupDateTime);
-                        var destBackupFilePath0 = this.backupFilePath.Convert(filePath, backupDateTime, 0);
-                        Assert.True(File.Exists(srcBackupFilePath0));
-                        Assert.False(File.Exists(destBackupFilePath0));
-                        File.Move(srcBackupFilePath0, destBackupFilePath0);
-
-                        Assert.True(File.Exists(filePath));
-                        Assert.False(File.Exists(backupFilePath));
-                        File.Move(filePath, backupFilePath);
-                        break;
-                    }
-                }
-                else
-                {
-                    var backupFilePath = this.backupFilePath.Convert(filePath, backupDateTime, backupIndex);
-
-                    if (!File.Exists(backupFilePath))
-                    {
-                        Assert.True(File.Exists(filePath));
-                        Assert.False(File.Exists(backupFilePath));
-                        File.Move(filePath, backupFilePath);
-                        break;
-                    }
-                }
-            }
-
-            // 新たにログファイルを開きます。
-            File.Create(filePath).Dispose();
-            File.SetCreationTime(filePath, SystemClock.Now);
-
-            FileStream = File.Open(filePath, FileMode.Create, FileAccess.Write);
-            Writer = new StreamWriter(FileStream, Encoding);
         }
 
         #endregion
