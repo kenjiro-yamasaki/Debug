@@ -39,15 +39,6 @@ namespace SoftCube.Log
         private Encoding encoding = Encoding.UTF8;
 
         /// <summary>
-        /// 最大ファイルサイズ (単位：byte)。
-        /// </summary>
-        /// <remarks>
-        /// 現在のログファイルの容量が最大ファイルサイズを超過した場合、
-        /// 現在のログファイルをバックアップします。
-        /// </remarks>
-        public long MaxFileSize { get; set; } = 10 * 1024 * 1024;
-
-        /// <summary>
         /// ファイルパス。
         /// </summary>
         public string FilePath => FileStream.Name;
@@ -138,6 +129,7 @@ namespace SoftCube.Log
         /// コンストラクター。
         /// </summary>
         public FileAppender()
+            : this(new SystemClock())
         {
         }
 
@@ -155,7 +147,6 @@ namespace SoftCube.Log
 
             FileOpenPolicy = xappender.Property(nameof(FileOpenPolicy)).ToFileOpenPolicy();
             Encoding       = Encoding.GetEncoding(xappender.Property("Encoding"));
-            MaxFileSize    = ParseMaxFileSize(xappender.Property("MaxFileSize"));
             BackupFilePath = xappender.Property(nameof(BackupFilePath));
 
             var filePath   = ParseFilePath(xappender.Property(nameof(FilePath)));
@@ -169,6 +160,7 @@ namespace SoftCube.Log
         internal FileAppender(ISystemClock systemClock)
             : base(systemClock)
         {
+            BackupFilePath = @"{Directory}/{FileBody}.{DateTime:yyyy-MM-dd}{Index:\.000}{Extension}";
         }
 
         #endregion
@@ -491,40 +483,6 @@ namespace SoftCube.Log
 
             var length = endIndex - startIndex + 1;
             return format.Substring(startIndex, length);
-        }
-
-
-        /// <summary>
-        /// 最大ファイルサイズを解析します。
-        /// </summary>
-        /// <param name="maxFileSize">最大ファイルサイズを示す文字列。</param>
-        /// <returns>最大ファイルサイズ。</returns>
-        /// <remarks>
-        /// 単位を示す以下のプレースフォルダは、このメソッド内で単位変換されます。
-        /// ・KB : キロバイト。
-        /// ・MB : メガバイト。
-        /// ・GB : ギガバイト。
-        /// </remarks>
-        private static long ParseMaxFileSize(string maxFileSize)
-        {
-            const long Byte = 1;
-            const long KB = Byte * 1024;
-            const long MB = KB * 1024;
-            const long GB = MB * 1024;
-
-            if (maxFileSize.EndsWith("KB"))
-            {
-                return long.Parse(maxFileSize.Replace("KB", string.Empty)) * KB;
-            }
-            if (maxFileSize.EndsWith("MB"))
-            {
-                return long.Parse(maxFileSize.Replace("MB", string.Empty)) * MB;
-            }
-            if (maxFileSize.EndsWith("GB"))
-            {
-                return long.Parse(maxFileSize.Replace("GB", string.Empty)) * GB;
-            }
-            return long.Parse(maxFileSize) * Byte;
         }
 
         #endregion
