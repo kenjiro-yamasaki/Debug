@@ -41,17 +41,50 @@ namespace SoftCube.Log
         /// <summary>
         /// ファイルパス。
         /// </summary>
-        public string FilePath => FileStream.Name;
+        public string FilePath
+        {
+            get
+            {
+                if (!IsOpened)
+                {
+                    throw new InvalidOperationException("ファイルが開かれていません");
+                }
+
+                return FileStream.Name;
+            }
+        }
 
         /// <summary>
         /// ファイルサイズ（単位：byte）。
         /// </summary>
-        public long FileSize => FileStream.Position;
+        public long FileSize
+        {
+            get
+            {
+                if (!IsOpened)
+                {
+                    throw new InvalidOperationException("ファイルが開かれていません");
+                }
+
+                return FileStream.Position;
+            }
+        }
 
         /// <summary>
         /// ファイル作成日時。
         /// </summary>
-        public DateTime CreationTime => File.GetCreationTime(FilePath);
+        public DateTime CreationTime
+        {
+            get
+            {
+                if (!IsOpened)
+                {
+                    throw new InvalidOperationException("ファイルが開かれていません");
+                }
+
+                return File.GetCreationTime(FilePath);
+            }
+        }
 
         /// <summary>
         /// バックアップファイルパス。
@@ -61,6 +94,12 @@ namespace SoftCube.Log
             get => backupFilePath;
             set
             {
+                var index = value.IndexOfAny(Path.GetInvalidPathChars());
+                if (0 <= index)
+                {
+                    throw new ArgumentException($"BackupFilePath に使用できない文字[{value[index]}]が使われています。", nameof(value));
+                }
+
                 if (value != backupFilePath)
                 {
                     backupFilePath = value;
@@ -98,6 +137,11 @@ namespace SoftCube.Log
             }
         }
         private string backupFilePath;
+
+        /// <summary>
+        /// 開かれているか。
+        /// </summary>
+        public bool IsOpened => FileStream != null;
 
         /// <summary>
         /// バックアップファイルパスの文字列フォーマット。
@@ -187,7 +231,7 @@ namespace SoftCube.Log
 
         #endregion
 
-        #region ログファイルを開く
+        #region オープン
 
         /// <summary>
         /// ログファイルを開きます。
@@ -230,7 +274,7 @@ namespace SoftCube.Log
 
         #endregion
 
-        #region ログファイルを閉じる
+        #region クローズ
 
         /// <summary>
         /// ログファイルを閉じます。
@@ -265,23 +309,13 @@ namespace SoftCube.Log
         /// <param name="log">ログ。</param>
         public override void Log(string log)
         {
-            if (Writer == null)
+            if (!IsOpened)
             {
                 return;
             }
 
             lock (Writer)
             {
-                //// バックアップ条件に適合している場合、現在のログファイルをバックアップします。
-                //// その後、新たにログファイルを開きます。
-                //var isDateTimeChanged = backupFile.BackupFilePath(FilePath, CreationTime) != backupFile.BackupFilePath(FilePath, SystemClock.Now);
-                //var isOverCapacity    = MaxFileSize <= FileSize;
-                //if (isDateTimeChanged || isOverCapacity)
-                //{
-                //    Backup();
-                //}
-
-                //
                 Writer.Write(log);
                 Writer.Flush();
             }
@@ -309,6 +343,11 @@ namespace SoftCube.Log
             for (int index = 0; true; index++)
             {
                 var backupFilePath = GetBackupFilePath(filePath, creationTime, index);
+                var directory = Path.GetDirectoryName(backupFilePath);
+                if (Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
 
                 if (index == 0)
                 {

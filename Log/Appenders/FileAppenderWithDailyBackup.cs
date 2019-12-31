@@ -19,21 +19,7 @@ namespace SoftCube.Log
         public string DatePattern
         {
             get => datePattern;
-            set
-            {
-                if (value != datePattern)
-                {
-                    var index = datePattern.IndexOfAny(Path.GetInvalidFileNameChars());
-                    if (0 <= index)
-                    {
-                        throw new ArgumentException(
-                            $"ファイル名に使用できない文字[{datePattern[index]}]が使われています。",
-                            nameof(value));
-                    }
-
-                    datePattern = value;
-                }
-            }
+            set => datePattern = value ?? throw new ArgumentNullException(nameof(value));
         }
         private string datePattern;
 
