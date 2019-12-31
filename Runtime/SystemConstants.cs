@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
 
-namespace SoftCube.Runtime
+namespace SoftCube.Debug
 {
     /// <summary>
     /// システム定数。

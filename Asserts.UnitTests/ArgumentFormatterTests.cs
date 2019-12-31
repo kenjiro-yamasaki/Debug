@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace SoftCube.Asserts.UnitTests
+namespace SoftCube.Asserts
 {
     using XAssert = Xunit.Assert;
 
@@ -310,7 +310,7 @@ namespace SoftCube.Asserts.UnitTests
         [Fact]
         public static void Format_大きなクラス_最大プロパティフィールド数でフォーマットを打ち切る()
         {
-            var expected = $@"BigClass {{ Field1 = 42, Field2 = ""Hello, world!"", Property1 = {21.12}, Property2 = typeof(SoftCube.Asserts.UnitTests.ArgumentFormatterTests+BigClass), Property3 = 2014-04-17T07:45:23.0000000+00:00, ... }}";
+            var expected = $@"BigClass {{ Field1 = 42, Field2 = ""Hello, world!"", Property1 = {21.12}, Property2 = typeof(SoftCube.Asserts.ArgumentFormatterTests+BigClass), Property3 = 2014-04-17T07:45:23.0000000+00:00, ... }}";
 
             XAssert.Equal(expected, ArgumentFormatter.Format(new BigClass()));
         }

@@ -1,8 +1,7 @@
 ﻿using SoftCube.Log;
-using SoftCube.Profile;
 using System.Threading;
 
-namespace Profile.Example
+namespace SoftCube.Profile
 {
     class Program
     {

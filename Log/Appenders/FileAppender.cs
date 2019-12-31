@@ -1,6 +1,5 @@
 ﻿using SoftCube.Asserts;
-using SoftCube.IO.Xml;
-using SoftCube.Runtime;
+using SoftCube.IO;
 using System;
 using System.IO;
 using System.Text;
@@ -181,7 +180,7 @@ namespace SoftCube.Log
         /// コンストラクター。
         /// </summary>
         public FileAppender()
-            : this(new SystemClock())
+            : this(new Clock())
         {
         }
 
@@ -209,7 +208,7 @@ namespace SoftCube.Log
         /// コンストラクター。
         /// </summary>
         /// <param name="systemClock">システムクロック。</param>
-        internal FileAppender(ISystemClock systemClock)
+        internal FileAppender(IClock systemClock)
             : base(systemClock)
         {
             BackupFilePath = @"{Directory}/{FileBody}.{DateTime:yyyy-MM-dd}{Index:\.000}{Extension}";

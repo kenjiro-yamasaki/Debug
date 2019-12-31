@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 using Xunit;
 
-namespace SoftCube.Asserts.UnitTests
+namespace SoftCube.Asserts
 {
     using XAssert = Xunit.Assert;
 

@@ -1,5 +1,4 @@
-﻿using SoftCube.IO.Xml;
-using SoftCube.Runtime;
+﻿using SoftCube.IO;
 using System;
 using System.Xml.Linq;
 
@@ -30,7 +29,7 @@ namespace SoftCube.Log
         /// コンストラクター。
         /// </summary>
         public FileAppenderWithDailyBackup()
-            : this(new SystemClock())
+            : this(new Clock())
         {
         }
 
@@ -53,7 +52,7 @@ namespace SoftCube.Log
         /// コンストラクター。
         /// </summary>
         /// <param name="systemClock">システムクロック。</param>
-        internal FileAppenderWithDailyBackup(ISystemClock systemClock)
+        internal FileAppenderWithDailyBackup(IClock systemClock)
             : base(systemClock)
         {
             DatePattern = "yyyyMMdd";

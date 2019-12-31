@@ -1,23 +1,34 @@
 ﻿using System;
 
-namespace SoftCube.Runtime
+namespace SoftCube.Log
 {
     /// <summary>
-    /// システムクロック。
+    /// クロック。
     /// </summary>
-    public interface ISystemClock
+    public class Clock : IClock
     {
         #region プロパティ
 
         /// <summary>
         /// コンピューター上の現在の日時 (現地時刻)。
         /// </summary>
-        DateTime Now { get; }
+        public DateTime Now => DateTime.Now;
 
         /// <summary>
         /// コンピューター上の現在の日時 (世界協定時刻)。
         /// </summary>
-        DateTime UtcNow { get; }
+        public DateTime UtcNow => DateTime.UtcNow;
+
+        #endregion
+
+        #region コンストラクター
+
+        /// <summary>
+        /// コンストラクター。
+        /// </summary>
+        public Clock()
+        {
+        }
 
         #endregion
     }

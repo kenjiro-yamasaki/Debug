@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Xunit;
 
-namespace SoftCube.Asserts.UnitTests
+namespace SoftCube.Asserts
 {
     using XAssert = Xunit.Assert;
 

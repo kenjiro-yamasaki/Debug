@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Xunit;
 
-namespace SoftCube.Asserts.UnitTests
+namespace SoftCube.Asserts
 {
     using XAssert = Xunit.Assert;
 

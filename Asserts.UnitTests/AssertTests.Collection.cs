@@ -5,7 +5,7 @@ using System.Linq;
 using NSubstitute;
 using Xunit;
 
-namespace SoftCube.Asserts.UnitTests
+namespace SoftCube.Asserts
 {
     using XAssert = Xunit.Assert;
 

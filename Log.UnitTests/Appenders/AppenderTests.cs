@@ -1,11 +1,10 @@
 ﻿using NSubstitute;
-using SoftCube.Runtime;
 using System;
 using System.Diagnostics;
 using System.Threading;
 using Xunit;
 
-namespace SoftCube.Log.Appenders.UnitTests
+namespace SoftCube.Log
 {
     public class AppenderTests
     {
@@ -284,7 +283,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             [Fact]
             public void Date書式指定_正しく出力する()
             {
-                var clock = Substitute.For<ISystemClock>();
+                var clock = Substitute.For<IClock>();
                 clock.Now.Returns(new DateTime(2019, 12, 19, 22, 54, 19, 777));
 
                 var appender = new StringAppender(clock);
@@ -414,7 +413,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             [Fact]
             public void 推奨書式_正しく出力する()
             {
-                var clock = Substitute.For<ISystemClock>();
+                var clock = Substitute.For<IClock>();
                 clock.Now.Returns(new DateTime(2019, 12, 19, 22, 54, 19, 777));
 
                 var appender = new StringAppender(clock);

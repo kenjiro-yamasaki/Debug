@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SoftCube.IO.Xml" Version="1.0.0" />
+    <PackageReference Include="SoftCube.IO.Xml" Version="1.0.1" />
   </ItemGroup>
 
   <ItemGroup>

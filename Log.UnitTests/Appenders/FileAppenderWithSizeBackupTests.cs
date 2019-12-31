@@ -1,12 +1,11 @@
 ﻿using NSubstitute;
-using SoftCube.Runtime;
 using SoftCube.Test;
 using System;
 using System.IO;
 using System.Runtime.CompilerServices;
 using Xunit;
 
-namespace SoftCube.Log.Appenders.UnitTests
+namespace SoftCube.Log
 {
     public class FileAppenderWithSizeBackupTests
     {
@@ -43,7 +42,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             {
                 var filePath = GetFilePath();
 
-                var clock = Substitute.For<ISystemClock>();
+                var clock = Substitute.For<IClock>();
                 clock.Now.Returns(new DateTime(2020, 1, 1));
 
                 using (var appender = new FileAppenderWithSizeBackup(clock))
@@ -67,7 +66,7 @@ namespace SoftCube.Log.Appenders.UnitTests
             {
                 var filePath = GetFilePath();
 
-                var clock = Substitute.For<ISystemClock>();
+                var clock = Substitute.For<IClock>();
                 clock.Now.Returns(new DateTime(2020, 1, 1));
 
                 using (var appender = new FileAppenderWithSizeBackup(clock))

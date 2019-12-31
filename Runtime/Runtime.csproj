@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Platforms>AnyCPU;x64;x86</Platforms>
-    <AssemblyName>SoftCube.Runtime</AssemblyName>
-    <RootNamespace>SoftCube.Runtime</RootNamespace>
+    <AssemblyName>SoftCube.Debug.Runtime</AssemblyName>
+    <RootNamespace>SoftCube.Debug</RootNamespace>
   </PropertyGroup>
 
 </Project>

@@ -7,7 +7,7 @@
 
     <AssemblyName>SoftCube.Log.UnitTests</AssemblyName>
 
-    <RootNamespace>SoftCube.Log.UnitTests</RootNamespace>
+    <RootNamespace>SoftCube.Log</RootNamespace>
 
     <Platforms>AnyCPU;x86;x64</Platforms>
   </PropertyGroup>

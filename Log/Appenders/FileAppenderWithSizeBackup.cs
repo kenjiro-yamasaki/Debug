@@ -1,5 +1,4 @@
-﻿using SoftCube.IO.Xml;
-using SoftCube.Runtime;
+﻿using SoftCube.IO;
 using System;
 using System.Xml.Linq;
 
@@ -51,7 +50,7 @@ namespace SoftCube.Log
         /// コンストラクター。
         /// </summary>
         /// <param name="systemClock">システムクロック。</param>
-        internal FileAppenderWithSizeBackup(ISystemClock systemClock)
+        internal FileAppenderWithSizeBackup(IClock systemClock)
             : base(systemClock)
         {
         }

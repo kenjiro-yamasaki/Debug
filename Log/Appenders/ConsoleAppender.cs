@@ -1,5 +1,4 @@
-﻿using SoftCube.Runtime;
-using System;
+﻿using System;
 using System.Xml.Linq;
 
 namespace SoftCube.Log
@@ -15,7 +14,7 @@ namespace SoftCube.Log
         /// コンストラクター。
         /// </summary>
         public ConsoleAppender()
-            : this(new SystemClock())
+            : this(new Clock())
         {
         }
 
@@ -32,7 +31,7 @@ namespace SoftCube.Log
         /// コンストラクター。
         /// </summary>
         /// <param name="systemClock">システムクロック。</param>
-        internal ConsoleAppender(ISystemClock systemClock)
+        internal ConsoleAppender(IClock systemClock)
             : base(systemClock)
         {
         }
