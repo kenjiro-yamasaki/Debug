@@ -1,6 +1,6 @@
 ﻿using NSubstitute;
-using SoftCube.Test;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using Xunit;
@@ -19,7 +19,10 @@ namespace SoftCube.Log
         /// <returns>ログファイルパス。</returns>
         private static string GetFilePath([CallerMemberName] string callerMemberName = "", [CallerLineNumber] int callerLineNumber = 0)
         {
-            var filePath = TestFile.GetFilePath(".log", 1, callerMemberName, callerLineNumber);
+            var stackFrame = new StackFrame(1, true);
+            var type = stackFrame.GetMethod().DeclaringType.FullName;
+
+            var filePath = Path.Combine(Environment.CurrentDirectory, $"{type}_{callerMemberName}{callerLineNumber}.log");
 
             foreach (var path in Directory.GetFiles(Path.GetDirectoryName(filePath), "*", SearchOption.TopDirectoryOnly))
             {
