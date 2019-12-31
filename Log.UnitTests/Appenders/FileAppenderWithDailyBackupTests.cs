@@ -8,7 +8,7 @@ using Xunit;
 
 namespace SoftCube.Log.Appenders.UnitTests
 {
-    public class FileAppenderWithSizeBackupTests
+    public class FileAppenderWithDalyBackupTests
     {
         #region テストユーティリティ
 
@@ -39,38 +39,42 @@ namespace SoftCube.Log.Appenders.UnitTests
         public class Log
         {
             [Fact]
-            public void 容量超過_バックアップする()
+            public void 日付変化_バックアップする()
             {
                 var filePath = GetFilePath();
 
                 var clock = Substitute.For<ISystemClock>();
                 clock.Now.Returns(new DateTime(2020, 1, 1));
 
-                using (var appender = new FileAppenderWithSizeBackup(clock))
+                using (var appender = new FileAppenderWithDailyBackup(clock))
                 {
-                    appender.MaxFileSize = 1;
                     appender.Open(filePath);
                     appender.Trace("A");
-                    appender.Trace("B");
-                    Assert.Equal("A", File.ReadAllText(appender.GetBackupFilePath(clock.Now)));
 
+                    clock.Now.Returns(new DateTime(2020, 1, 2));
+                    appender.Trace("B");
+
+                    Assert.Equal("A", File.ReadAllText(appender.GetBackupFilePath(new DateTime(2020, 1, 1))));
+
+                    clock.Now.Returns(new DateTime(2020, 1, 3));
                     appender.Trace("C");
-                    Assert.Equal("A", File.ReadAllText(appender.GetBackupFilePath(clock.Now, 0)));
-                    Assert.Equal("B", File.ReadAllText(appender.GetBackupFilePath(clock.Now, 1)));
+
+                    Assert.Equal("A", File.ReadAllText(appender.GetBackupFilePath(new DateTime(2020, 1, 1))));
+                    Assert.Equal("B", File.ReadAllText(appender.GetBackupFilePath(new DateTime(2020, 1, 2))));
                 }
 
                 Assert.Equal("C", File.ReadAllText(filePath));
             }
 
             [Fact]
-            public void 容量超過しない_バックアップしない()
+            public void 日付変化しない_バックアップしない()
             {
                 var filePath = GetFilePath();
 
                 var clock = Substitute.For<ISystemClock>();
                 clock.Now.Returns(new DateTime(2020, 1, 1));
 
-                using (var appender = new FileAppenderWithSizeBackup(clock))
+                using (var appender = new FileAppenderWithDailyBackup(clock))
                 {
                     appender.Open(filePath);
                     appender.Trace("A");

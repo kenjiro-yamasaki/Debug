@@ -317,6 +317,10 @@ namespace SoftCube.Log
         /// <param name="log">ログ。</param>
         public override void Log(string log)
         {
+            if (log == null)
+            {
+                throw new ArgumentNullException(nameof(log));
+            }
             if (!IsOpened)
             {
                 return;
