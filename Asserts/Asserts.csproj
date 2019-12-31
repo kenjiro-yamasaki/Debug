@@ -10,9 +10,10 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Company>SoftCube Co., Ltd.</Company>
     <Authors>山﨑 謙次郎</Authors>
-    <PackageTags>Assert</PackageTags>
+    <PackageTags>Debug Assert</PackageTags>
     <Copyright>山﨑 謙次郎</Copyright>
-    <PackageProjectUrl>https://github.com/kenjiro-yamasaki/Debugs</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/kenjiro-yamasaki/Debug</PackageProjectUrl>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
