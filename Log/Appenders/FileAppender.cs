@@ -94,6 +94,11 @@ namespace SoftCube.Log
             get => backupFilePath;
             set
             {
+                if (value == null)
+                {
+                    throw new ArgumentNullException(nameof(value));
+                }
+
                 var index = value.IndexOfAny(Path.GetInvalidPathChars());
                 if (0 <= index)
                 {
@@ -125,10 +130,13 @@ namespace SoftCube.Log
                     var indexFormat = ParseIndexFormat(value);
                     if (indexFormat == null)
                     {
-                        throw new ArgumentException("バックアップの書式には {BackupIndex} を含めてください。", nameof(backupFilePath));
+                        throw new ArgumentException($"{nameof(BackupFilePath)} には {{Index}} を含めてください。", nameof(backupFilePath));
                     }
 
-                    value = value.Replace(dateTimeFormat, dateTimeFormat.Replace("DateTime", "5"));
+                    if (dateTimeFormat != null)
+                    {
+                        value = value.Replace(dateTimeFormat, dateTimeFormat.Replace("DateTime", "5"));
+                    }
                     value = value.Replace(indexFormat, indexFormat.Replace("Index", "6"));
 
                     BackupFilePathFormat0 = value.Replace(indexFormat.Replace("Index", "6"), "");
@@ -139,7 +147,7 @@ namespace SoftCube.Log
         private string backupFilePath;
 
         /// <summary>
-        /// 開かれているか。
+        /// ログファイルが開かれているか。
         /// </summary>
         public bool IsOpened => FileStream != null;
 
@@ -330,19 +338,17 @@ namespace SoftCube.Log
         /// </summary>
         public void Backup()
         {
-            Assert.NotNull(FileStream);
+            if (!IsOpened)
+            {
+                throw new InvalidOperationException("Backup() を呼び出すには、ログファイルを開いてください。");
+            }
+
             var filePath = FilePath;
-
-            // 現在のログファイルを閉じます。
-            Close();
-
-            // 現在のログファイルをバックアップファイルに名前変更します。
-            Assert.True(File.Exists(filePath));
-            var creationTime = File.GetCreationTime(filePath);
 
             for (int index = 0; true; index++)
             {
-                var backupFilePath = GetBackupFilePath(filePath, creationTime, index);
+                var backupFilePath  = GetBackupFilePath(CreationTime, index);
+
                 var directory = Path.GetDirectoryName(backupFilePath);
                 if (Directory.Exists(directory))
                 {
@@ -351,10 +357,14 @@ namespace SoftCube.Log
 
                 if (index == 0)
                 {
-                    var backupFilePath0 = GetBackupFilePath(filePath, creationTime);
+                    var backupFilePath0 = GetBackupFilePath(CreationTime);
 
                     if (!File.Exists(backupFilePath0) && !File.Exists(backupFilePath))
                     {
+                        // 現在のログファイルを閉じます。
+                        Close();
+
+                        // 閉じたログファイルをバックアップファイルに名前変更します。
                         Assert.True(File.Exists(filePath));
                         Assert.False(File.Exists(backupFilePath0));
                         File.Move(filePath, backupFilePath0);
@@ -365,8 +375,13 @@ namespace SoftCube.Log
                 {
                     if (!File.Exists(backupFilePath))
                     {
-                        File.Move(GetBackupFilePath(filePath, creationTime), GetBackupFilePath(filePath, creationTime, 0));
+                        // インデックス 0 のバックアップファイルを名前変更します。
+                        File.Move(GetBackupFilePath(CreationTime), GetBackupFilePath(CreationTime, 0));
 
+                        // 現在のログファイルを閉じます。
+                        Close();
+
+                        // 閉じたログファイルをバックアップファイルに名前変更します。
                         Assert.True(File.Exists(filePath));
                         Assert.False(File.Exists(backupFilePath));
                         File.Move(filePath, backupFilePath);
@@ -377,6 +392,10 @@ namespace SoftCube.Log
                 {
                     if (!File.Exists(backupFilePath))
                     {
+                        // 現在のログファイルを閉じます。
+                        Close();
+
+                        // 閉じたログファイルをバックアップファイルに名前変更します。
                         Assert.True(File.Exists(filePath));
                         Assert.False(File.Exists(backupFilePath));
                         File.Move(filePath, backupFilePath);
@@ -399,21 +418,19 @@ namespace SoftCube.Log
         /// </summary>
         /// <param name="dateTime">日時。</param>
         /// <returns>バックアップファイルパス。</returns>
-        private string GetBackupFilePath(string filePath, DateTime dateTime)
+        public string GetBackupFilePath(DateTime dateTime)
         {
-            var directory = Path.GetDirectoryName(filePath);
-            var fileName  = Path.GetFileName(filePath);
-            var fileBody  = Path.GetFileNameWithoutExtension(filePath);
-            var extension = Path.GetExtension(filePath);
+            if (!IsOpened)
+            {
+                throw new InvalidOperationException("GetBackupFilePath(dateTime) を呼び出すには、ログファイルを開いてください。");
+            }
 
-            return string.Format(
-                BackupFilePathFormat0,
-                filePath,
-                directory,
-                fileName,
-                fileBody,
-                extension,
-                dateTime);
+            var directory = Path.GetDirectoryName(FilePath);
+            var fileName  = Path.GetFileName(FilePath);
+            var fileBody  = Path.GetFileNameWithoutExtension(FilePath);
+            var extension = Path.GetExtension(FilePath);
+
+            return string.Format(BackupFilePathFormat0, FilePath, directory, fileName, fileBody, extension, dateTime);
         }
 
         /// <summary>
@@ -422,22 +439,19 @@ namespace SoftCube.Log
         /// <param name="dateTime">日時。</param>
         /// <param name="index">インデックス。</param>
         /// <returns>バックアップファイルパス。</returns>
-        private string GetBackupFilePath(string filePath, DateTime dateTime, int index)
+        public string GetBackupFilePath(DateTime dateTime, int index)
         {
-            var directory = Path.GetDirectoryName(filePath);
-            var fileName  = Path.GetFileName(filePath);
-            var fileBody  = Path.GetFileNameWithoutExtension(filePath);
-            var extension = Path.GetExtension(filePath);
+            if (!IsOpened)
+            {
+                throw new InvalidOperationException("GetBackupFilePath(dateTime, index) を呼び出すには、ログファイルを開いてください。");
+            }
 
-            return string.Format(
-                BackupFilePathFormat1,
-                filePath,
-                directory,
-                fileName,
-                fileBody,
-                extension,
-                dateTime,
-                index);
+            var directory = Path.GetDirectoryName(FilePath);
+            var fileName  = Path.GetFileName(FilePath);
+            var fileBody  = Path.GetFileNameWithoutExtension(FilePath);
+            var extension = Path.GetExtension(FilePath);
+
+            return string.Format(BackupFilePathFormat1, FilePath, directory, fileName, fileBody, extension, dateTime, index);
         }
 
         #endregion
