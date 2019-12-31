@@ -8,8 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="SoftCube.IO.Xml" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Asserts\Asserts.csproj" />
-    <ProjectReference Include="..\Configuration\Configuration.csproj" />
     <ProjectReference Include="..\Runtime\Runtime.csproj" />
   </ItemGroup>
 

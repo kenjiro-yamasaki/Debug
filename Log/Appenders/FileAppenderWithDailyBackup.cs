@@ -1,7 +1,6 @@
-﻿using SoftCube.Configuration;
+﻿using SoftCube.IO.Xml;
 using SoftCube.Runtime;
 using System;
-using System.IO;
 using System.Xml.Linq;
 
 namespace SoftCube.Log

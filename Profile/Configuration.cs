@@ -1,4 +1,4 @@
-﻿using SoftCube.Configuration;
+﻿using SoftCube.IO.Xml;
 using SoftCube.Log;
 using System;
 using System.IO;

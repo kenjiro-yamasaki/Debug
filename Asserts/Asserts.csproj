@@ -12,6 +12,7 @@
     <Authors>山﨑 謙次郎</Authors>
     <PackageTags>Assert</PackageTags>
     <Copyright>山﨑 謙次郎</Copyright>
+    <PackageProjectUrl>https://github.com/kenjiro-yamasaki/Debugs</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
