@@ -1,6 +1,9 @@
-# Debugs
+## Debugs
 
-Debugsは、その名前のとおりデバッグに関する以下の機能を提供します。  
-* アサート
-* ロガー
-* プロファイラー
+Debugs, as the name implies, provides the following debugging features:  
+* Assert
+* Log
+* Profile
+
+
+## Assert
