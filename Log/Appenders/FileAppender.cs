@@ -1,5 +1,5 @@
 ﻿using SoftCube.Asserts;
-using SoftCube.IO;
+using SoftCube.Xml;
 using System;
 using System.IO;
 using System.Text;

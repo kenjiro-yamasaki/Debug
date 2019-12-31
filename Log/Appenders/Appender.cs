@@ -1,4 +1,4 @@
-﻿using SoftCube.IO;
+﻿using SoftCube.Xml;
 using System;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
