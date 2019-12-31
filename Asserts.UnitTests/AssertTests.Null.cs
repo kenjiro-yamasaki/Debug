@@ -5,7 +5,7 @@ namespace SoftCube.Asserts.UnitTests
 {
     using XAssert = Xunit.Assert;
 
-    public class NullAssertsTests
+    public partial class AssertTests
     {
         public class NotNull
         {

@@ -4,7 +4,7 @@ namespace SoftCube.Asserts.UnitTests
 {
     using XAssert = Xunit.Assert;
 
-    public class IdentityAssertsTests
+    public partial class AssertsTests
     {
         public class NotSame
         {

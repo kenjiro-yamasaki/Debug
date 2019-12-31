@@ -5,7 +5,7 @@ namespace SoftCube.Asserts.UnitTests
 {
     using XAssert = Xunit.Assert;
 
-    public class RangeAssertsTests
+    public partial class AssertTests
     {
         #region テスト用クラス
 

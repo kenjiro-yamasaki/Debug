@@ -10,7 +10,7 @@ namespace SoftCube.Asserts.UnitTests
 {
     using XAssert = Xunit.Assert;
 
-    public class EqualityAssertsTests
+    public partial class AssertTests
     {
         #region テスト用クラス
 
@@ -34,7 +34,7 @@ namespace SoftCube.Asserts.UnitTests
 
         #endregion
 
-        public class Equal
+        public partial class Equal
         {
             [Fact]
             public void Equalを失敗させる_例外オブジェクトが正しい()

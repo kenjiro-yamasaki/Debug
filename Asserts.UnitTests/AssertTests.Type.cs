@@ -6,7 +6,7 @@ namespace SoftCube.Asserts.UnitTests
 {
     using XAssert = Xunit.Assert;
 
-    public class TypeAssertTests
+    public partial class AssertTests
     {
         public class IsAssignableFrom_Generic
         {

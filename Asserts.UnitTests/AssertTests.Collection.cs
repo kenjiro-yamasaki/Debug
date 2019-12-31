@@ -9,7 +9,7 @@ namespace SoftCube.Asserts.UnitTests
 {
     using XAssert = Xunit.Assert;
 
-    public class CollectionAssertsTests
+    public partial class AssertTests
     {
         #region テスト用クラス
 
@@ -159,7 +159,7 @@ namespace SoftCube.Asserts.UnitTests
             }
         }
 
-        public class Contains
+        public partial class Contains
         {
             [Fact]
             public static void 引数がNull_ArgumentNullException例外を投げる()
@@ -339,7 +339,7 @@ namespace SoftCube.Asserts.UnitTests
             }
         }
 
-        public class DoesNotContain
+        public partial class DoesNotContain
         {
             [Fact]
             public static void 引数がNull_ArgumentNullException例外を投げる()
@@ -569,7 +569,7 @@ namespace SoftCube.Asserts.UnitTests
             }
         }
 
-        public class Equal
+        public class EqualCollection
         {
             [Fact]
             public static void 等値の配列_Equal()

@@ -6,9 +6,9 @@ namespace SoftCube.Asserts.UnitTests
 {
     using XAssert = Xunit.Assert;
 
-    public class StringAssertsTests
+    public partial class AssertTests
     {
-        public class Contains
+        public partial class Contains
         {
             [Fact]
             public void 期待値がnull_ArgumentNullExceptionを投げる()
@@ -52,7 +52,7 @@ namespace SoftCube.Asserts.UnitTests
             }
         }
 
-        public class DoesNotContain
+        public partial class DoesNotContain
         {
             [Fact]
             public void 期待値にnullを指定_ArgumentNullException例外を投げる()
@@ -94,7 +94,7 @@ namespace SoftCube.Asserts.UnitTests
             }
         }
 
-        public class Equal
+        public partial class Equal
         {
             [Theory]
             [InlineData(null, null, false, false, false)]
