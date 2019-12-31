@@ -5,6 +5,20 @@
     <AssemblyName>SoftCube.Asserts</AssemblyName>
     <RootNamespace>SoftCube.Asserts</RootNamespace>
     <Platforms>AnyCPU;x64;x86</Platforms>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Company>SoftCube Co., Ltd.</Company>
+    <Authors>山﨑 謙次郎</Authors>
+    <PackageTags>Assert</PackageTags>
+    <Copyright>山﨑 謙次郎</Copyright>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>

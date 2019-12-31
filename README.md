@@ -11,7 +11,8 @@
 
 
 ## Assert
-さまざまな Assert メソッドを提供します。
+「起こるはずがない」と思っていることがあれば、それをチェックするコードを追加してください。
+Assert を用いるのが最も簡単な方法です。**Debugs** は、さまざまな Assert メソッドを提供します。
 * 論理検証
 * 等値検証
 * 同一インスタンス検証
@@ -19,6 +20,18 @@
 * null の検証
 * 文字列の検証
 * その他
+
+```C#
+using SoftCube.Asserts;
+...
+
+void Log(string message)
+{
+    Assert.NotNull(message);
+    ...
+}
+```
+
 
 
 ## Log  
