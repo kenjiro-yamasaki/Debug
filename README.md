@@ -9,8 +9,13 @@ Debugs, as the name implies, provides the following debugging features:
 
 
 ## Assert
-さまざまな条件のAssertを提供します。
-* 
+さまざまな種類のAssertメソッドを提供します。
+* 論理条件
+* null値
+* 等値比較
+* 同一インスタンス比較
+* 浮動小数誤差を考慮した等値比較
+* 文字列比較
 
 ## Log  
 
