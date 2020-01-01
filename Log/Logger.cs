@@ -41,7 +41,7 @@ namespace SoftCube.Log
         /// </summary>
         static Logger()
         {
-            var configurator = Assembly.GetEntryAssembly().GetCustomAttribute<Configuration>();
+            var configurator = Assembly.GetEntryAssembly()?.GetCustomAttribute<Configuration>();
             configurator?.Configurate();
 
             // プロセス終了時にアペンダーを破棄します。
