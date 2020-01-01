@@ -30,9 +30,9 @@ namespace SoftCube.Log
         /// <summary>
         /// コンストラクター。
         /// </summary>
-        /// <param name="systemClock">システムクロック。</param>
-        internal ConsoleAppender(IClock systemClock)
-            : base(systemClock)
+        /// <param name="clock">クロック。</param>
+        internal ConsoleAppender(IClock clock)
+            : base(clock)
         {
         }
 

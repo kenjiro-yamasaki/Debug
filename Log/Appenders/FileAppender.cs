@@ -207,9 +207,9 @@ namespace SoftCube.Log
         /// <summary>
         /// コンストラクター。
         /// </summary>
-        /// <param name="systemClock">システムクロック。</param>
-        internal FileAppender(IClock systemClock)
-            : base(systemClock)
+        /// <param name="clock">クロック。</param>
+        internal FileAppender(IClock clock)
+            : base(clock)
         {
             BackupFilePath = @"{Directory}/{FileBody}.{DateTime:yyyy-MM-dd}{Index:\.000}{Extension}";
         }
@@ -265,7 +265,7 @@ namespace SoftCube.Log
             if (FileOpenPolicy == FileOpenPolicy.Overwrite || !File.Exists(filePath))
             {
                 File.Create(filePath).Dispose();
-                File.SetCreationTime(filePath, SystemClock.Now);
+                File.SetCreationTime(filePath, Clock.Now);
             }
 
             FileStream = File.Open(filePath, FileMode.Open, FileAccess.Write);
@@ -409,7 +409,7 @@ namespace SoftCube.Log
 
             // 新たにログファイルを開きます。
             File.Create(filePath).Dispose();
-            File.SetCreationTime(filePath, SystemClock.Now);
+            File.SetCreationTime(filePath, Clock.Now);
 
             FileStream = File.Open(filePath, FileMode.Open, FileAccess.Write);
             FileStream.Seek(0, SeekOrigin.End);

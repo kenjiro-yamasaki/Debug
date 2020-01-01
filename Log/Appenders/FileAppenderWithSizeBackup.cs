@@ -49,9 +49,9 @@ namespace SoftCube.Log
         /// <summary>
         /// コンストラクター。
         /// </summary>
-        /// <param name="systemClock">システムクロック。</param>
-        internal FileAppenderWithSizeBackup(IClock systemClock)
-            : base(systemClock)
+        /// <param name="clock">クロック。</param>
+        internal FileAppenderWithSizeBackup(IClock clock)
+            : base(clock)
         {
         }
 

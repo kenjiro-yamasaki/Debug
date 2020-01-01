@@ -40,9 +40,9 @@ namespace SoftCube.Log
         public Level MaxLevel { get; set; } = Level.Fatal;
 
         /// <summary>
-        /// システムクロック。
+        /// クロック。
         /// </summary>
-        protected IClock SystemClock { get; }
+        protected IClock Clock { get; }
 
         #endregion
 
@@ -76,10 +76,10 @@ namespace SoftCube.Log
         /// <summary>
         /// コンストラクター。
         /// </summary>
-        /// <param name="systemClock">システムクロック。</param>
-        internal Appender(IClock systemClock)
+        /// <param name="clock">クロック。</param>
+        internal Appender(IClock clock)
         {
-            SystemClock = systemClock ?? throw new ArgumentNullException(nameof(systemClock));
+            Clock = clock ?? throw new ArgumentNullException(nameof(clock));
             LogFormat = "{Message}";
         }
 
@@ -139,7 +139,7 @@ namespace SoftCube.Log
             var level = Level.Trace;
             if (MinLevel <= level && level <= MaxLevel)
             {
-                Log(logFormat.Convert(SystemClock.Now, file, level, line, message, method));
+                Log(logFormat.Convert(Clock.Now, file, level, line, message, method));
             }
         }
 
@@ -160,7 +160,7 @@ namespace SoftCube.Log
             var level = Level.Debug;
             if (MinLevel <= level && level <= MaxLevel)
             {
-                Log(logFormat.Convert(SystemClock.Now, file, level, line, message, method));
+                Log(logFormat.Convert(Clock.Now, file, level, line, message, method));
             }
         }
 
@@ -181,7 +181,7 @@ namespace SoftCube.Log
             var level = Level.Info;
             if (MinLevel <= level && level <= MaxLevel)
             {
-                Log(logFormat.Convert(SystemClock.Now, file, level, line, message, method));
+                Log(logFormat.Convert(Clock.Now, file, level, line, message, method));
             }
         }
 
@@ -202,7 +202,7 @@ namespace SoftCube.Log
             var level = Level.Warning;
             if (MinLevel <= level && level <= MaxLevel)
             {
-                Log(logFormat.Convert(SystemClock.Now, file, level, line, message, method));
+                Log(logFormat.Convert(Clock.Now, file, level, line, message, method));
             }
         }
 
@@ -223,7 +223,7 @@ namespace SoftCube.Log
             var level = Level.Error;
             if (MinLevel <= level && level <= MaxLevel)
             {
-                Log(logFormat.Convert(SystemClock.Now, file, level, line, message, method));
+                Log(logFormat.Convert(Clock.Now, file, level, line, message, method));
             }
         }
 
@@ -244,7 +244,7 @@ namespace SoftCube.Log
             var level = Level.Fatal;
             if (MinLevel <= level && level <= MaxLevel)
             {
-                Log(logFormat.Convert(SystemClock.Now, file, level, line, message, method));
+                Log(logFormat.Convert(Clock.Now, file, level, line, message, method));
             }
         }
 
@@ -265,7 +265,7 @@ namespace SoftCube.Log
 
             if (MinLevel <= level && level <= MaxLevel)
             {
-                Log(logFormat.Convert(SystemClock.Now, file, level, line, message, method));
+                Log(logFormat.Convert(Clock.Now, file, level, line, message, method));
             }
         }
 

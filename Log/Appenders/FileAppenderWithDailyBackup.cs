@@ -51,9 +51,9 @@ namespace SoftCube.Log
         /// <summary>
         /// コンストラクター。
         /// </summary>
-        /// <param name="systemClock">システムクロック。</param>
-        internal FileAppenderWithDailyBackup(IClock systemClock)
-            : base(systemClock)
+        /// <param name="clock">クロック。</param>
+        internal FileAppenderWithDailyBackup(IClock clock)
+            : base(clock)
         {
             DatePattern = "yyyyMMdd";
         }
@@ -69,7 +69,7 @@ namespace SoftCube.Log
         public override void Log(string log)
         {
             // バックアップ条件に適合している場合、現在のログファイルをバックアップします。
-            if (CreationTime.ToString(DatePattern) != SystemClock.Now.ToString(DatePattern))
+            if (CreationTime.ToString(DatePattern) != Clock.Now.ToString(DatePattern))
             {
                 Backup();
             }
