@@ -1,5 +1,4 @@
-﻿using SoftCube.Xml;
-using SoftCube.Log;
+﻿using SoftCube.Log;
 using System;
 using System.IO;
 using System.Xml.Linq;
