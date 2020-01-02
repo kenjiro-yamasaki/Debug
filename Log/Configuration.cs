@@ -27,11 +27,19 @@ namespace SoftCube.Log
         /// </summary>
         internal void Configurate()
         {
-            if (ConfigFilePath == null || !File.Exists(ConfigFilePath))
+            if (ConfigFilePath == null)
             {
-                return;
+                throw new InvalidOperationException($"ログ構成に失敗しました。{GetType().FullName}.{nameof(ConfigFilePath)} が null です。");
             }
- 
+            if (!File.Exists(ConfigFilePath))
+            {
+                throw new InvalidOperationException(
+                    $"ログ構成に失敗しました。{ConfigFilePath} が存在しません。" +
+                    $"よくある原因は、次のとおりです。" +
+                    $"(1) ファイルパスの綴りが間違っている。" +
+                    $"(2) {ConfigFilePath} のプロパティ＞出力ディレクトリーにコピーが「コピーしない」になっている (「新しい場合はコピーする」に変更してください)。");
+            }
+
             // 構成ファイルを読み込み、ロガーを構成します。
             var xlogger = XElement.Load(ConfigFilePath).Element("logger");
 

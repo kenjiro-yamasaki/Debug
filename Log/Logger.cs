@@ -41,11 +41,29 @@ namespace SoftCube.Log
         /// </summary>
         static Logger()
         {
-            var configurator = Assembly.GetEntryAssembly()?.GetCustomAttribute<Configuration>();
-            configurator?.Configurate();
+            try
+            {
+                var assembly = Assembly.GetEntryAssembly();
+                if (assembly == null)
+                {
+                    System.Diagnostics.Debug.WriteLine("エントリーアセンブリの取得に失敗しました。");
+                    return;
+                }
 
-            // プロセス終了時にアペンダーを破棄します。
-            AppDomain.CurrentDomain.ProcessExit += (s, e) => Exit();
+                var configurator = assembly.GetCustomAttribute<Configuration>();
+                if (configurator == null)
+                {
+                    System.Diagnostics.Debug.WriteLine($"エントリーアセンブリ {assembly.FullName} に {typeof(Configuration).FullName } 属性が定義されていません。");
+                    return;
+                }
+
+                configurator.Configurate();
+            }
+            finally
+            {
+                // プロセス終了時に終了処理をおこないます。
+                AppDomain.CurrentDomain.ProcessExit += (s, e) => Exit();
+            }
         }
 
         #endregion

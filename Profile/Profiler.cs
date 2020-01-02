@@ -56,10 +56,29 @@ namespace SoftCube.Profile
         /// </summary>
         static Profiler()
         {
-            var configurator = Assembly.GetEntryAssembly()?.GetCustomAttribute<Configuration>();
-            configurator?.Configurate();
+            try
+            {
+                var assembly = Assembly.GetEntryAssembly();
+                if (assembly == null)
+                {
+                    System.Diagnostics.Debug.WriteLine("エントリーアセンブリの取得に失敗しました。");
+                    return;
+                }
 
-            Logger.Exiting += (s, e) => Log();
+                var configurator = assembly.GetCustomAttribute<Configuration>();
+                if (configurator == null)
+                {
+                    System.Diagnostics.Debug.WriteLine($"エントリーアセンブリ {assembly.FullName} に {typeof(Configuration).FullName } 属性が定義されていません。");
+                    return;
+                }
+
+                configurator.Configurate();
+            }
+            finally
+            {
+                // ロガー終了時 (プロセス終了時) に計測結果のログ出力をおこないます。
+                Logger.Exiting += (s, e) => Log();
+            }
         }
 
         #endregion

@@ -12,7 +12,7 @@
     <Copyright>山﨑 謙次郎</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/kenjiro-yamasaki/Debug</PackageProjectUrl>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <PackageTags>Log</PackageTags>
   </PropertyGroup>
 
