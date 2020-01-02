@@ -1,7 +1,9 @@
 ﻿using SoftCube.Asserts;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Xml.Linq;
 
 namespace SoftCube.Log
@@ -14,9 +16,9 @@ namespace SoftCube.Log
         #region プロパティ
 
         /// <summary>
-        /// 構成ファイルパス。
+        /// 構成ファイル名。
         /// </summary>
-        public string ConfigFilePath { get; set; }
+        public string ConfigFileName { get; set; }
 
         #endregion
 
@@ -27,21 +29,25 @@ namespace SoftCube.Log
         /// </summary>
         internal void Configurate()
         {
-            if (ConfigFilePath == null)
+            if (ConfigFileName == null)
             {
-                throw new InvalidOperationException($"ログ構成に失敗しました。{GetType().FullName}.{nameof(ConfigFilePath)} が null です。");
+                throw new InvalidOperationException($"ログ構成に失敗しました。{GetType().FullName}.{nameof(ConfigFileName)} が null です。");
             }
-            if (!File.Exists(ConfigFilePath))
+
+            var entryAssemblyPath = Assembly.GetEntryAssembly().Location;
+            var configFilePath    = Path.Combine(Path.GetDirectoryName(entryAssemblyPath), ConfigFileName);
+            if (!File.Exists(configFilePath))
             {
                 throw new InvalidOperationException(
-                    $"ログ構成に失敗しました。{ConfigFilePath} が存在しません。" +
+                    $"ログ構成に失敗しました。{configFilePath} が存在しません。" +
                     $"よくある原因は、次のとおりです。" +
                     $"(1) ファイルパスの綴りが間違っている。" +
-                    $"(2) {ConfigFilePath} のプロパティ＞出力ディレクトリーにコピーが「コピーしない」になっている (「新しい場合はコピーする」に変更してください)。");
+                    $"(2) {ConfigFileName} のプロパティ＞出力ディレクトリーにコピーが「コピーしない」になっている (「新しい場合はコピーする」に変更してください)。");
             }
 
             // 構成ファイルを読み込み、ロガーを構成します。
-            var xlogger = XElement.Load(ConfigFilePath).Element("logger");
+            Debug.WriteLine($"{configFilePath} を読み込み、ロガーを構成します。");
+            var xlogger = XElement.Load(configFilePath).Element("logger");
 
             var appenders = new Dictionary<string, Appender>();
             foreach (var xappender in xlogger.Elements("appender"))
@@ -52,7 +58,7 @@ namespace SoftCube.Log
                 if (appenderType == null)
                 {
                     throw new IOException(
-                        $"ロガー構成ファイル {ConfigFilePath} の書式が不正です。{Environment.NewLine}" +
+                        $"ロガー構成ファイル {ConfigFileName} の書式が不正です。{Environment.NewLine}" +
                         $"appender タグの type 属性に {appenderTypeName} を指定することはできません。{Environment.NewLine}" +
                         $"この属性には appender の正確な型名 (例：{typeof(FileAppender).FullName}) を指定してください。");
                 }

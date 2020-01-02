@@ -1,6 +1,8 @@
 ﻿using SoftCube.Log;
 using System;
+using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Xml.Linq;
 
 namespace SoftCube.Profile
@@ -13,9 +15,9 @@ namespace SoftCube.Profile
         #region プロパティ
 
         /// <summary>
-        /// 構成ファイルパス。
+        /// 構成ファイル名。
         /// </summary>
-        public string ConfigFilePath { get; set; }
+        public string ConfigFileName { get; set; }
 
         #endregion
 
@@ -37,21 +39,25 @@ namespace SoftCube.Profile
         /// </summary>
         internal void Configurate()
         {
-            if (ConfigFilePath == null)
+            if (ConfigFileName == null)
             {
-                throw new InvalidOperationException($"プロファイル構成に失敗しました。{GetType().FullName}.{nameof(ConfigFilePath)} が null です。");
+                throw new InvalidOperationException($"プロファイル構成に失敗しました。{GetType().FullName}.{nameof(ConfigFileName)} が null です。");
             }
-            if (!File.Exists(ConfigFilePath))
+
+            var entryAssemblyPath = Assembly.GetEntryAssembly().Location;
+            var configFilePath    = Path.Combine(Path.GetDirectoryName(entryAssemblyPath), ConfigFileName);
+            if (!File.Exists(configFilePath))
             {
                 throw new InvalidOperationException(
-                    $"プロファイル構成に失敗しました。{ConfigFilePath} が存在しません。" +
+                    $"プロファイル構成に失敗しました。{configFilePath} が存在しません。" +
                     $"よくある原因は、次のとおりです。" +
                     $"(1) ファイルパスの綴りが間違っている。" +
-                    $"(2) {ConfigFilePath} のプロパティ＞出力ディレクトリーにコピーが「コピーしない」になっている (「新しい場合はコピーする」に変更してください)。");
+                    $"(2) {ConfigFileName} のプロパティ＞出力ディレクトリーにコピーが「コピーしない」になっている (「新しい場合はコピーする」に変更してください)。");
             }
 
             // 構成ファイルを読み込み、プロファイラーを構成します。
-            var xprofiler = XElement.Load(ConfigFilePath).Element("profiler");
+            Debug.WriteLine($"{configFilePath} を読み込み、ロガーを構成します。");
+            var xprofiler = XElement.Load(configFilePath).Element("profiler");
 
             Profiler.LogLevel    = xprofiler.Property(nameof(Profiler.LogLevel)).ToLevel();
             Profiler.TitleFormat = xprofiler.Property(nameof(Profiler.TitleFormat));
