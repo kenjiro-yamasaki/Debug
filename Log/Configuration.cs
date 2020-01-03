@@ -58,8 +58,8 @@ namespace SoftCube.Log
                 if (appenderType == null)
                 {
                     throw new IOException(
-                        $"ロガー構成ファイル {ConfigFileName} の書式が不正です。{Environment.NewLine}" +
-                        $"appender タグの type 属性に {appenderTypeName} を指定することはできません。{Environment.NewLine}" +
+                        $"ロガー構成ファイル {ConfigFileName} の書式が不正です。" +
+                        $"appender の type 属性に {appenderTypeName} を指定することはできません。" +
                         $"この属性には appender の正確な型名 (例：{typeof(FileAppender).FullName}) を指定してください。");
                 }
 
@@ -72,10 +72,13 @@ namespace SoftCube.Log
             foreach (var xuseAppender in xlogger.Elements("use-appender"))
             {
                 var useAppenderName = (string)xuseAppender.Attribute("name");
-                if (appenders.ContainsKey(useAppenderName))
+                if (!appenders.ContainsKey(useAppenderName))
                 {
-                    Logger.Add(appenders[useAppenderName]);
+                    throw new IOException(
+                        $"ロガー構成ファイル {ConfigFileName} の書式が不正です。" +
+                        $"use-appender [{useAppenderName}] の参照先の appender が存在しません。");
                 }
+                Logger.Add(appenders[useAppenderName]);
             }
         }
 
