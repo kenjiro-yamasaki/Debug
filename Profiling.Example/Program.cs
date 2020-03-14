@@ -8,9 +8,19 @@ namespace SoftCube.Profiling
         static void Main(string[] args)
         {
             Logger.Trace("A");
-            using (var transaction = Profiler.Start("A"))
+            using (var transaction1 = Profiler.Start("A"))
             {
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
+
+                using (var transaction2 = Profiler.Start("A"))
+                {
+                    Thread.Sleep(500);
+
+                    using (var transaction3 = Profiler.Start("A"))
+                    {
+                        Thread.Sleep(500);
+                    }
+                }
             }
 
             Logger.Trace("B");

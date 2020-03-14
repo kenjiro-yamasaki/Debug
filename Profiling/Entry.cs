@@ -8,10 +8,10 @@ namespace SoftCube.Profiling
     /// エントリー。
     /// </summary>
     /// <remarks>
-    /// エントリーは、計測と計測結果の管理をおこないます。
-    /// <see cref="Start()"/> を呼び出すと計測を開始します。
-    /// <see cref="Stop()"/> を呼び出すと計測を終了し、計測結果をプロパティに反映します。
-    /// <see cref="Start()"/> と <see cref="Stop()"/> の呼び出しは、<see cref="Transaction"/> がおこないます。
+    /// エントリーは、計測結果を管理します。
+    /// Start を呼びだすと計測を開始します。
+    /// Stop を呼びだすと計測を終了し、計測結果をプロパティに反映します。
+    /// Start と Stop は、<see cref="Transaction"/> が呼びだします。
     /// </remarks>
     internal class Entry
     {
@@ -30,7 +30,7 @@ namespace SoftCube.Profiling
         /// <summary>
         /// 合計計測時間 (秒)。
         /// </summary>
-        internal double TotalSeconds => TotalTicks / (double)Stopwatch.Frequency;
+        internal double TotalSeconds => totalTicks / (double)Stopwatch.Frequency;
 
         /// <summary>
         /// 平均計測時間 (秒)。
@@ -40,12 +40,12 @@ namespace SoftCube.Profiling
         /// <summary>
         /// 最小計測時間 (秒)。
         /// </summary>
-        internal double MinSeconds => MinTicks / (double)Stopwatch.Frequency;
+        internal double MinSeconds => minTicks / (double)Stopwatch.Frequency;
 
         /// <summary>
         /// 最大計測時間 (秒)。
         /// </summary>
-        internal double MaxSeconds => MaxTicks / (double)Stopwatch.Frequency;
+        internal double MaxSeconds => maxTicks / (double)Stopwatch.Frequency;
 
         /// <summary>
         /// 最小計測インデックス (0～)。
@@ -60,22 +60,46 @@ namespace SoftCube.Profiling
         /// <summary>
         /// 合計計測チック (タイマー刻み)。
         /// </summary>
-        private long TotalTicks { get; set; }
+        private long totalTicks;
 
         /// <summary>
         /// 最小計測チック (タイマー刻み)。
         /// </summary>
-        private long MinTicks { get; set; }
+        private long minTicks;
 
         /// <summary>
         /// 最大計測チック (タイマー刻み)。
         /// </summary>
-        private long MaxTicks { get; set; }
+        private long maxTicks;
+
+        /// <summary>
+        /// 何回 Stop をスキップするか。
+        /// </summary>
+        /// <remarks>
+        /// 以下のコードのような場合、transaction2 と transaction3 の Start と Stop 処理は無視する必要があります。
+        /// そこで Start 時に Stopwatch.IsRunning が true の場合、 ignoreStopCount をカウントアップし、計測開始処理をスキップします。
+        /// Stop 時に ignoreStopCount が 1 以上の場合、ignoreStopCount をカウントダウンし、計測終了処理をスキップします。
+        /// <code>
+        /// using (var transaction1 = Profiler.Start("A"))
+        /// {
+        ///     Thread.Sleep(500);
+        ///     using (var transaction2 = Profiler.Start("A"))
+        ///     {
+        ///         Thread.Sleep(500);
+        ///         using (var transaction3 = Profiler.Start("A"))
+        ///         {
+        ///             Thread.Sleep(500);
+        ///         }
+        ///     }
+        /// }
+        /// </code>
+        /// </remarks>
+        private int skipStopCount = 0;
 
         /// <summary>
         /// ストップウォッチ。
         /// </summary>
-        private Stopwatch Stopwatch { get; } = new Stopwatch();
+        private readonly Stopwatch stopwatch = new Stopwatch();
 
         #endregion
 
@@ -99,8 +123,13 @@ namespace SoftCube.Profiling
         /// </summary>
         public void Start()
         {
-            Assert.False(Stopwatch.IsRunning);
-            Stopwatch.Restart();
+            if (stopwatch.IsRunning)
+            {
+                skipStopCount++;
+                return;
+            }
+
+            stopwatch.Restart();
         }
 
         /// <summary>
@@ -108,30 +137,36 @@ namespace SoftCube.Profiling
         /// </summary>
         public void Stop()
         {
-            Assert.True(Stopwatch.IsRunning);
-            Stopwatch.Stop();
+            if (1 <= skipStopCount)
+            {
+                skipStopCount--;
+                return;
+            }
 
-            var elapsedTicks = Stopwatch.ElapsedTicks;
-            TotalTicks += elapsedTicks;
+            Assert.True(stopwatch.IsRunning);
+            stopwatch.Stop();
+
+            var elapsedTicks = stopwatch.ElapsedTicks;
+            totalTicks += elapsedTicks;
 
             if (Count == 0)
             {
-                MinTicks = elapsedTicks;
+                minTicks = elapsedTicks;
                 MinIndex = Count;
 
-                MaxTicks = elapsedTicks;
+                maxTicks = elapsedTicks;
                 MaxIndex = Count;
             }
             else
             {
-                if (elapsedTicks < MinTicks)
+                if (elapsedTicks < minTicks)
                 {
-                    MinTicks = elapsedTicks;
+                    minTicks = elapsedTicks;
                     MinIndex = Count;
                 }
-                if (MaxTicks < elapsedTicks)
+                if (maxTicks < elapsedTicks)
                 {
-                    MaxTicks = elapsedTicks;
+                    maxTicks = elapsedTicks;
                     MaxIndex = Count;
                 }
             }
